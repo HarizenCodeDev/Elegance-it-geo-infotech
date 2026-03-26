@@ -101,8 +101,9 @@ const createOrUpdateAttendance = async (req, res, next) => {
 
 const listAttendance = async (req, res, next) => {
   try {
-    const { date, from, to, userId } = req.query;
-    let query = db("attendance")
+    const { date, from, to, userId, includeLoginLogs } = req.query;
+    
+    const attendanceQuery = db("attendance")
       .join("users", "attendance.user_id", "users.id")
       .select(
         "attendance.id",
@@ -120,22 +121,62 @@ const listAttendance = async (req, res, next) => {
       .limit(500);
 
     if (date) {
-      query = query.whereRaw("date(attendance.date) = date(?)", [date]);
+      attendanceQuery.whereRaw("date(attendance.date) = date(?)", [date]);
     }
 
     if (from && to) {
-      query = query.whereBetween("attendance.date", [new Date(from), new Date(to)]);
+      attendanceQuery.whereBetween("attendance.date", [new Date(from), new Date(to)]);
     }
 
     if (userId) {
-      query = query.where("attendance.user_id", userId);
+      attendanceQuery.where("attendance.user_id", userId);
     }
 
-    const records = await query;
+    const records = await attendanceQuery;
 
-    res.json({
-      success: true,
-      records: records.map((r) => ({
+    let result = records.map((r) => ({
+      _id: r.id,
+      user: {
+        _id: r.user_id,
+        name: r.user_name,
+        employeeId: r.employee_id,
+        department: r.department,
+        role: r.role,
+      },
+      date: r.date,
+      status: r.status,
+      checkInAt: r.check_in_at,
+      checkOutAt: r.check_out_at,
+      type: "attendance",
+    }));
+
+    if (includeLoginLogs === "true") {
+      const loginQuery = db("login_logs")
+        .join("users", "login_logs.user_id", "users.id")
+        .select(
+          "login_logs.id",
+          "login_logs.user_id",
+          "login_logs.created_at as login_time",
+          "login_logs.status as login_status",
+          "users.name as user_name",
+          "users.employee_id",
+          "users.department",
+          "users.role"
+        )
+        .orderBy("login_logs.created_at", "desc")
+        .limit(500);
+
+      if (from && to) {
+        loginQuery.whereBetween("login_logs.created_at", [new Date(from), new Date(to)]);
+      }
+
+      if (userId) {
+        loginQuery.where("login_logs.user_id", userId);
+      }
+
+      const loginRecords = await loginQuery;
+
+      const loginActivity = loginRecords.map((r) => ({
         _id: r.id,
         user: {
           _id: r.user_id,
@@ -144,11 +185,19 @@ const listAttendance = async (req, res, next) => {
           department: r.department,
           role: r.role,
         },
-        date: r.date,
-        status: r.status,
-        checkInAt: r.check_in_at,
-        checkOutAt: r.check_out_at,
-      })),
+        date: r.login_time,
+        status: r.login_status === "success" ? "Logged In" : "Login Failed",
+        checkInAt: r.login_status === "success" ? r.login_time : null,
+        checkOutAt: null,
+        type: "login",
+      }));
+
+      result = [...result, ...loginActivity].sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    res.json({
+      success: true,
+      records: result,
     });
   } catch (error) {
     next(error);

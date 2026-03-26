@@ -6,6 +6,51 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const createOrUpdateAttendanceOnLogin = async (userId, action = "checkin") => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split("T")[0];
+
+    const existing = await db("attendance")
+      .where("user_id", userId)
+      .whereRaw("date(date) = ?", [todayStr])
+      .first();
+
+    if (action === "checkin") {
+      if (existing) {
+        await db("attendance")
+          .where("id", existing.id)
+          .update({
+            status: "Present",
+            check_in_at: new Date(),
+            updated_at: db.fn.now(),
+          });
+      } else {
+        try {
+          await db("attendance").insert({
+            user_id: userId,
+            date: today,
+            status: "Present",
+            check_in_at: new Date(),
+          });
+        } catch (e) {
+          // Ignore duplicate errors
+        }
+      }
+    } else if (action === "checkout" && existing) {
+      await db("attendance")
+        .where("id", existing.id)
+        .update({
+          check_out_at: new Date(),
+          updated_at: db.fn.now(),
+        });
+    }
+  } catch (err) {
+    console.error("Attendance update error:", err);
+  }
+};
+
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -55,6 +100,8 @@ const login = async (req, res, next) => {
       status: "success",
     });
 
+    await createOrUpdateAttendanceOnLogin(user.id, "checkin");
+
     res.json({
       success: true,
       token,
@@ -71,6 +118,19 @@ const login = async (req, res, next) => {
         department: user.department,
         designation: user.designation,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const logout = async (req, res, next) => {
+  try {
+    await createOrUpdateAttendanceOnLogin(req.user._id, "checkout");
+
+    res.json({
+      success: true,
+      message: "Logged out successfully",
     });
   } catch (error) {
     next(error);
@@ -499,4 +559,4 @@ const getProfile = async (req, res, next) => {
   }
 };
 
-export { login, refreshAccessToken, changePassword, forgotPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel };
+export { login, logout, refreshAccessToken, changePassword, forgotPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel };
