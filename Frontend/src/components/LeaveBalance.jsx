@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Award, Calendar, Clock, TrendingUp } from "lucide-react";
+import { Skeleton, SkeletonGrid } from "./Skeleton";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -50,8 +51,23 @@ const LeaveBalance = ({ compact = false }) => {
 
   if (loading) {
     return (
-      <div className="animate-pulse">
-        <div className="h-20 bg-slate-700/50 rounded-xl"></div>
+      <div className="space-y-4">
+        <Skeleton variant="title" className="w-40" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-slate-800/60 border border-slate-700 rounded-xl p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Skeleton variant="card" className="h-8 w-8" />
+                <Skeleton variant="text" className="w-24" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton variant="text" className="w-3/4" />
+                <Skeleton variant="card" className="h-2 w-full" />
+                <Skeleton variant="text" className="w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

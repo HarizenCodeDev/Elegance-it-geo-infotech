@@ -1,6 +1,7 @@
 import { Calendar as CalIcon, Clock, CheckCircle, XCircle } from "lucide-react";
 import LeaveBalance from "./LeaveBalance";
 import AttendanceBarChart from "./charts/AttendanceBarChart";
+import { Skeleton, SkeletonChart } from "./Skeleton";
 
 const EmployeeHome = ({ stats, loading }) => {
   const weekData = [
@@ -18,10 +19,19 @@ const EmployeeHome = ({ stats, loading }) => {
       <div className="space-y-6">
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }} />
+            <div key={i} className="h-28 rounded-2xl border p-5" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <Skeleton variant="text" className="w-24" />
+                  <Skeleton variant="title" className="w-16" />
+                </div>
+                <Skeleton variant="card" className="h-12 w-12" />
+              </div>
+            </div>
           ))}
         </div>
-        <div className="h-64 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }} />
+        <SkeletonChart />
+        <SkeletonChart />
       </div>
     );
   }

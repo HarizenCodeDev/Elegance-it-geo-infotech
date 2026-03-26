@@ -4,6 +4,7 @@ import axios from "axios";
 import { Download } from "lucide-react";
 import { useAuth } from "../context/authContext";
 import { exportToExcel, getImageUrl } from "../utils/excel";
+import { Skeleton, SkeletonTable } from "./Skeleton";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -178,7 +179,7 @@ const AttendanceList = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-8 text-slate-400">Loading...</div>
+        <SkeletonTable rows={10} cols={7} />
       ) : error ? (
         <div className="text-center py-8 text-rose-400">{error}</div>
       ) : rows.length === 0 ? (

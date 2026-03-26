@@ -1,8 +1,9 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Download } from "lucide-react";
 import { exportToExcel, getImageUrl } from "../utils/excel";
+import { Skeleton, SkeletonTable } from "./Skeleton";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -140,7 +141,7 @@ const EmployeesList = ({ onAddNew, onView, onEdit }) => {
       </div>
 
       {loading ? (
-        <div className="text-center py-8 text-slate-400">Loading...</div>
+        <SkeletonTable rows={8} cols={6} />
       ) : error ? (
         <div className="text-center py-8 text-rose-400">{error}</div>
       ) : employees.length === 0 ? (

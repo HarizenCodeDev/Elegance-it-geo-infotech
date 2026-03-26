@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
+import { Skeleton, SkeletonTable } from "./Skeleton";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 const statusOptions = ["All", "Pending", "Approved", "Rejected"];
@@ -207,7 +208,9 @@ const LeavesList = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-slate-400">Loading...</td>
+                <td colSpan={7} className="px-4 py-12 text-center">
+                  <SkeletonTable rows={5} cols={7} />
+                </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>

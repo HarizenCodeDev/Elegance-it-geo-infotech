@@ -1,10 +1,10 @@
-import { useState, useEffect, memo } from "react";
-import { Users, UserCheck, UserX, Clock, Building } from "lucide-react";
+import { memo } from "react";
 import LeaveBalance from "./LeaveBalance";
 import LeaveCalendar from "./LeaveCalendar";
 import Celebrations from "./Celebrations";
 import BarChartComponent from "./charts/BarChartComponent";
 import PieChartComponent from "./charts/PieChartComponent";
+import { Skeleton, SkeletonChart } from "./Skeleton";
 
 const statsCards = [
   { label: "Total Employees", key: "totalEmployees", color: "#02f5a1" },
@@ -50,14 +50,21 @@ const DashboardHome = ({ stats, loading }) => {
       <div className="space-y-6">
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="h-28 rounded-2xl animate-pulse"
-              style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-            />
+            <div key={i} className="h-28 rounded-2xl border p-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+              <Skeleton variant="text" className="w-1/2 mb-2" />
+              <Skeleton variant="title" className="w-3/4" />
+            </div>
           ))}
         </div>
-        <div className="h-80 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }} />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SkeletonChart />
+          <SkeletonChart />
+        </div>
+        <SkeletonChart />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SkeletonChart />
+          <SkeletonChart />
+        </div>
       </div>
     );
   }
