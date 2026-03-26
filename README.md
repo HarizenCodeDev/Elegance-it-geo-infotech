@@ -99,20 +99,6 @@ npm run dev
 
 ---
 
-## 🔑 Default Login Credentials
-
-| Role | Email | Password |
-|------|-------|----------|
-| 👑 Root | admin@elegance.com | admin123 |
-| 👔 Manager | manager@elegance.com | password123 |
-| 👔 HR | hr@elegance.com | password123 |
-| 👔 Team Lead | teamlead@elegance.com | password123 |
-| 👔 Developer | sathis@elegance.com | password123 |
-
-> ⚠️ **Important**: Change these passwords after first login!
-
----
-
 ## 📁 Project Structure
 
 ```
