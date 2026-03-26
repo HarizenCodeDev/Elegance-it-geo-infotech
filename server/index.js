@@ -14,7 +14,12 @@ import leaveRouter from "./routes/leave.js";
 import chatRouter from "./routes/chat.js";
 import announcementRouter from "./routes/announcement.js";
 import checkinRouter from "./routes/checkin.js";
-import { errorHandler } from "./middleware/errorHandler.js";
+import leaveBalanceRouter from "./routes/leaveBalance.js";
+import notificationRouter from "./routes/notification.js";
+import holidayRouter from "./routes/holiday.js";
+import documentRouter from "./routes/document.js";
+import activityLogRouter from "./routes/activityLog.js";
+import { errorHandler, requestLogger } from "./middleware/errorHandler.js";
 
 dotenv.config();
 
@@ -68,6 +73,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
   }
 }));
 
+// Request logging
+app.use(requestLogger);
+
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/employees", employeeRouter);
@@ -76,6 +84,11 @@ app.use("/api/leaves", leaveRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/announcements", announcementRouter);
 app.use("/api/checkin", checkinRouter);
+app.use("/api/leave-balance", leaveBalanceRouter);
+app.use("/api/notifications", notificationRouter);
+app.use("/api/holidays", holidayRouter);
+app.use("/api/documents", documentRouter);
+app.use("/api/activity-logs", activityLogRouter);
 
 // Health check
 app.get("/api/health", (req, res) => {

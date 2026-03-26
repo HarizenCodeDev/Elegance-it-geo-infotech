@@ -1,4 +1,6 @@
 import db from "../config/database.js";
+import { createNotification } from "./notificationController.js";
+import { updateBalance, getOrCreateBalance } from "./leaveBalanceController.js";
 
 const canApprove = (role) => ["root", "admin", "manager"].includes(role);
 
@@ -139,6 +141,14 @@ const updateLeaveStatus = async (req, res, next) => {
       });
     }
 
+    const oldLeave = await db("leaves").where("id", id).first();
+    if (!oldLeave) {
+      return res.status(404).json({
+        success: false,
+        error: "Leave not found",
+      });
+    }
+
     const [leave] = await db("leaves")
       .where("id", id)
       .update({
@@ -147,11 +157,48 @@ const updateLeaveStatus = async (req, res, next) => {
       })
       .returning("*");
 
-    if (!leave) {
-      return res.status(404).json({
-        success: false,
-        error: "Leave not found",
-      });
+    const year = new Date(leave.from_date).getFullYear();
+    const fromDate = new Date(leave.from_date);
+    const toDate = new Date(leave.to_date);
+    const days = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1;
+
+    // Map leave type to balance type
+    const leaveTypeMap = {
+      "Annual Leave": "annual",
+      "Sick Leave": "sick",
+      "Casual Leave": "casual",
+      "unpaid": "unpaid",
+    };
+    const balanceType = leaveTypeMap[leave.type] || "casual";
+
+    // Update leave balance
+    if (status === "Approved") {
+      await updateBalance(leave.user_id, balanceType, days, year);
+    } else if (status === "Rejected" && oldLeave.status === "Pending") {
+      // If rejecting a pending leave, no balance change needed
+    } else if (status === "Rejected" && oldLeave.status === "Approved") {
+      // If rejecting an already approved leave, deduct from used
+      await updateBalance(leave.user_id, balanceType, -days, year);
+    }
+
+    // Send notification
+    const user = await db("users").where("id", leave.user_id).first();
+    if (user) {
+      if (status === "Approved") {
+        await createNotification(
+          leave.user_id,
+          "Leave Approved",
+          `Your ${leave.type} request for ${days} day(s) has been approved.`,
+          "success"
+        );
+      } else if (status === "Rejected") {
+        await createNotification(
+          leave.user_id,
+          "Leave Rejected",
+          `Your ${leave.type} request has been rejected.`,
+          "error"
+        );
+      }
     }
 
     res.json({

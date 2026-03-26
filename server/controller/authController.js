@@ -42,6 +42,12 @@ const login = async (req, res, next) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
     );
 
+    const refreshToken = jwt.sign(
+      { _id: user.id, type: "refresh" },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
+
     await db("login_logs").insert({
       user_id: user.id,
       ip_address: ip,
@@ -52,6 +58,8 @@ const login = async (req, res, next) => {
     res.json({
       success: true,
       token,
+      refreshToken,
+      expiresIn: "7d",
       user: {
         _id: user.id,
         name: user.name,
@@ -65,6 +73,64 @@ const login = async (req, res, next) => {
       },
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+const refreshAccessToken = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({
+        success: false,
+        error: "Refresh token required",
+      });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+
+    if (decoded.type !== "refresh") {
+      return res.status(401).json({
+        success: false,
+        error: "Invalid refresh token",
+      });
+    }
+
+    const user = await db("users").where("id", decoded._id).first();
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: "User not found",
+      });
+    }
+
+    const newToken = jwt.sign(
+      { _id: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    );
+
+    const newRefreshToken = jwt.sign(
+      { _id: user.id, type: "refresh" },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
+
+    res.json({
+      success: true,
+      token: newToken,
+      refreshToken: newRefreshToken,
+      expiresIn: "7d",
+    });
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        error: "Refresh token expired, please login again",
+      });
+    }
     next(error);
   }
 };
@@ -433,4 +499,4 @@ const getProfile = async (req, res, next) => {
   }
 };
 
-export { login, changePassword, forgotPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel };
+export { login, refreshAccessToken, changePassword, forgotPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel };

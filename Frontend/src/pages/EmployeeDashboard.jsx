@@ -5,6 +5,7 @@ import ChatWindow from "../components/ChatWindow";
 import EmployeeLeaves from "../components/EmployeeLeaves";
 import EmployeeAttendanceView from "../components/EmployeeAttendanceView";
 import EmployeeAnnouncements from "../components/EmployeeAnnouncements";
+import ProfileEdit from "../components/ProfileEdit";
 import EmployeeHome from "../components/EmployeeHome";
 import CheckInOut from "../components/CheckInOut";
 import axios from "axios";
@@ -60,6 +61,8 @@ const EmployeeDashboard = () => {
 
   const renderContent = () => {
     switch (currentView) {
+      case "profileEdit":
+        return <ProfileEdit onDone={() => setCurrentView("dashboard")} />;
       case "leaves":
         return <EmployeeLeaves />;
       case "attendance":
@@ -67,6 +70,7 @@ const EmployeeDashboard = () => {
       case "checkin":
         return <CheckInOut />;
       case "announcementsList":
+      case "announcements":
         return <EmployeeAnnouncements />;
       default:
         return <EmployeeHome stats={stats} loading={loading} />;

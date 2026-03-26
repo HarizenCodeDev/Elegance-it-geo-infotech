@@ -1,5 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Calendar, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Calendar as CalIcon, Clock, CheckCircle, XCircle } from "lucide-react";
+import LeaveBalance from "./LeaveBalance";
 
 const EmployeeHome = ({ stats, loading }) => {
   const weekData = [
@@ -29,7 +30,7 @@ const EmployeeHome = ({ stats, loading }) => {
     { label: "Present This Month", value: stats?.monthPresent || 0, color: "#02f5a1", icon: CheckCircle },
     { label: "Absent This Month", value: stats?.monthAbsent || 0, color: "#ef4444", icon: XCircle },
     { label: "Pending Leaves", value: stats?.pendingLeaves || 0, color: "#f59e0b", icon: Clock },
-    { label: "Approved Leaves", value: stats?.approvedLeaves || 0, color: "#3b82f6", icon: Calendar },
+    { label: "Approved Leaves", value: stats?.approvedLeaves || 0, color: "#3b82f6", icon: CalIcon },
   ];
 
   return (
@@ -80,6 +81,8 @@ const EmployeeHome = ({ stats, loading }) => {
           </ResponsiveContainer>
         </div>
       </div>
+
+      <LeaveBalance />
     </section>
   );
 };

@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import {
   login,
+  refreshAccessToken,
   changePassword,
   forgotPassword,
   uploadAvatar,
@@ -49,6 +50,8 @@ const forgotPasswordSchema = {
 };
 
 router.post("/login", sanitizeInput, validate(loginSchema), login);
+
+router.post("/refresh", refreshAccessToken);
 
 router.put(
   "/change-password",

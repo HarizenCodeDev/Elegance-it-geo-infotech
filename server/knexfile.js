@@ -3,18 +3,11 @@ dotenv.config();
 
 export default {
   development: {
-    client: "pg",
+    client: "better-sqlite3",
     connection: {
-      host: process.env.DB_HOST || "localhost",
-      port: process.env.DB_PORT || 5432,
-      database: process.env.DB_NAME || "elegance_ems",
-      user: process.env.DB_USER || "postgres",
-      password: process.env.DB_PASSWORD || "postgres",
+      filename: "./data/elegance.db",
     },
-    pool: {
-      min: 2,
-      max: 10,
-    },
+    useNullAsDefault: true,
     migrations: {
       directory: "./migrations",
       extension: "js",
@@ -26,18 +19,8 @@ export default {
   },
   production: {
     client: "pg",
-    connection: {
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      database: process.env.DB_NAME,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      ssl: { rejectUnauthorized: false },
-    },
-    pool: {
-      min: 2,
-      max: 10,
-    },
+    connection: process.env.DB_URL,
+    ssl: { rejectUnauthorized: false },
     migrations: {
       directory: "./migrations",
       extension: "js",

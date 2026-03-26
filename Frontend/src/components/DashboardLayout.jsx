@@ -5,27 +5,29 @@ import { useAuth } from "../context/authContext";
 import axios from "axios";
 import { getImageUrl } from "../utils/excel";
 import logoSrc from "../assets/Logo/EG.png";
+import NotificationBell from "./NotificationBell";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const menuItems = [
   { title: "Dashboard", key: "dashboard" },
+  { title: "My Profile", key: "profileEdit" },
   { title: "My Attendance", key: "attendance" },
   { title: "Leave Request", key: "leaves" },
-  { title: "Announcements", key: "announcements", children: [
-    { title: "View All", key: "announcementsList" },
-  ]},
-  { title: "Chat", key: "chat" },
+  { title: "Attendance", key: "attendanceManage", roles: ["root", "admin", "manager"] },
+  { title: "Leave Calendar", key: "leaveCalendar", roles: ["root", "admin", "manager"] },
   { title: "Employees", key: "employees", children: [
     { title: "Add Employee", key: "addEmployee", roles: ["root", "admin", "manager"] },
     { title: "Employees List", key: "employeesList" },
   ]},
-  { title: "Attendance", key: "attendanceManage", roles: ["root", "admin", "manager"] },
   { title: "Check In/Out", key: "checkin", roles: ["root", "admin", "manager"] },
+  { title: "Chat", key: "chat" },
+  { title: "Holidays", key: "holidays" },
   { title: "Login Logs", key: "loginLogs", roles: ["root", "admin", "manager"] },
-  { title: "Announcements", key: "manageAnnouncements", roles: ["root", "admin", "manager", "hr", "teamlead"], children: [
-    { title: "Add New", key: "addAnnouncement" },
-    { title: "Manage List", key: "announcementsList" },
+  { title: "Activity Logs", key: "activityLogs", roles: ["root", "admin"] },
+  { title: "Announcements", key: "announcements", children: [
+    { title: "Add New", key: "addAnnouncement", roles: ["root", "admin", "manager", "hr", "teamlead"] },
+    { title: "View All", key: "announcementsList" },
   ]},
 ];
 
@@ -122,7 +124,7 @@ const DashboardLayout = ({
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg-primary)', color: 'var(--color-text-primary)' }}>
-      <header className="px-4 md:px-6 py-4 shadow flex items-center gap-3 relative z-50" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
+      <header className="sticky top-0 z-50 px-4 md:px-6 py-4 shadow flex items-center gap-3" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden p-2 rounded-lg transition-colors"
@@ -133,10 +135,12 @@ const DashboardLayout = ({
 
         <div className="flex items-center gap-3">
           <img src={logoSrc} alt="Elegance" className="h-9 w-9 object-contain" />
-          <h1 className="text-lg md:text-xl font-semibold">Elegance It & Geo Synergy</h1>
+          <h1 className="text-lg md:text-xl font-semibold">Elegance IT & Geo Synergy</h1>
         </div>
 
         <div className="ml-auto flex items-center gap-3">
+          <NotificationBell />
+
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ backgroundColor: 'var(--color-bg-tertiary)' }}>
             <div className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold gradient-primary">
               {(user?.name || "U").slice(0, 2).toUpperCase()}
@@ -229,7 +233,8 @@ const DashboardLayout = ({
       <div className="flex flex-1">
         <aside
           className={`
-            fixed md:static inset-y-0 left-0 z-40
+            fixed md:sticky top-0 md:top-auto inset-y-0 left-0 z-40
+            h-screen md:h-auto
             w-64 border-r
             transform transition-transform duration-200 ease-in-out
             ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
@@ -337,7 +342,7 @@ const DashboardLayout = ({
       </div>
 
       <footer className="px-6 py-3 text-center text-sm border-t" style={{ backgroundColor: 'var(--color-bg-secondary)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
-        © {new Date().getFullYear()} Elegance It & Geo Synergy. All rights reserved.
+        © {new Date().getFullYear()} Elegance IT & Geo Synergy. All rights reserved.
       </footer>
     </div>
   );

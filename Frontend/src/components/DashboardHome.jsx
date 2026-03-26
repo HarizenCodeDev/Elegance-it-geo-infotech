@@ -1,5 +1,8 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Users, UserCheck, UserX, Clock, Building } from "lucide-react";
+import LeaveBalance from "./LeaveBalance";
+import LeaveCalendar from "./LeaveCalendar";
+import Celebrations from "./Celebrations";
 
 const statsCards = [
   { label: "Total Employees", key: "totalEmployees", color: "#02f5a1" },
@@ -147,6 +150,13 @@ const DashboardHome = ({ stats, loading }) => {
             </div>
           </div>
         </div>
+      </div>
+
+      <LeaveBalance />
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <LeaveCalendar />
+        <Celebrations />
       </div>
     </section>
   );

@@ -1,21 +1,23 @@
 import bcrypt from "bcryptjs";
-import db from "../config/database.js";
+import knex from "knex";
 import dotenv from "dotenv";
+import knexConfig from "../knexfile.js";
 
 dotenv.config();
+
+const env = process.env.NODE_ENV || "development";
+const db = knex(knexConfig[env]);
 
 async function seed() {
   console.log("🌱 Starting database seed...");
 
   try {
-    // Check if root user exists
     const existingRoot = await db("users").where("role", "root").first();
     if (existingRoot) {
       console.log("⚠️  Root user already exists. Skipping seed.");
       return;
     }
 
-    // Create root user
     const hashedPassword = await bcrypt.hash(
       process.env.DEFAULT_PASSWORD || "admin123",
       12

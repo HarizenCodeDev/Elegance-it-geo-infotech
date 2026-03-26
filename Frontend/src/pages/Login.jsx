@@ -75,7 +75,7 @@ const Login = () => {
             className="h-20 w-20 mx-auto mb-4 object-contain"
             onError={(e) => { e.target.style.display = 'none'; }}
           />
-          <h1 className="text-2xl font-bold text-white">Elegance It & Geo Synergy</h1>
+          <h1 className="text-2xl font-bold text-white">Elegance IT & Geo Synergy</h1>
           <p className="text-slate-400 mt-1">Welcome Back</p>
         </div>
 

@@ -63,7 +63,7 @@ const createOrUpdateAttendance = async (req, res, next) => {
     // Upsert attendance record
     const existing = await db("attendance")
       .where("user_id", userId)
-      .whereRaw("DATE(date) = ?", [dateObj])
+      .where("date", dateObj.toISOString().split("T")[0])
       .first();
 
     if (existing) {
@@ -120,9 +120,7 @@ const listAttendance = async (req, res, next) => {
       .limit(500);
 
     if (date) {
-      const dateObj = new Date(date);
-      dateObj.setHours(0, 0, 0, 0);
-      query = query.whereRaw("DATE(attendance.date) = ?", [dateObj]);
+      query = query.whereRaw("date(attendance.date) = date(?)", [date]);
     }
 
     if (from && to) {

@@ -1,7 +1,7 @@
 import db from "../config/database.js";
 
 const canPublish = (role) =>
-  ["root", "admin", "manager", "hr", "teamlead"].includes(role);
+  ["root", "admin", "manager", "hr", "teamlead", "developer"].includes(role);
 
 const createAnnouncement = async (req, res, next) => {
   try {
@@ -21,12 +21,15 @@ const createAnnouncement = async (req, res, next) => {
       });
     }
 
+    const roles = audienceRoles?.length ? audienceRoles : ["all"];
+    const depts = audienceDepartments?.length ? audienceDepartments : [];
+    
     const [announcement] = await db("announcements")
       .insert({
         title: title.trim(),
         message: message.trim(),
-        audience_roles: audienceRoles.length ? audienceRoles : ["all"],
-        audience_departments: audienceDepartments,
+        audience_roles: JSON.stringify(roles),
+        audience_departments: JSON.stringify(depts),
         created_by: req.user._id,
       })
       .returning("*");
@@ -62,7 +65,6 @@ const listAnnouncements = async (req, res, next) => {
     const userRole = req.user.role;
     const userDepartment = req.user.department;
 
-    // Build filter based on user's role and department
     const announcements = await db("announcements")
       .leftJoin("users", "announcements.created_by", "users.id")
       .select(
@@ -78,10 +80,10 @@ const listAnnouncements = async (req, res, next) => {
       )
       .where((builder) => {
         builder
-          .whereRaw("'all' = ANY(announcements.audience_roles)")
-          .orWhereRaw("? = ANY(announcements.audience_roles)", [userRole]);
+          .whereRaw("announcements.audience_roles LIKE ?", ["%\"all\"%"])
+          .orWhereRaw("announcements.audience_roles LIKE ?", [`%"${userRole}"%`]);
         if (userDepartment) {
-          builder.orWhereRaw("? = ANY(announcements.audience_departments)", [userDepartment]);
+          builder.orWhereRaw("announcements.audience_departments LIKE ?", [`%"${userDepartment}"%`]);
         }
       })
       .orderBy("announcements.created_at", "desc")
@@ -93,8 +95,14 @@ const listAnnouncements = async (req, res, next) => {
         _id: a.id,
         title: a.title,
         message: a.message,
-        audienceRoles: a.audience_roles,
-        audienceDepartments: a.audience_departments,
+        audienceRoles: (() => {
+          try { return typeof a.audience_roles === 'string' ? JSON.parse(a.audience_roles) : a.audience_roles; }
+          catch { return ["all"]; }
+        })(),
+        audienceDepartments: (() => {
+          try { return typeof a.audience_departments === 'string' ? JSON.parse(a.audience_departments) : a.audience_departments; }
+          catch { return []; }
+        })(),
         createdBy: {
           _id: a.creator_id,
           name: a.creator_name,

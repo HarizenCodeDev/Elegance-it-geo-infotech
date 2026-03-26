@@ -3,12 +3,11 @@ import db from "../config/database.js";
 const MAX_CHECKIN_PER_DAY = 3;
 
 const getTodayCheckins = async (userId) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = new Date().toISOString().split("T")[0];
   
   const checkins = await db("checkin_checkout")
     .where("user_id", userId)
-    .whereRaw("DATE(created_at) = ?", [today])
+    .whereRaw("date(created_at) = date(?)", [today])
     .where("type", "checkin")
     .orderBy("created_at", "desc");
   
@@ -133,9 +132,7 @@ const getMyRecords = async (req, res, next) => {
       .limit(parseInt(limit));
 
     if (date) {
-      const dateObj = new Date(date);
-      dateObj.setHours(0, 0, 0, 0);
-      query = query.whereRaw("DATE(created_at) = ?", [dateObj]);
+      query = query.whereRaw("date(created_at) = date(?)", [date]);
     }
 
     const records = await query;

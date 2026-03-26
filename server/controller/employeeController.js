@@ -26,6 +26,13 @@ const createEmployee = async (req, res, next) => {
       salary,
     } = req.body;
 
+    if (salary && (isNaN(salary) || parseFloat(salary) < 0)) {
+      return res.status(400).json({
+        success: false,
+        error: "Salary must be a positive number",
+      });
+    }
+
     // Check permission to create this role
     if (req.user.role !== "root" && !canManageRole(req.user.role, role)) {
       return res.status(403).json({
@@ -70,7 +77,7 @@ const createEmployee = async (req, res, next) => {
         marital_status: maritalStatus || null,
         designation: designation || null,
         department: department || null,
-        salary: salary || null,
+        salary: salary ? parseFloat(salary) : null,
         profile_image: profileImage,
       })
       .returning([
@@ -123,11 +130,12 @@ const listEmployees = async (req, res, next) => {
 
     const buildQuery = (q) => {
       if (search) {
+        const searchTerm = `%${search}%`;
         q = q.where((builder) => {
           builder
-            .whereILike("name", `%${search}%`)
-            .orWhereILike("email", `%${search}%`)
-            .orWhereILike("employee_id", `%${search}%`);
+            .where("name", "like", searchTerm)
+            .orWhere("email", "like", searchTerm)
+            .orWhere("employee_id", "like", searchTerm);
         });
       }
       if (department) {
@@ -200,6 +208,17 @@ const updateEmployee = async (req, res, next) => {
     delete updates.password;
     delete updates._id;
     delete updates.id;
+
+    // Validate salary
+    if (updates.salary !== undefined && updates.salary !== "") {
+      if (isNaN(updates.salary) || parseFloat(updates.salary) < 0) {
+        return res.status(400).json({
+          success: false,
+          error: "Salary must be a positive number",
+        });
+      }
+      updates.salary = parseFloat(updates.salary);
+    }
 
     // Handle password update separately
     if (updates.newPassword) {
@@ -372,9 +391,67 @@ const deleteEmployee = async (req, res, next) => {
   }
 };
 
+const getEmployee = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await db("users")
+      .where("id", id)
+      .select(
+        "id",
+        "name",
+        "email",
+        "role",
+        "employee_id",
+        "dob",
+        "gender",
+        "marital_status",
+        "department",
+        "designation",
+        "salary",
+        "profile_image",
+        "avatar",
+        "attendance_status",
+        "created_at"
+      )
+      .first();
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: "Employee not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        employeeId: user.employee_id,
+        dob: user.dob,
+        gender: user.gender,
+        maritalStatus: user.marital_status,
+        department: user.department,
+        designation: user.designation,
+        salary: user.salary,
+        profileImage: user.profile_image,
+        avatar: user.avatar,
+        attendanceStatus: user.attendance_status,
+        createdAt: user.created_at,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   createEmployee,
   listEmployees,
+  getEmployee,
   updateEmployee,
   updateAttendance,
   deleteEmployee,

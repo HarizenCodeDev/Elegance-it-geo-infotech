@@ -9,11 +9,35 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const AttendanceList = () => {
   const [rows, setRows] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [exportFrom, setExportFrom] = useState(() => {
+    const d = new Date();
+    d.setDate(1);
+    return d.toISOString().split("T")[0];
+  });
+  const [exportTo, setExportTo] = useState(() => new Date().toISOString().split("T")[0]);
+  const [exportEmployee, setExportEmployee] = useState("all");
   const { user } = useAuth();
   const canUpdate = ["admin", "manager", "root"].includes(user?.role);
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${API_BASE}/api/employees?limit=500`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setEmployees(res.data.users || []);
+    } catch (error) {
+      console.error("Failed to fetch employees");
+    }
+  };
 
   const loadData = async (selectedDate) => {
     setLoading(true);
@@ -74,16 +98,28 @@ const AttendanceList = () => {
   };
 
   const handleExport = async () => {
+    if (!exportFrom || !exportTo) {
+      toast.error("Please select date range");
+      return;
+    }
     try {
       const token = localStorage.getItem("token");
+      const params = { from: exportFrom, to: exportTo };
+      if (exportEmployee !== "all") {
+        params.userId = exportEmployee;
+      }
       const res = await axios.get(`${API_BASE}/api/auth/export/attendance`, {
         headers: { Authorization: `Bearer ${token}` },
+        params,
       });
       if (res.data.success && res.data.data.length > 0) {
-        exportToExcel(res.data.data, `attendance_${new Date().toISOString().split("T")[0]}`, "Attendance");
+        const fileName = exportEmployee !== "all" 
+          ? `attendance_${exportEmployee}_${exportFrom}_to_${exportTo}`
+          : `attendance_${exportFrom}_to_${exportTo}`;
+        exportToExcel(res.data.data, fileName, "Attendance");
         toast.success("Excel downloaded!");
       } else {
-        toast.error("No data to export");
+        toast.error("No data to export for selected date range");
       }
     } catch {
       toast.error("Export failed");
@@ -92,19 +128,45 @@ const AttendanceList = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <h2 className="text-xl font-semibold text-white">Mark Attendance</h2>
-        <button
-          onClick={handleExport}
-          className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs transition-colors"
-        >
-          <Download size={14} />
-          Export Excel
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-slate-400">Export:</span>
+          <select
+            value={exportEmployee}
+            onChange={(e) => setExportEmployee(e.target.value)}
+            className="rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-1.5 text-white text-sm"
+          >
+            <option value="all">All Employees</option>
+            {employees.map((emp) => (
+              <option key={emp._id} value={emp._id}>{emp.name}</option>
+            ))}
+          </select>
+          <input
+            type="date"
+            value={exportFrom}
+            onChange={(e) => setExportFrom(e.target.value)}
+            className="rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-1.5 text-white text-sm"
+          />
+          <span className="text-sm text-slate-400">to</span>
+          <input
+            type="date"
+            value={exportTo}
+            onChange={(e) => setExportTo(e.target.value)}
+            className="rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-1.5 text-white text-sm"
+          />
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs transition-colors"
+          >
+            <Download size={14} />
+            Export Excel
+          </button>
+        </div>
       </div>
 
       <div className="flex justify-end">
-        <label htmlFor="att-date" className="sr-only">Select date</label>
+        <label htmlFor="att-date" className="text-sm text-slate-400 mr-2">Select date:</label>
         <input
           id="att-date"
           name="date"

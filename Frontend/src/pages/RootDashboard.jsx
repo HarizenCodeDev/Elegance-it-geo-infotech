@@ -9,7 +9,11 @@ import AttendanceList from "../components/AttendanceList";
 import EditEmployeeForm from "../components/EditEmployeeForm";
 import AddAnnouncementForm from "../components/AddAnnouncementForm";
 import AnnouncementsList from "../components/AnnouncementsList";
+import ProfileEdit from "../components/ProfileEdit";
 import DashboardHome from "../components/DashboardHome";
+import HolidayManagement from "../components/HolidayManagement";
+import LeaveCalendar from "../components/LeaveCalendar";
+import ActivityLog from "../components/ActivityLog";
 import CheckInOut from "../components/CheckInOut";
 import LoginLogs from "../components/LoginLogs";
 import axios from "axios";
@@ -76,6 +80,8 @@ const RootDashboard = () => {
 
   const renderContent = () => {
     switch (currentView) {
+      case "profileEdit":
+        return <ProfileEdit onDone={() => setCurrentView("dashboard")} />;
       case "addEmployee":
         return <AddEmployeeForm />;
       case "employeesList":
@@ -114,6 +120,12 @@ const RootDashboard = () => {
         ) : null;
       case "leaves":
         return <LeavesList />;
+      case "holidays":
+        return <HolidayManagement />;
+      case "leaveCalendar":
+        return <LeaveCalendar />;
+      case "activityLogs":
+        return <ActivityLog />;
       case "attendance":
       case "attendanceManage":
         return <AttendanceList />;

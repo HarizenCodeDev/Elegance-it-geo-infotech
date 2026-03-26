@@ -6,6 +6,7 @@ import authMiddleware from "../middleware/auth.js";
 import {
   createEmployee,
   listEmployees,
+  getEmployee,
   updateEmployee,
   updateAttendance,
   deleteEmployee,
@@ -41,6 +42,8 @@ const createEmployeeSchema = {
 };
 
 router.use(authMiddleware);
+
+router.get("/:id", getEmployee);
 
 router.post("/", upload.single("profileImage"), sanitizeInput, validate(createEmployeeSchema), createEmployee);
 
