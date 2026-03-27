@@ -86,9 +86,11 @@ export async function up(knex) {
   await knex.schema.createTable("checkin_checkout", (table) => {
     table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
     table.uuid("user_id");
+    table.uuid("parent_id");
     table.string("type").notNullable();
     table.string("ip_address");
     table.text("location");
+    table.text("note");
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
   

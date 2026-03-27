@@ -2,7 +2,12 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
-import authMiddleware from "../middleware/auth.js";
+import authMiddleware, { 
+  requireRole, 
+  requireMinRole, 
+  canManageUser,
+  ROLES 
+} from "../middleware/auth.js";
 import {
   createEmployee,
   listEmployees,
@@ -45,14 +50,33 @@ router.use(authMiddleware);
 
 router.get("/:id", getEmployee);
 
-router.post("/", upload.single("profileImage"), sanitizeInput, validate(createEmployeeSchema), createEmployee);
+router.post("/", 
+  requireRole(ROLES.ROOT, ROLES.ADMIN), 
+  upload.single("profileImage"), 
+  sanitizeInput, 
+  validate(createEmployeeSchema), 
+  createEmployee
+);
 
-router.get("/", listEmployees);
+router.get("/", 
+  listEmployees
+);
 
-router.put("/:id", sanitizeInput, upload.single("profileImage"), updateEmployee);
+router.put("/:id", 
+  canManageUser, 
+  sanitizeInput, 
+  upload.single("profileImage"), 
+  updateEmployee
+);
 
-router.put("/:id/attendance", updateAttendance);
+router.put("/:id/attendance", 
+  requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER), 
+  updateAttendance
+);
 
-router.delete("/:id", deleteEmployee);
+router.delete("/:id", 
+  requireRole(ROLES.ROOT, ROLES.ADMIN), 
+  deleteEmployee
+);
 
 export default router;

@@ -8,6 +8,7 @@ import {
   refreshAccessToken,
   changePassword,
   forgotPassword,
+  resetPassword,
   uploadAvatar,
   getProfile,
   getLoginLogs,
@@ -15,14 +16,14 @@ import {
   exportAttendanceExcel,
   exportLoginLogsExcel,
 } from "../controller/authController.js";
-import authMiddleware from "../middleware/auth.js";
+import authMiddleware, { requireRole, ROLES } from "../middleware/auth.js";
 import { validate, sanitizeInput } from "../middleware/validator.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowed = /jpeg|jpg|png|gif|webp/;
     const extname = allowed.test(path.extname(file.originalname).toLowerCase());
@@ -66,16 +67,34 @@ router.put(
 
 router.post("/forgot-password", sanitizeInput, validate(forgotPasswordSchema), forgotPassword);
 
+router.post("/reset-password", resetPassword);
+
 router.post("/avatar", authMiddleware, upload.single("avatar"), uploadAvatar);
 
 router.get("/profile", authMiddleware, getProfile);
 
-router.get("/login-logs", authMiddleware, getLoginLogs);
+router.get("/login-logs", 
+  authMiddleware,
+  requireRole(ROLES.ROOT, ROLES.ADMIN), 
+  getLoginLogs
+);
 
-router.get("/export/employees", authMiddleware, exportEmployeesExcel);
+router.get("/export/employees", 
+  authMiddleware,
+  requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER), 
+  exportEmployeesExcel
+);
 
-router.get("/export/attendance", authMiddleware, exportAttendanceExcel);
+router.get("/export/attendance", 
+  authMiddleware,
+  requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER), 
+  exportAttendanceExcel
+);
 
-router.get("/export/login-logs", authMiddleware, exportLoginLogsExcel);
+router.get("/export/login-logs", 
+  authMiddleware,
+  requireRole(ROLES.ROOT, ROLES.ADMIN), 
+  exportLoginLogsExcel
+);
 
 export default router;

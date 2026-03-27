@@ -1,4 +1,6 @@
 import db from "../config/database.js";
+import crypto from "crypto";
+import { uploadFile } from "../utils/supabaseStorage.js";
 
 const createGroup = async (req, res, next) => {
   try {
@@ -18,7 +20,11 @@ const createGroup = async (req, res, next) => {
       });
     }
 
-    const groupId = `grp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const generateUUID = () => {
+      return crypto.randomUUID();
+    };
+
+    const groupId = generateUUID();
 
     const [group] = await db("chat_groups")
       .insert({
@@ -191,6 +197,11 @@ const sendMessage = async (req, res, next) => {
       });
     }
 
+    let attachmentUrl = null;
+    if (req.file) {
+      attachmentUrl = await uploadFile(req.file, "chat-attachments");
+    }
+
     let message;
 
     if (type === "group") {
@@ -199,6 +210,7 @@ const sendMessage = async (req, res, next) => {
           from_user: req.user._id,
           to_group: contactId,
           text: text.trim(),
+          attachment: attachmentUrl,
         })
         .returning("*");
     } else {
@@ -207,11 +219,11 @@ const sendMessage = async (req, res, next) => {
           from_user: req.user._id,
           to_user: contactId,
           text: text.trim(),
+          attachment: attachmentUrl,
         })
         .returning("*");
     }
 
-    // Get sender info
     const sender = await db("users").where("id", req.user._id).first();
 
     res.status(201).json({
@@ -220,6 +232,7 @@ const sendMessage = async (req, res, next) => {
         _id: message.id,
         text: message.text,
         ts: message.ts,
+        attachment: message.attachment,
         from: {
           _id: sender.id,
           name: sender.name,

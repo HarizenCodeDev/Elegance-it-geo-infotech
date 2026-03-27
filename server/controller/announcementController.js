@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import { logActivity } from "./activityLogController.js";
 
 const canPublish = (role) =>
   ["root", "admin", "manager", "hr", "teamlead", "developer"].includes(role);
@@ -55,6 +56,8 @@ const createAnnouncement = async (req, res, next) => {
         createdAt: announcement.created_at,
       },
     });
+    
+    await logActivity(req.user._id, "create", "announcement", announcement.id, { title }, req.ip);
   } catch (error) {
     next(error);
   }

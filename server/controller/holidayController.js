@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import { populateHolidaysForYear, autoPopulateUpcomingYears, getAllHolidaysForYear } from "../utils/holidayService.js";
 
 const getHolidays = async (req, res, next) => {
   try {
@@ -110,4 +111,32 @@ const getUpcomingHolidays = async (req, res, next) => {
   }
 };
 
-export { getHolidays, createHoliday, deleteHoliday, getUpcomingHolidays };
+const autoPopulateHolidays = async (req, res, next) => {
+  try {
+    if (!["root", "admin", "manager"].includes(req.user.role)) {
+      return res.status(403).json({ success: false, error: "Not authorized" });
+    }
+
+    const { year, years } = req.query;
+    
+    let results;
+    
+    if (year) {
+      results = [await populateHolidaysForYear(parseInt(year))];
+    } else if (years) {
+      results = await autoPopulateUpcomingYears(parseInt(years));
+    } else {
+      results = await autoPopulateUpcomingYears(2);
+    }
+
+    res.json({
+      success: true,
+      message: "Holidays populated successfully",
+      results,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { getHolidays, createHoliday, deleteHoliday, getUpcomingHolidays, autoPopulateHolidays };

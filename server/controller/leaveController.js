@@ -1,8 +1,11 @@
 import db from "../config/database.js";
 import { createNotification } from "./notificationController.js";
 import { updateBalance, getOrCreateBalance } from "./leaveBalanceController.js";
+import { logActivity } from "./activityLogController.js";
 
 const canApprove = (role) => ["root", "admin", "manager"].includes(role);
+
+const VALID_LEAVE_TYPES = ["Annual Leave", "Sick Leave", "Casual Leave", "unpaid"];
 
 const createLeave = async (req, res, next) => {
   try {
@@ -13,6 +16,14 @@ const createLeave = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         error: "Type, from date, and to date are required",
+      });
+    }
+
+    // Validate leave type
+    if (!VALID_LEAVE_TYPES.includes(type)) {
+      return res.status(400).json({
+        success: false,
+        error: `Invalid leave type. Must be one of: ${VALID_LEAVE_TYPES.join(", ")}`,
       });
     }
 
@@ -60,6 +71,8 @@ const createLeave = async (req, res, next) => {
         createdAt: leave.created_at,
       },
     });
+    
+    await logActivity(userId, "create", "leave", leave.id, { type, from, to }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -213,6 +226,8 @@ const updateLeaveStatus = async (req, res, next) => {
         createdAt: leave.created_at,
       },
     });
+    
+    await logActivity(req.user._id, status.toLowerCase(), "leave", id, { type: leave.type, previousStatus: oldLeave.status }, req.ip);
   } catch (error) {
     next(error);
   }

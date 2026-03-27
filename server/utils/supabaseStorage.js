@@ -17,8 +17,13 @@ if (supabaseUrl && supabaseKey) {
 
 const localUploadPath = path.join(process.cwd(), "uploads");
 
+const sanitizeFileName = (name) => {
+  return name.replace(/[^a-zA-Z0-9._-]/g, "_");
+};
+
 const saveLocalFile = async (file) => {
-  const fileName = `${Date.now()}-${file.originalname}`;
+  const sanitizedName = sanitizeFileName(file.originalname);
+  const fileName = `${Date.now()}-${sanitizedName}`;
   const filePath = path.join(localUploadPath, fileName);
   
   fs.writeFileSync(filePath, file.buffer);
@@ -26,9 +31,11 @@ const saveLocalFile = async (file) => {
 };
 
 export const uploadFile = async (file, folder = "uploads") => {
+  const sanitizedName = sanitizeFileName(file.originalname);
+  
   if (supabase) {
     try {
-      const fileName = `${folder}/${Date.now()}-${file.originalname}`;
+      const fileName = `${folder}/${Date.now()}-${sanitizedName}`;
       
       const { data, error } = await supabase.storage
         .from("ems-uploads")

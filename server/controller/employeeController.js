@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import db from "../config/database.js";
 import { uploadFile, deleteFile } from "../utils/supabaseStorage.js";
+import { logActivity } from "./activityLogController.js";
 
 const ROLES_HIERARCHY = ["root", "admin", "manager", "teamlead", "hr", "developer"];
 
@@ -120,6 +121,8 @@ const createEmployee = async (req, res, next) => {
         createdAt: user.created_at,
       },
     });
+    
+    await logActivity(req.user._id, "create", "employee", user.id, { name: user.name, role: user.role }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -130,6 +133,9 @@ const listEmployees = async (req, res, next) => {
     const { page = 1, limit = 50, search, department, role } = req.query;
     const offset = (page - 1) * limit;
 
+    const allowedRoles = ["root", "admin", "manager", "hr"];
+    const canViewAll = allowedRoles.includes(req.user.role);
+    
     const whereConditions = [];
     
     if (search) {
@@ -141,8 +147,14 @@ const listEmployees = async (req, res, next) => {
     if (role) {
       whereConditions.push({ type: "role", value: role });
     }
+    if (!canViewAll) {
+      whereConditions.push({ type: "user_id", value: req.user._id });
+    }
 
     const buildQuery = (q) => {
+      if (!canViewAll) {
+        q = q.where("id", req.user._id);
+      }
       if (search) {
         const searchTerm = `%${search}%`;
         q = q.where((builder) => {
@@ -177,6 +189,7 @@ const listEmployees = async (req, res, next) => {
           "department",
           "designation",
           "profile_image",
+          "avatar",
           "attendance_status",
           "created_at"
         )
@@ -198,6 +211,7 @@ const listEmployees = async (req, res, next) => {
         department: u.department,
         designation: u.designation,
         profileImage: u.profile_image,
+        avatar: u.avatar,
         attendanceStatus: u.attendance_status,
         createdAt: u.created_at,
       })),
@@ -322,6 +336,8 @@ const updateEmployee = async (req, res, next) => {
         attendanceStatus: user.attendance_status,
       },
     });
+    
+    await logActivity(req.user._id, "update", "employee", id, { name: user.name }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -396,6 +412,8 @@ const deleteEmployee = async (req, res, next) => {
       });
     }
 
+    await logActivity(req.user._id, "delete", "employee", id, {}, req.ip);
+
     res.json({
       success: true,
       message: "Employee deleted successfully",
@@ -437,6 +455,8 @@ const getEmployee = async (req, res, next) => {
       });
     }
 
+    const canViewSalary = ["root", "admin", "manager"].includes(req.user?.role);
+
     res.json({
       success: true,
       user: {
@@ -450,7 +470,7 @@ const getEmployee = async (req, res, next) => {
         maritalStatus: user.marital_status,
         department: user.department,
         designation: user.designation,
-        salary: user.salary,
+        salary: canViewSalary ? user.salary : undefined,
         profileImage: user.profile_image,
         avatar: user.avatar,
         attendanceStatus: user.attendance_status,

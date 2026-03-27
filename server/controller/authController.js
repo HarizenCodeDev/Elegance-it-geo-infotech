@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import db from "../config/database.js";
 import { uploadFile, deleteFile } from "../utils/supabaseStorage.js";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { sendPasswordResetEmail } from "../utils/emailService.js";
+import { config } from "../config/appConfig.js";
+import { logActivity } from "./activityLogController.js";
 
 const createOrUpdateAttendanceOnLogin = async (userId, action = "checkin") => {
   try {
@@ -86,13 +87,13 @@ const login = async (req, res, next) => {
 
     const token = jwt.sign(
       { _id: user.id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+      config.JWT_SECRET,
+      { expiresIn: config.JWT_EXPIRES_IN }
     );
 
     const refreshToken = jwt.sign(
       { _id: user.id, type: "refresh" },
-      process.env.JWT_SECRET,
+      config.JWT_SECRET,
       { expiresIn: "30d" }
     );
 
@@ -104,6 +105,8 @@ const login = async (req, res, next) => {
     });
 
     await createOrUpdateAttendanceOnLogin(user.id, "checkin");
+    
+    await logActivity(user.id, "login", "auth", user.id, { email: user.email }, ip);
 
     res.json({
       success: true,
@@ -130,6 +133,7 @@ const login = async (req, res, next) => {
 const logout = async (req, res, next) => {
   try {
     await createOrUpdateAttendanceOnLogin(req.user._id, "checkout");
+    await logActivity(req.user._id, "logout", "auth", req.user._id, {}, req.ip);
 
     res.json({
       success: true,
@@ -151,7 +155,7 @@ const refreshAccessToken = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
 
     if (decoded.type !== "refresh") {
       return res.status(401).json({
@@ -171,13 +175,13 @@ const refreshAccessToken = async (req, res, next) => {
 
     const newToken = jwt.sign(
       { _id: user.id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+      config.JWT_SECRET,
+      { expiresIn: config.JWT_EXPIRES_IN }
     );
 
     const newRefreshToken = jwt.sign(
       { _id: user.id, type: "refresh" },
-      process.env.JWT_SECRET,
+      config.JWT_SECRET,
       { expiresIn: "30d" }
     );
 
@@ -454,19 +458,76 @@ const forgotPassword = async (req, res, next) => {
     const user = await db("users").where("email", email.toLowerCase()).first();
 
     if (!user) {
-      // Don't reveal if email exists
       return res.json({
         success: true,
         message: "If an account exists with this email, a password reset request has been sent.",
       });
     }
 
-    // In production, send email here
-    console.log(`Password reset requested for: ${email}`);
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpiry = new Date(Date.now() + 3600000);
+
+    await db("users")
+      .where("id", user.id)
+      .update({
+        reset_token: resetToken,
+        reset_token_expiry: resetTokenExpiry,
+      });
+
+    await sendPasswordResetEmail(user.email, resetToken, user.name);
 
     res.json({
       success: true,
       message: "If an account exists with this email, a password reset request has been sent.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({
+        success: false,
+        error: "Token and password are required",
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must be at least 8 characters",
+      });
+    }
+
+    const user = await db("users")
+      .where("reset_token", token)
+      .where("reset_token_expiry", ">", new Date())
+      .first();
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid or expired reset token",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    await db("users")
+      .where("id", user.id)
+      .update({
+        password: hashedPassword,
+        reset_token: null,
+        reset_token_expiry: null,
+      });
+
+    res.json({
+      success: true,
+      message: "Password reset successful. Please login with your new password.",
     });
   } catch (error) {
     next(error);
@@ -562,4 +623,4 @@ const getProfile = async (req, res, next) => {
   }
 };
 
-export { login, logout, refreshAccessToken, changePassword, forgotPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel };
+export { login, logout, refreshAccessToken, changePassword, forgotPassword, resetPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel };
