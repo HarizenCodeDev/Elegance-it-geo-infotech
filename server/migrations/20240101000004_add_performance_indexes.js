@@ -31,17 +31,19 @@ export async function up(knex) {
 
   // Activity log table
   await knex.schema.createTable("activity_logs", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
-    table.string("user_id").references("id").inTable("users").onDelete("SET NULL");
-    table.string("action").notNullable(); // created, updated, deleted, approved, rejected, login, logout
-    table.string("module").notNullable(); // employee, leave, attendance, announcement, etc.
-    table.string("target_id"); // ID of the affected record
-    table.text("details"); // JSON string with additional details
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+    table.uuid("user_id");
+    table.string("action").notNullable();
+    table.string("module").notNullable();
+    table.string("target_id");
+    table.text("details");
     table.string("ip_address");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.index(["user_id", "created_at"]);
     table.index(["module", "action"]);
   });
+  
+  await knex.schema.raw('ALTER TABLE activity_logs ADD CONSTRAINT activity_logs_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL');
 }
 
 /**

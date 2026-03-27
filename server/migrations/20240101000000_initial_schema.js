@@ -5,7 +5,7 @@
 export async function up(knex) {
   // Users table
   await knex.schema.createTable("users", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
     table.string("name").notNullable();
     table.string("email").unique().notNullable();
     table.string("password").notNullable();
@@ -26,8 +26,8 @@ export async function up(knex) {
 
   // Attendance table
   await knex.schema.createTable("attendance", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
-    table.string("user_id").references("id").inTable("users").onDelete("CASCADE");
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+    table.uuid("user_id");
     table.date("date").notNullable();
     table.string("status").notNullable();
     table.timestamp("check_in_at");
@@ -36,11 +36,13 @@ export async function up(knex) {
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.unique(["user_id", "date"]);
   });
+  
+  await knex.schema.raw('ALTER TABLE attendance ADD CONSTRAINT attendance_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE');
 
   // Leave table
   await knex.schema.createTable("leaves", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
-    table.string("user_id").references("id").inTable("users").onDelete("CASCADE");
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+    table.uuid("user_id");
     table.string("type").notNullable();
     table.date("from_date").notNullable();
     table.date("to_date").notNullable();
@@ -49,49 +51,60 @@ export async function up(knex) {
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
+  
+  await knex.schema.raw('ALTER TABLE leaves ADD CONSTRAINT leaves_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE');
 
   // Announcements table
   await knex.schema.createTable("announcements", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
     table.string("title").notNullable();
     table.text("message").notNullable();
     table.text("audience_roles").defaultTo("all");
     table.text("audience_departments").defaultTo("{}");
-    table.string("created_by").references("id").inTable("users").onDelete("SET NULL");
+    table.uuid("created_by");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
+  
+  await knex.schema.raw('ALTER TABLE announcements ADD CONSTRAINT announcements_created_by_foreign FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL');
 
   // Chat messages table
   await knex.schema.createTable("chat_messages", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
-    table.string("from_user").references("id").inTable("users").onDelete("CASCADE");
-    table.string("to_user").references("id").inTable("users").onDelete("SET NULL");
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+    table.uuid("from_user");
+    table.uuid("to_user");
     table.string("to_group");
     table.text("text").notNullable();
     table.timestamp("ts").defaultTo(knex.fn.now());
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
+  
+  await knex.schema.raw('ALTER TABLE chat_messages ADD CONSTRAINT chat_messages_from_user_foreign FOREIGN KEY (from_user) REFERENCES users(id) ON DELETE CASCADE');
+  await knex.schema.raw('ALTER TABLE chat_messages ADD CONSTRAINT chat_messages_to_user_foreign FOREIGN KEY (to_user) REFERENCES users(id) ON DELETE SET NULL');
 
   // Checkin/Checkout logs table
   await knex.schema.createTable("checkin_checkout", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
-    table.string("user_id").references("id").inTable("users").onDelete("CASCADE");
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+    table.uuid("user_id");
     table.string("type").notNullable();
     table.string("ip_address");
     table.text("location");
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
+  
+  await knex.schema.raw('ALTER TABLE checkin_checkout ADD CONSTRAINT checkin_checkout_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE');
 
   // Login logs table
   await knex.schema.createTable("login_logs", (table) => {
-    table.string("id").primary().defaultTo(knex.fn.uuid());
-    table.string("user_id").references("id").inTable("users").onDelete("CASCADE");
+    table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+    table.uuid("user_id");
     table.string("ip_address");
     table.text("user_agent");
     table.string("status");
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
+  
+  await knex.schema.raw('ALTER TABLE login_logs ADD CONSTRAINT login_logs_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE');
 }
 
 /**

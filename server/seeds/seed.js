@@ -1,18 +1,10 @@
 import bcrypt from "bcryptjs";
-import knex from "knex";
-import dotenv from "dotenv";
-import knexConfig from "../knexfile.js";
 
-dotenv.config();
-
-const env = process.env.NODE_ENV || "development";
-const db = knex(knexConfig[env]);
-
-async function seed() {
+export async function seed(knex) {
   console.log("🌱 Starting database seed...");
 
   try {
-    const existingRoot = await db("users").where("role", "root").first();
+    const existingRoot = await knex("users").where("role", "root").first();
     if (existingRoot) {
       console.log("⚠️  Root user already exists. Skipping seed.");
       return;
@@ -23,7 +15,7 @@ async function seed() {
       12
     );
 
-    const [rootUser] = await db("users")
+    const [rootUser] = await knex("users")
       .insert({
         name: process.env.DEFAULT_NAME || "Admin",
         email: process.env.DEFAULT_EMAIL || "admin@elegance.com",
@@ -39,14 +31,8 @@ async function seed() {
     console.log(`   Email: ${rootUser.email}`);
     console.log(`   Password: ${process.env.DEFAULT_PASSWORD || "admin123"}`);
     console.log("\n⚠️  Please change this password after first login!");
-
-    process.exit(0);
   } catch (error) {
     console.error("❌ Seed failed:", error);
-    process.exit(1);
-  } finally {
-    await db.destroy();
+    throw error;
   }
 }
-
-seed();

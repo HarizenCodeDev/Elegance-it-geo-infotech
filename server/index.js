@@ -21,10 +21,10 @@ import documentRouter from "./routes/document.js";
 import activityLogRouter from "./routes/activityLog.js";
 import { errorHandler, requestLogger } from "./middleware/errorHandler.js";
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Security middleware
 app.use(helmet({
