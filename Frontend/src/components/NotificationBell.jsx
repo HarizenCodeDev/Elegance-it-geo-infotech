@@ -3,8 +3,7 @@ import { Bell, X, Check, CheckCheck } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Skeleton } from "./Skeleton";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);

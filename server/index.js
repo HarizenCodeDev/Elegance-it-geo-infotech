@@ -23,6 +23,7 @@ import activityLogRouter from "./routes/activityLog.js";
 import twoFactorRouter from "./routes/twoFactor.js";
 import oauthRouter from "./routes/oauth.js";
 import { errorHandler, requestLogger } from "./middleware/errorHandler.js";
+import { validateInputLength } from "./middleware/validator.js";
 import { initSentry, sentryErrorHandler } from "./utils/sentry.js";
 import { connectRedis } from "./utils/redis.js";
 import { initSocketIO } from "./utils/socket.js";
@@ -54,9 +55,14 @@ app.use(helmet({
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "*",
+    origin: [
+      process.env.FRONTEND_URL || "*",
+      "http://192.168.29.205",
+      "http://192.168.29.205:5173",
+      "http://192.168.29.205:3000",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Content-Length"],
     credentials: true,
   })
 );
@@ -67,22 +73,40 @@ const globalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: false,
+  validate: { xForwardedForHeader: false },
   message: { success: false, error: "Too many requests, please try again later." },
 });
 app.use("/api/", globalLimiter);
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   message: { success: false, error: "Too many login attempts, please try again later." },
 });
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/forgot-password", authLimiter);
 
-app.use(express.json({ limit: "10kb" }));
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express.json({ 
+  limit: "50mb",
+  strict: true,
+}));
+
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(400).json({
+      success: false,
+      error: "Invalid JSON format",
+    });
+  }
+  next(err);
+});
+
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+app.use("/api/", validateInputLength);
 
 app.use(compression());
 

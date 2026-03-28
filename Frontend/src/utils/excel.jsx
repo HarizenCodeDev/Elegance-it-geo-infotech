@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 export const getImageUrl = (path) => {
   if (!path) return null;

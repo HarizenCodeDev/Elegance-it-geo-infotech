@@ -1,183 +1,154 @@
-# 🎯 Elegance IT & Geo Synergy - Employee Management System
+# Elegance EMS
 
-<p align="center">
-  <img src="Frontend/src/assets/Logo/EG.png" alt="Elegance Logo" width="120" />
-</p>
+<div align="center">
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-18.2-blue?style=for-the-badge&logo=react" alt="React">
-  <img src="https://img.shields.io/badge/Node.js-22-green?style=for-the-badge&logo=nodedotjs" alt="Node.js">
-  <img src="https://img.shields.io/badge/Express-4.x-lightgrey?style=for-the-badge&logo=express" alt="Express">
-  <img src="https://img.shields.io/badge/SQLite-3-orange?style=for-the-badge&logo=sqlite" alt="SQLite">
-  <img src="https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=for-the-badge&logo=tailwindcss" alt="Tailwind">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
-</p>
+![Elegance Logo](Frontend/src/assets/Logo/EG.png)
+
+### Enterprise-Grade Employee Management System
+
+[![React](https://img.shields.io/badge/React-18.3-blue?style=for-the-badge&logo=react)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-22-green?style=for-the-badge&logo=nodedotjs)](https://nodejs.org)
+[![Express](https://img.shields.io/badge/Express-4.x-lightgrey?style=for-the-badge&logo=express)](https://expressjs.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?style=for-the-badge&logo=postgresql)](https://postgresql.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](https://github.com/HarizenCodeDev/Elegance-it-geo-infotech/pulls)
+
+**A modern, secure, and feature-rich employee management system built for scalability.**
+
+[Features](#features) • [Tech Stack](#tech-stack) • [Getting Started](#getting-started) • [Documentation](#documentation) • [Contributing](#contributing)
+
+</div>
 
 ---
 
-## 🚀 Overview
+## 🎯 Overview
 
-**Elegance EMS** is a comprehensive, full-stack Employee Management System designed for modern organizations. Built with a sleek dark-themed UI, it provides complete control over employee data, attendance tracking, leave management, and internal communications.
+Elegance EMS is a comprehensive employee management platform designed for modern organizations. It combines a sleek dark-themed UI with enterprise-grade security features, providing complete control over employee data, attendance tracking, leave management, and internal communications.
 
-### ✨ Key Features
+### Key Highlights
+
+- 🔐 **Enterprise Security** — JWT authentication, password policies, session management, account lockout
+- 👥 **Role-Based Access** — 6 roles with granular permissions (Root, Admin, Manager, HR, Team Lead, Developer)
+- 📊 **Real-Time Analytics** — Interactive dashboards with live statistics and visualizations
+- 💬 **Internal Communication** — WhatsApp-style messaging with real-time updates
+- 📱 **Responsive Design** — Optimized for desktop, tablet, and mobile devices
+- ⚡ **Modern Stack** — React 18, Vite, Express, PostgreSQL
+
+---
+
+## ✨ Features
+
+### Authentication & Security
 
 | Feature | Description |
 |---------|-------------|
-| 🔐 **Secure Authentication** | JWT-based login with bcrypt password hashing |
-| 👥 **Role-Based Access** | 6 roles: Root, Admin, Manager, Team Lead, HR, Developer |
-| 📊 **Interactive Dashboard** | Real-time statistics with beautiful charts |
-| 📋 **Employee Management** | Complete CRUD operations with profile management |
-| ✅ **Attendance Tracking** | Auto check-in on login, check-out on logout, manual entry |
-| 🏖️ **Leave Management** | Request, approve, reject with balance tracking |
-| 📢 **Announcements** | Company-wide announcements and updates |
-| 💬 **Internal Chat** | WhatsApp-style messaging with background logo |
-| 🎉 **Celebrations** | Birthday and work anniversary alerts |
-| 📅 **Holiday Calendar** | Track company holidays and events |
-| 📝 **Activity Logs** | Complete audit trail of all actions |
-| 🔔 **Notifications** | Real-time in-app notifications |
-| 📱 **Responsive Design** | Works on desktop, tablet, and mobile |
-| ⚡ **Skeleton Loading** | Smooth loading states for better UX |
+| JWT Authentication | Secure token-based authentication with refresh tokens |
+| Password Complexity | Enforced complexity rules for admin roles (8+ chars, uppercase, lowercase, numbers, special chars) |
+| Password Expiry | Auto-expiry after 90 days for admin accounts |
+| Password History | Prevents reuse of last 5 passwords |
+| Account Lockout | 5 failed attempts triggers 15-minute lockout |
+| Session Management | Track, view, and terminate active sessions across devices |
+| Remember Me | Extended 30-day sessions with secure token storage |
+
+### Core Modules
+
+| Module | Features |
+|--------|----------|
+| **Dashboard** | Real-time statistics, charts, celebrations, notifications |
+| **Employees** | Complete CRUD, search, filter, export to Excel, profile management |
+| **Attendance** | Auto check-in/out, manual entry, calendar view, status tracking |
+| **Leave Management** | Request, approve, reject, balance tracking, overlap prevention |
+| **Announcements** | Create, prioritize, broadcast company-wide updates |
+| **Internal Chat** | Direct messages, group chats, emoji support, real-time updates |
+| **Holidays** | Manage company holidays, calendar integration |
+| **Activity Logs** | Complete audit trail of all system actions |
+| **Notifications** | Real-time in-app notifications with read/unread tracking |
+
+### User Experience
+
+| Feature | Description |
+|---------|-------------|
+| Cinematic Loader | Premium animated loading screen with progress indicator |
+| Skeleton Loading | Smooth skeleton screens while data fetches |
+| Dark Theme | Modern sleek dark-themed UI |
+| Responsive Design | Fully responsive across all devices |
+| Toast Notifications | Non-intrusive feedback system |
+| Excel Export | Export data to Excel with one click |
 
 ---
 
-## 🔄 System Flowchart
-
-```
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                              ELEGANCE EMS - SYSTEM ARCHITECTURE                       │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-
-                                    ┌──────────────────┐
-                                    │    USER LOGIN    │
-                                    │  (JWT Auth +     │
-                                    │   Attendance)    │
-                                    └────────┬─────────┘
-                                             │
-                    ┌─────────────────────────┼─────────────────────────┐
-                    │                         │                         │
-                    ▼                         ▼                         ▼
-          ┌─────────────────┐        ┌─────────────────┐        ┌─────────────────┐
-          │  👤 EMPLOYEE   │        │   👔 MANAGER    │        │   👑 ADMIN/ROOT │
-          │  - Dashboard   │        │  - Team View    │        │  - Full Access  │
-          │  - My Profile  │        │  - Leave Approve│        │  - All Features │
-          │  - My Attendance│       │  - Reports      │        │  - User Mgmt    │
-          │  - My Leaves   │        └────────┬────────┘        └────────┬────────┘
-          │  - Chat        │                 │                         │
-          └────────┬────────┘                 │                         │
-                   │                          │                         │
-                   └──────────────────────────┴─────────────────────────┘
-                                            │
-                                            ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                    CORE MODULES                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-
-    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-    │   👥 EMPLOYEE   │    │  ✅ ATTENDANCE │    │   🏖️ LEAVE    │    │   💬 CHAT    │
-    │   MANAGEMENT   │    │   TRACKING    │    │   MANAGEMENT  │    │   MESSAGING │
-    ├──────────────┤    ├──────────────┤    ├──────────────┤    ├──────────────┤
-    │ • Add/Edit    │    │ • Check-In    │    │ • Request    │    │ • Direct Msg │
-    │ • Delete      │    │ • Check-Out    │    │ • Approve    │    │ • Group Chat│
-    │ • Search      │    │ • Auto-Login   │    │ • Reject     │    │ • Realtime   │
-    │ • Export      │    │ • Status       │    │ • Balance    │    │ • Emoji      │
-    └──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-
-    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-    │   📢 ANNOUNCE   │    │   📅 HOLIDAY  │    │   🎉 EVENTS   │    │   📝 LOGS    │
-    │   MENTS        │    │   CALENDAR   │    │   (Birthday)  │    │   ACTIVITY   │
-    ├──────────────┤    ├──────────────┤    ├──────────────┤    ├──────────────┤
-    │ • Create      │    │ • Add Holiday│    │ • Birthday   │    │ • Login Logs │
-    │ • Delete      │    │ • View Cal   │    │ • Anniversary│    │ • Actions    │
-    │ • Priority    │    │ • Mark Event │    │ • Reminders  │    │ • Audit Trail│
-    └──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                    DATA FLOW                                         │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-
-    ┌─────────────┐      ┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-    │   FRONTEND  │─────▶│    EXPRESS  │─────▶│   Knex.js   │─────▶│   SQLite    │
-    │   (React)   │◀─────│   (Node.js) │◀─────│ (Query)     │◀─────│ (Database)  │
-    └─────────────┘      └─────────────┘      └─────────────┘      └─────────────┘
-         │                      │                      │
-         │                      │                      │
-         ▼                      ▼                      ▼
-    ┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-    │   JWT Token │      │   bcrypt    │      │   Multer    │
-    │   Auth      │      │   Password  │      │   Uploads   │
-    └─────────────┘      └─────────────┘      └─────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                    USER JOURNEY                                      │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-
-    1️⃣ LOGIN ──▶ 2️⃣ DASHBOARD ──▶ 3️⃣ CHECK-IN ──▶ 4️⃣ WORK ──▶ 5️⃣ CHECK-OUT ──▶ 6️⃣ LOGOUT
-    
-    │            │            │            │            │            │
-    ▼            ▼            ▼            ▼            ▼            ▼
-    JWT Auth  Stats View  Auto Record  Chat/Task   Auto Record  Update Logs
-    + Attendance      Attendance    Leaves    Attendance    Session End
-```
-
----
-
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
 ### Frontend
-- **React 18** - Modern React with hooks
-- **Vite** - Lightning-fast build tool
-- **Tailwind CSS 3.4** - Utility-first styling
-- **Recharts** - Beautiful charts
-- **Lucide React** - Icon library
-- **React Router 6** - Client-side routing
-- **Axios** - HTTP client
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| React | 18.x | UI library |
+| Vite | 8.x | Build tool |
+| Tailwind CSS | 3.4 | Styling |
+| React Router | 6.x | Routing |
+| Recharts | 2.x | Data visualization |
+| Lucide React | Latest | Icon library |
+| Axios | Latest | HTTP client |
 
 ### Backend
-- **Node.js 22** - JavaScript runtime
-- **Express 4** - Web framework
-- **Knex.js** - SQL query builder
-- **Better-SQLite3** - SQLite for development
-- **JWT** - Token-based auth
-- **Bcrypt** - Password hashing
-- **Multer** - File uploads
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Node.js | 22.x | Runtime |
+| Express | 4.x | Web framework |
+| Knex.js | 3.x | Query builder |
+| PostgreSQL | 16.x | Production database |
+| SQLite | 3.x | Development database |
+| JWT | 9.x | Authentication |
+| Bcrypt | Latest | Password hashing |
+| Socket.io | 4.x | Real-time communication |
+| Zod | Latest | Schema validation |
 
 ---
 
-## 📦 Installation
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Node.js 18+** ([Download](https://nodejs.org/))
-- **npm** or **yarn**
+- Node.js 18+ and npm/yarn
+- PostgreSQL 14+ (for production)
+- Git
 
 ### Quick Start
 
 ```bash
-# 1. Clone the repository
+# Clone the repository
 git clone https://github.com/HarizenCodeDev/Elegance-it-geo-infotech.git
 cd Elegance-it-geo-infotech
 
-# 2. Backend Setup
+# Backend Setup
 cd server
 npm install
+cp .env.example .env  # Edit with your configuration
+npm run db:migrate
+npm run db:seed
+npm run dev
 
-# 3. Frontend Setup (new terminal)
+# Frontend Setup (new terminal)
 cd ../Frontend
 npm install
-
-# 4. Start Backend
-cd server
-npm start
-
-# 5. Start Frontend (new terminal)
-cd Frontend
 npm run dev
 ```
 
-### Access the Application
+### Access
 
 - **Frontend**: [http://localhost:5173](http://localhost:5173)
 - **Backend API**: [http://localhost:3000/api](http://localhost:3000/api)
+
+### Default Credentials
+
+After seeding:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Root | mrnobody@elegance.com | mrnobody009 |
 
 ---
 
@@ -185,289 +156,203 @@ npm run dev
 
 ```
 Elegance/
-├── 📂 server/
-│   ├── 📂 config/
-│   │   └── database.js          # Database configuration
-│   ├── 📂 controller/
-│   │   ├── authController.js     # Authentication logic
-│   │   ├── employeeController.js  # Employee CRUD
-│   │   ├── attendanceController.js
-│   │   ├── leaveController.js
-│   │   ├── chatController.js
-│   │   ├── announcementController.js
-│   │   ├── notificationController.js
-│   │   ├── holidayController.js
-│   │   ├── leaveBalanceController.js
-│   │   ├── activityLogController.js
-│   │   └── documentController.js
-│   ├── 📂 middleware/
-│   │   └── errorHandler.js       # Error logging
-│   ├── 📂 migrations/             # Database schema
-│   ├── 📂 routes/                 # API routes
-│   ├── 📂 seeds/                  # Initial data
-│   ├── 📂 uploads/                # Uploaded files
-│   ├── 📂 data/                  # SQLite database
-│   ├── 📂 logs/                  # Server logs
-│   ├── index.js                   # Entry point
-│   ├── knexfile.js              # Knex configuration
-│   ├── package.json
-│   └── .env                      # Environment variables
+├── 📂 server/                 # Express.js backend
+│   ├── 📂 config/            # Database configuration
+│   ├── 📂 controller/         # Business logic
+│   ├── 📂 middleware/         # Auth, validation, error handling
+│   ├── 📂 migrations/         # Database schema
+│   ├── 📂 routes/            # API endpoints
+│   ├── 📂 seeds/             # Initial data
+│   ├── 📂 utils/            # Helpers (Socket.io, Redis, Sentry)
+│   ├── 📂 uploads/          # File uploads
+│   ├── 📂 logs/             # Server logs
+│   └── index.js             # Entry point
 │
-└── 📂 Frontend/
+└── 📂 Frontend/             # React frontend
     ├── 📂 src/
-    │   ├── 📂 components/
-    │   │   ├── DashboardLayout.jsx
-    │   │   ├── DashboardHome.jsx
-    │   │   ├── EmployeeHome.jsx
-    │   │   ├── EmployeesList.jsx
-    │   │   ├── AttendanceList.jsx
-    │   │   ├── LeavesList.jsx
-    │   │   ├── ChatWindow.jsx
-    │   │   ├── NotificationBell.jsx
-    │   │   ├── LeaveBalance.jsx
-    │   │   ├── LeaveCalendar.jsx
-    │   │   ├── Celebrations.jsx
-    │   │   ├── HolidayManagement.jsx
-    │   │   ├── ActivityLog.jsx
-    │   │   ├── Skeleton.jsx
-    │   │   ├── VideoBackground.jsx
-    │   │   └── 📂 charts/        # Chart components
-    │   ├── 📂 pages/
-    │   │   ├── Login.jsx
-    │   │   ├── AdminDashboard.jsx
-    │   │   ├── EmployeeDashboard.jsx
-    │   │   ├── RootDashboard.jsx
-    │   │   └── ChangePassword.jsx
-    │   ├── 📂 context/
-    │   │   └── authContext.jsx
-    │   ├── 📂 utils/
-    │   │   └── excel.jsx          # Export utilities
-    │   ├── 📂 assets/
-    │   │   └── Logo/
-    │   ├── App.jsx
-    │   ├── main.jsx
-    │   └── index.css
-    ├── index.html
-    ├── package.json
-    ├── vite.config.js
-    └── .env
+    │   ├── 📂 components/    # Reusable UI components
+    │   ├── 📂 pages/        # Route pages
+    │   ├── 📂 context/      # React context
+    │   ├── 📂 assets/        # Static assets
+    │   └── App.jsx          # Root component
+    └── index.html
 ```
 
 ---
 
-## 🔗 API Endpoints
+## 🔗 API Documentation
 
-### 🔐 Authentication
+### Authentication
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/auth/login` | User login |
 | POST | `/api/auth/refresh` | Refresh token |
+| POST | `/api/auth/logout` | Logout |
+| GET | `/api/auth/profile` | Get current user |
 | PUT | `/api/auth/change-password` | Change password |
-| GET | `/api/auth/profile` | Get profile |
-| POST | `/api/auth/avatar` | Upload avatar |
 
-### 👥 Employees
+### Employees
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/employees` | List employees |
 | POST | `/api/employees` | Create employee |
+| GET | `/api/employees/:id` | Get employee |
 | PUT | `/api/employees/:id` | Update employee |
 | DELETE | `/api/employees/:id` | Delete employee |
 
-### ✅ Attendance
+### Attendance
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/attendance` | List attendance |
-| POST | `/api/attendance` | Mark attendance |
+| GET | `/api/attendance` | List attendance records |
+| POST | `/api/attendance` | Create attendance |
+| GET | `/api/attendance/my` | My attendance |
 | POST | `/api/checkin/check-in` | Check in |
 | POST | `/api/checkin/check-out` | Check out |
 
-### 🏖️ Leaves
+### Leaves
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/leaves` | List leaves |
-| POST | `/api/leaves` | Create leave |
-| PUT | `/api/leaves/:id/status` | Approve/Reject |
+| POST | `/api/leaves` | Create leave request |
+| PUT | `/api/leaves/:id/status` | Approve/reject |
 | GET | `/api/leave-balance/balance` | Get balance |
 
-### 📢 Announcements
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/announcements` | List announcements |
-| POST | `/api/announcements` | Create announcement |
-| DELETE | `/api/announcements/:id` | Delete announcement |
+### Additional Endpoints
 
-### 💬 Chat
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/chat/groups` | List groups |
-| GET | `/api/chat/:groupId` | Get messages |
-| POST | `/api/chat` | Send message |
-
-### 🔔 Notifications
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/notifications` | List notifications |
-| PUT | `/api/notifications/:id/read` | Mark as read |
-| PUT | `/api/notifications/read-all` | Mark all as read |
-
-### 📅 Holidays
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/holidays` | List holidays |
-| POST | `/api/holidays` | Create holiday |
-| DELETE | `/api/holidays/:id` | Delete holiday |
-
-### 📝 Activity Logs
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/activity-logs` | List activity logs |
+| Resource | Methods |
+|----------|---------|
+| `/api/announcements` | GET, POST, DELETE |
+| `/api/chat` | GET groups, messages, POST send |
+| `/api/notifications` | GET, PUT read |
+| `/api/holidays` | GET, POST, DELETE |
+| `/api/activity-logs` | GET |
+| `/api/auth/sessions` | GET, DELETE |
 
 ---
 
-## 👥 Role Permissions
+## 🔐 Security Architecture
 
-| Feature | Root | Admin | Manager | Team Lead | HR | Developer |
-|---------|:----:|:-----:|:-------:|:---------:|:--:|:---------:|
-| Full Dashboard | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ |
-| Manage Employees | ✅ | ✅ | ⚠️ | 👁️ | ✅ | 👁️ |
-| Mark Attendance | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ |
-| Approve Leaves | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ❌ |
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      SECURITY LAYER                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐       │
+│  │   INPUT     │  │  AUTHENTI-  │  │  AUTHORI-    │       │
+│  │  VALIDATION │  │   CATION    │  │   ZATION    │       │
+│  │  (Zod)     │  │   (JWT)     │  │  (RBAC)     │       │
+│  └─────────────┘  └─────────────┘  └─────────────┘       │
+│                                                             │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐       │
+│  │  PASSWORD   │  │  SESSION    │  │   RATE      │       │
+│  │   (bcrypt) │  │ MANAGEMENT   │  │  LIMITING   │       │
+│  │  12 rounds  │  │  (Redis)    │  │  (express)  │       │
+│  └─────────────┘  └─────────────┘  └─────────────┘       │
+│                                                             │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐       │
+│  │   HTTPS     │  │   HELMET    │  │   ERROR     │       │
+│  │  (SSL/TLS) │  │  (Headers)  │  │  HANDLING   │       │
+│  └─────────────┘  └─────────────┘  └─────────────┘       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Role Permissions Matrix
+
+| Feature | Root | Admin | Manager | HR | Team Lead | Developer |
+|---------|:----:|:-----:|:-------:|:--:|:---------:|:---------:|
+| Full Dashboard | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Manage Employees | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Approve Leaves | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| View Activity Logs | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
 | Manage Holidays | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
-| View Activity Logs | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
-| Manage Announcements | ✅ | ✅ | ✅ | ⚠️ | ✅ | ❌ |
-| Chat | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-
-> ✅ Full Access | ⚠️ Limited | 👁️ View Only | ❌ No Access
+| Password Reset | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
-## ⚙️ Environment Configuration
+## 🌐 Deployment
 
-### Server (.env)
-
-```env
-# Server Configuration
-PORT=3000
-NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
-
-# Database (Development - SQLite)
-DB_TYPE=sqlite
-
-# Database (Production - PostgreSQL)
-# DB_URL=postgresql://user:pass@host:5432/dbname
-
-# JWT Configuration
-JWT_SECRET=your-super-secret-key-min-32-chars
-JWT_EXPIRES_IN=7d
-
-# Default Admin User
-DEFAULT_EMAIL=admin@elegance.com
-DEFAULT_PASSWORD=admin123
-DEFAULT_NAME=Mr.Nobody
-```
-
-### Frontend (.env)
-
-```env
-VITE_API_BASE_URL=http://localhost:3000
-```
-
----
-
-## 🎨 Dashboard Features
-
-### Admin Dashboard
-- 📊 Total employees, present/absent counts
-- 📈 Employee distribution by role (bar chart)
-- 🥧 Attendance pie chart
-- 🏖️ Leave balance display
-- 📅 Leave calendar with holidays
-- 🎉 Upcoming birthdays & anniversaries
-- 🔔 Notification bell with unread count
-
-### Employee Dashboard
-- 📊 Personal attendance statistics
-- 📈 Weekly attendance chart
-- 🏖️ Individual leave balance
-- 📋 Pending leave requests
-
----
-
-## 🔧 Troubleshooting
-
-### Database Connection Issues
+### Docker
 
 ```bash
-# For SQLite (development)
-# No additional setup needed!
-
-# For PostgreSQL (production)
-# 1. Ensure PostgreSQL is running
-# 2. Check DB_URL in .env
-# 3. Verify database exists
+# Build and run with Docker Compose
+docker-compose up -d
 ```
 
-### Port Already in Use
+### PM2 (Production)
 
 ```bash
-# Find and kill the process
-lsof -i :3000
-kill -9 <PID>
-```
-
-### CORS Errors
-
-Update `FRONTEND_URL` in server `.env`:
-```env
-FRONTEND_URL=http://localhost:5173
-```
-
----
-
-## 📈 Performance Optimizations
-
-| Optimization | Description |
-|--------------|-------------|
-| 🚀 Code Splitting | Lazy loading routes with React.lazy() |
-| 📦 Chunking | Separate vendor bundles (React, Charts, Utils) |
-| 🎬 Video Lazy Load | Video background loads on demand |
-| 📊 Chart Lazy Load | Charts load only when needed |
-| 📥 Excel Lazy Load | xlsx library loads only on export |
-| ⏳ Skeleton Loading | Beautiful loading states |
-
----
-
-## 🚀 Production Deployment
-
-### Build Frontend
-
-```bash
-cd Frontend
-npm run build
-# Output in dist/ folder
-```
-
-### Deploy with PM2
-
-```bash
+# Backend
 cd server
-npm install -g pm2
-pm2 start index.js --name elegance-server
-pm2 save
-pm2 startup
+pm2 start index.js --name elegance-backend
+
+# Frontend (after build)
+pm2 serve dist/ --name elegance-frontend --port 5173
+```
+
+### Environment Variables
+
+```env
+# Server (.env)
+PORT=3000
+NODE_ENV=production
+FRONTEND_URL=https://your-domain.com
+DB_URL=postgresql://user:pass@host:5432/elegance_ems
+JWT_SECRET=your-super-secret-key-min-32-chars
+PASSWORD_EXPIRY_DAYS=90
+MAX_LOGIN_ATTEMPTS=5
+LOCKOUT_DURATION_MINUTES=15
+
+# Frontend (.env)
+VITE_API_BASE_URL=https://api.your-domain.com
 ```
 
 ---
 
-## 📄 License
+## 🧪 Testing
 
-This project is licensed under the **MIT License**.
+```bash
+# Run all tests
+npm test
+
+# E2E tests with Playwright
+npx playwright test
+
+# Backend unit tests
+cd server && npm test
+
+# Frontend component tests
+cd Frontend && npm run test
+```
+
+---
+
+## 📈 Performance
+
+| Optimization | Implementation |
+|--------------|----------------|
+| Code Splitting | React.lazy() for route-based loading |
+| Bundle Optimization | Separate vendor chunks (React, Charts, Utils) |
+| Lazy Loading | Charts, Excel export loaded on demand |
+| Skeleton Screens | Smooth loading states with shimmer animation |
+| Caching | Redis session storage |
+| Compression | Gzip compression enabled |
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 ## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -477,8 +362,10 @@ This project is licensed under the **MIT License**.
 
 ---
 
-<p align="center">
-  <strong>Built with ❤️ by <a href="https://github.com/HarizenCodeDev">HarizenCodeDev</a></strong>
-  <br>
-  <sub>© 2026 Elegance IT & Geo Synergy. All rights reserved.</sub>
-</p>
+<div align="center">
+
+### Built with ❤️ by [HarizenCodeDev](https://github.com/HarizenCodeDev)
+
+**© 2026 Elegance IT & Geo Synergy. All rights reserved.**
+
+</div>

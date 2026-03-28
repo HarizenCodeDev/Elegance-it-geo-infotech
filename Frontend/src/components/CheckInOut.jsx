@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Download, LogIn, LogOut, Clock, CheckCircle, AlertCircle } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { Skeleton, SkeletonTable } from "./Skeleton";
+import API_BASE from "../config/api.js";
 
 const CheckInOut = () => {
   const [records, setRecords] = useState([]);
@@ -17,18 +17,19 @@ const CheckInOut = () => {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const today = new Date().toISOString().split("T")[0];
-      const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
+      const today = new Date();
+      const todayStr = today.toISOString().split("T")[0];
+      const firstDayOfYear = `${today.getFullYear()}-01-01`;
       const timestamp = Date.now();
 
       const res = await axios.get(`${API_BASE}/api/attendance/my`, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { from: firstDayOfMonth, to: today, _t: timestamp },
+        params: { from: firstDayOfYear, to: todayStr, _t: timestamp },
       });
 
       setRecords(res.data.records || []);
 
-      const todayRecords = (res.data.records || []).filter(r => r.date === today);
+      const todayRecords = (res.data.records || []).filter(r => r.date === todayStr);
       const todaySessions = todayRecords.flatMap(r => r.sessions || []);
       setTodayStats({
         checkinCount: todaySessions.filter(s => s.checkInAt).length,
@@ -200,8 +201,8 @@ const CheckInOut = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
-                    Loading...
+                  <td colSpan={6} className="px-4 py-8 text-center">
+                    <SkeletonTable rows={5} cols={6} />
                   </td>
                 </tr>
               ) : records.length === 0 ? (

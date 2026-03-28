@@ -57,38 +57,118 @@ const createOrUpdateAttendanceOnLogin = async (userId, action = "checkin") => {
 
 const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     const ip = req.ip || req.connection.remoteAddress;
     const userAgent = req.get("user-agent") || "Unknown";
+    const now = new Date();
 
-    const user = await db("users").where("email", email.toLowerCase()).first();
+    // Allow login with email or employee_id
+    let user;
+    if (email.includes('@')) {
+      user = await db("users").where("email", email.toLowerCase()).first();
+    } else {
+      user = await db("users").where("employee_id", email.toUpperCase()).first();
+    }
 
     if (!user) {
+      await db("login_attempts").insert({
+        email: email,
+        ip_address: ip,
+        user_agent: userAgent,
+        success: false,
+        failure_reason: "user_not_found",
+      });
       return res.status(401).json({
         success: false,
-        error: "Invalid email or password",
+        error: "Invalid credentials",
+      });
+    }
+
+    // Check if account is locked
+    if (user.locked_until && new Date(user.locked_until) > now) {
+      await db("login_attempts").insert({
+        email: email,
+        ip_address: ip,
+        user_agent: userAgent,
+        success: false,
+        failure_reason: "account_locked",
+      });
+      return res.status(423).json({
+        success: false,
+        error: "Account is temporarily locked",
+        lockedUntil: user.locked_until,
+      });
+    }
+
+    // Check if account is active
+    if (user.is_active === false) {
+      return res.status(403).json({
+        success: false,
+        error: "Account is deactivated. Contact administrator.",
       });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      await db("login_logs").insert({
-        user_id: user.id,
+      const failedAttempts = (user.failed_attempts || 0) + 1;
+      const lockUntil = failedAttempts >= 5 ? new Date(now.getTime() + 15 * 60 * 1000) : null;
+
+      await db("users").where("id", user.id).update({
+        failed_attempts: failedAttempts,
+        locked_until: lockUntil,
+      });
+
+      await db("login_attempts").insert({
+        email: email,
         ip_address: ip,
         user_agent: userAgent,
-        status: "failed",
+        success: false,
+        failure_reason: "invalid_password",
       });
+
+      if (lockUntil) {
+        return res.status(423).json({
+          success: false,
+          error: "Too many failed attempts. Account locked for 15 minutes.",
+          lockedUntil: lockUntil,
+        });
+      }
+
       return res.status(401).json({
         success: false,
-        error: "Invalid email or password",
+        error: `Invalid credentials. ${5 - failedAttempts} attempts remaining.`,
       });
     }
 
+    // Check password expiry (90 days for admin roles)
+    const adminRoles = ["root", "admin", "manager", "hr"];
+    let mustChangePassword = false;
+    let passwordExpiring = false;
+
+    if (adminRoles.includes(user.role)) {
+      const passwordExpiresAt = user.password_expires_at || new Date(new Date(user.created_at).getTime() + 90 * 24 * 60 * 60 * 1000);
+      
+      if (new Date(passwordExpiresAt) < now) {
+        mustChangePassword = true;
+      } else if (new Date(passwordExpiresAt) < new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)) {
+        passwordExpiring = true;
+      }
+    }
+
+    // Reset failed attempts on successful login
+    await db("users").where("id", user.id).update({
+      failed_attempts: 0,
+      locked_until: null,
+      last_login_at: now,
+      login_count: (user.login_count || 0) + 1,
+    });
+
+    const tokenExpiry = rememberMe ? "30d" : config.JWT_EXPIRES_IN;
     const token = jwt.sign(
       { _id: user.id, role: user.role },
       config.JWT_SECRET,
-      { expiresIn: config.JWT_EXPIRES_IN }
+      { expiresIn: tokenExpiry }
     );
 
     const refreshToken = jwt.sign(
@@ -97,6 +177,20 @@ const login = async (req, res, next) => {
       { expiresIn: "30d" }
     );
 
+    // Create session record
+    const expiresAt = new Date(now.getTime() + (rememberMe ? 30 : 7) * 24 * 60 * 60 * 1000);
+    const deviceType = userAgent.toLowerCase().includes("mobile") ? "mobile" : "desktop";
+    
+    await db("login_sessions").insert({
+      user_id: user.id,
+      token_hash: crypto.createHash("sha256").update(token).digest("hex"),
+      ip_address: ip,
+      user_agent: userAgent,
+      device_type: deviceType,
+      expires_at: expiresAt,
+      remember_me: rememberMe || false,
+    });
+
     await db("login_logs").insert({
       user_id: user.id,
       ip_address: ip,
@@ -104,15 +198,23 @@ const login = async (req, res, next) => {
       status: "success",
     });
 
+    await db("login_attempts").insert({
+      email: email,
+      ip_address: ip,
+      user_agent: userAgent,
+      success: true,
+    });
+
     await createOrUpdateAttendanceOnLogin(user.id, "checkin");
-    
-    await logActivity(user.id, "login", "auth", user.id, { email: user.email }, ip);
+    await logActivity(user.id, "login", "auth", user.id, { email: user.email, device: deviceType }, ip);
 
     res.json({
       success: true,
       token,
       refreshToken,
-      expiresIn: "7d",
+      expiresIn: tokenExpiry,
+      mustChangePassword,
+      passwordExpiring,
       user: {
         _id: user.id,
         name: user.name,
@@ -389,10 +491,22 @@ const exportLoginLogsExcel = async (req, res, next) => {
   }
 };
 
+const validatePasswordComplexity = (password) => {
+  const errors = [];
+  if (password.length < 8) errors.push("at least 8 characters");
+  if (!/[a-z]/.test(password)) errors.push("one lowercase letter");
+  if (!/[A-Z]/.test(password)) errors.push("one uppercase letter");
+  if (!/\d/.test(password)) errors.push("one number");
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) errors.push("one special character");
+  return errors;
+};
+
 const changePassword = async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = req.body;
     const userId = req.user._id;
+    const adminRoles = ["root", "admin", "manager", "hr"];
+    const user = await db("users").where("id", userId).first();
 
     if (!oldPassword || !newPassword) {
       return res.status(400).json({
@@ -400,15 +514,6 @@ const changePassword = async (req, res, next) => {
         error: "Old password and new password are required",
       });
     }
-
-    if (newPassword.length < 6) {
-      return res.status(400).json({
-        success: false,
-        error: "New password must be at least 6 characters",
-      });
-    }
-
-    const user = await db("users").where("id", userId).first();
 
     if (!user) {
       return res.status(404).json({
@@ -426,6 +531,114 @@ const changePassword = async (req, res, next) => {
       });
     }
 
+    // Password complexity validation for admin roles
+    if (adminRoles.includes(user.role)) {
+      const complexityErrors = validatePasswordComplexity(newPassword);
+      if (complexityErrors.length > 0) {
+        return res.status(400).json({
+          success: false,
+          error: `Password must contain: ${complexityErrors.join(", ")}`,
+        });
+      }
+    } else {
+      if (newPassword.length < 6) {
+        return res.status(400).json({
+          success: false,
+          error: "Password must be at least 6 characters",
+        });
+      }
+    }
+
+    // Check against password history (last 5 passwords)
+    const recentPasswords = await db("password_history")
+      .where("user_id", userId)
+      .orderBy("created_at", "desc")
+      .limit(5)
+      .select("password_hash");
+
+    for (const record of recentPasswords) {
+      if (await bcrypt.compare(newPassword, record.password_hash)) {
+        return res.status(400).json({
+          success: false,
+          error: "Cannot reuse any of your last 5 passwords",
+        });
+      }
+    }
+
+    // Save old password to history
+    await db("password_history").insert({
+      user_id: userId,
+      reset_by: userId,
+      password_hash: user.password,
+    });
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+    const passwordExpiresAt = adminRoles.includes(user.role) 
+      ? new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+      : null;
+
+    await db("users")
+      .where("id", userId)
+      .update({
+        password: hashedNewPassword,
+        must_change_password: false,
+        password_expires_at: passwordExpiresAt,
+        updated_at: db.fn.now(),
+      });
+
+    res.json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetUserPassword = async (req, res, next) => {
+  try {
+    const { userId, newPassword } = req.body;
+    const requestingUserId = req.user._id;
+    const requestingUserRole = req.user.role;
+
+    // Only root can reset other users' passwords
+    if (requestingUserRole !== "root") {
+      return res.status(403).json({
+        success: false,
+        error: "Only root user can reset other users' passwords",
+      });
+    }
+
+    if (!userId || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID and new password are required",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must be at least 6 characters",
+      });
+    }
+
+    const user = await db("users").where("id", userId).first();
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found",
+      });
+    }
+
+    // Save old password to history
+    await db("password_history").insert({
+      user_id: userId,
+      reset_by: requestingUserId,
+      password_hash: user.password,
+    });
+
     const hashedNewPassword = await bcrypt.hash(newPassword, 12);
 
     await db("users")
@@ -435,9 +648,105 @@ const changePassword = async (req, res, next) => {
         updated_at: db.fn.now(),
       });
 
+    // Log the activity
+    await logActivity(requestingUserId, "reset_password", "auth", userId, { 
+      targetUser: user.name, 
+      targetEmail: user.email 
+    }, req.ip);
+
     res.json({
       success: true,
-      message: "Password changed successfully",
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPasswordHistory = async (req, res, next) => {
+  try {
+    const requestingUserId = req.user._id;
+    const requestingUserRole = req.user.role;
+    const { userId } = req.query;
+
+    // Only root can view password history
+    if (requestingUserRole !== "root") {
+      return res.status(403).json({
+        success: false,
+        error: "Only root user can view password history",
+      });
+    }
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID is required",
+      });
+    }
+
+    const history = await db("password_history")
+      .where("user_id", userId)
+      .orderBy("created_at", "desc")
+      .limit(10);
+
+    const user = await db("users").where("id", userId).first();
+
+    res.json({
+      success: true,
+      user: user ? {
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        employeeId: user.employee_id,
+      } : null,
+      history: history.map(h => ({
+        _id: h.id,
+        changedAt: h.created_at,
+      })),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllPasswordHistory = async (req, res, next) => {
+  try {
+    const requestingUserRole = req.user.role;
+
+    // Only root can view password history
+    if (requestingUserRole !== "root") {
+      return res.status(403).json({
+        success: false,
+        error: "Only root user can view password history",
+      });
+    }
+
+    const history = await db("password_history")
+      .join("users as u", "password_history.user_id", "u.id")
+      .leftJoin("users as rb", "password_history.reset_by", "rb.id")
+      .select(
+        "password_history.id",
+        "password_history.created_at",
+        "u.name as user_name",
+        "u.email as user_email",
+        "u.employee_id",
+        "rb.name as reset_by_name"
+      )
+      .orderBy("password_history.created_at", "desc")
+      .limit(100);
+
+    res.json({
+      success: true,
+      history: history.map(h => ({
+        _id: h.id,
+        user: {
+          name: h.user_name,
+          email: h.user_email,
+          employeeId: h.employee_id,
+        },
+        resetBy: h.reset_by_name,
+        changedAt: h.created_at,
+      })),
     });
   } catch (error) {
     next(error);
@@ -623,4 +932,106 @@ const getProfile = async (req, res, next) => {
   }
 };
 
-export { login, logout, refreshAccessToken, changePassword, forgotPassword, resetPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel };
+const getSessions = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const currentToken = req.headers.authorization?.replace("Bearer ", "");
+    const currentTokenHash = currentToken ? crypto.createHash("sha256").update(currentToken).digest("hex") : null;
+
+    const sessions = await db("login_sessions")
+      .where("user_id", userId)
+      .where("is_active", true)
+      .where("expires_at", ">", new Date())
+      .orderBy("last_active_at", "desc");
+
+    res.json({
+      success: true,
+      sessions: sessions.map(s => ({
+        _id: s.id,
+        device: s.device_type === "mobile" ? "Mobile Device" : "Desktop",
+        browser: s.user_agent?.split(" ").slice(0, 2).join(" ") || "Unknown",
+        location: s.location || "Unknown",
+        ipAddress: s.ip_address,
+        deviceType: s.device_type,
+        loginAt: s.login_at,
+        lastActiveAt: s.last_active_at,
+        isCurrent: s.token_hash === currentTokenHash,
+      })),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const terminateSession = async (req, res, next) => {
+  try {
+    const { sessionId } = req.params;
+    const userId = req.user._id;
+
+    const session = await db("login_sessions")
+      .where("id", sessionId)
+      .where("user_id", userId)
+      .first();
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        error: "Session not found",
+      });
+    }
+
+    await db("login_sessions")
+      .where("id", sessionId)
+      .update({ is_active: false });
+
+    res.json({
+      success: true,
+      message: "Session terminated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const terminateAllSessions = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const currentToken = req.headers.authorization?.replace("Bearer ", "");
+    const currentTokenHash = currentToken ? crypto.createHash("sha256").update(currentToken).digest("hex") : null;
+
+    await db("login_sessions")
+      .where("user_id", userId)
+      .where("is_active", true)
+      .where("token_hash", "!=", currentTokenHash)
+      .update({ is_active: false });
+
+    res.json({
+      success: true,
+      message: "All other sessions terminated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendLoginNotification = async (userId, ip, deviceType) => {
+  try {
+    const user = await db("users").where("id", userId).first();
+    if (!user || !user.email) return;
+
+    // Check if user has email notifications enabled
+    const preferences = await db("user_preferences").where("user_id", userId).first();
+    if (preferences && !preferences.email_notifications) return;
+
+    // For now, we'll just log this - in production, you would send an actual email
+    await logActivity(userId, "login_alert", "security", userId, {
+      ip,
+      device: deviceType,
+      type: "new_device_login",
+    }, ip);
+  } catch (error) {
+    console.error("Login notification error:", error);
+  }
+};
+
+export { login, logout, refreshAccessToken, changePassword, forgotPassword, resetPassword, uploadAvatar, getProfile, getLoginLogs, exportEmployeesExcel, exportAttendanceExcel, exportLoginLogsExcel, resetUserPassword, getPasswordHistory, getAllPasswordHistory, getSessions, terminateSession, terminateAllSessions };

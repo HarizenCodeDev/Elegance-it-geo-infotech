@@ -18,13 +18,13 @@ const createEmployee = async (req, res, next) => {
       email,
       password,
       role = "developer",
-      employeeId,
       dob,
       gender,
       maritalStatus,
       designation,
       department,
       salary,
+      branch,
     } = req.body;
 
     if (salary && (isNaN(salary) || parseFloat(salary) < 0)) {
@@ -43,47 +43,71 @@ const createEmployee = async (req, res, next) => {
     }
 
     // Check if email exists
-    const existing = await db("users").where("email", email.toLowerCase()).first();
-    if (existing) {
-      return res.status(409).json({
-        success: false,
-        error: "Email already exists",
-      });
-    }
-
-    // Check employee ID uniqueness - auto-generate if not provided
-    let finalEmployeeId = employeeId;
-    if (!finalEmployeeId) {
-      const lastUser = await db("users")
-        .whereNotNull("employee_id")
-        .where("employee_id", "like", "EMP%")
-        .orderBy("employee_id", "desc")
-        .first();
-      
-      if (lastUser && lastUser.employee_id) {
-        const num = parseInt(lastUser.employee_id.replace("EMP", "")) + 1;
-        finalEmployeeId = `EMP${num.toString().padStart(3, "0")}`;
-      } else {
-        finalEmployeeId = "EMP001";
-      }
-    } else {
-      const existingId = await db("users").where("employee_id", employeeId).first();
-      if (existingId) {
+    if (email) {
+      const existing = await db("users").where("email", email.toLowerCase()).first();
+      if (existing) {
         return res.status(409).json({
           success: false,
-          error: "Employee ID already exists",
+          error: "Email already exists",
         });
       }
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // Branch-based employee ID generation: Prefix + HexCode + Sequential Number
+    const BRANCH_CONFIG = {
+      bengaluru: { prefix: "EJB", hexCode: "68617269" },  // "hari"
+      krishnagiri: { prefix: "EJK", hexCode: "68617269" },
+    };
+    
+    let finalEmployeeId;
+    let branchDepartment = department || "";
+    
+    if (branch && BRANCH_CONFIG[branch]) {
+      const { prefix, hexCode } = BRANCH_CONFIG[branch];
+      
+      // Find last employee with this prefix+hexcode pattern
+      const lastUser = await db("users")
+        .whereNotNull("employee_id")
+        .where("employee_id", "like", `${prefix}${hexCode}%`)
+        .orderBy("employee_id", "desc")
+        .first();
+      
+      if (lastUser && lastUser.employee_id) {
+        const currentNum = parseInt(lastUser.employee_id.replace(`${prefix}${hexCode}`, ""));
+        finalEmployeeId = `${prefix}${hexCode}${(currentNum + 1).toString().padStart(3, "0")}`;
+      } else {
+        finalEmployeeId = `${prefix}${hexCode}001`;
+      }
+      
+      if (!department) {
+        branchDepartment = branch.charAt(0).toUpperCase() + branch.slice(1);
+      }
+    } else {
+      // Default: auto-generate with EJB prefix
+      const defaultPrefix = "EJB";
+      const defaultHex = "68617269";
+      
+      const lastUser = await db("users")
+        .whereNotNull("employee_id")
+        .where("employee_id", "like", `${defaultPrefix}${defaultHex}%`)
+        .orderBy("employee_id", "desc")
+        .first();
+      
+      if (lastUser && lastUser.employee_id) {
+        const currentNum = parseInt(lastUser.employee_id.replace(`${defaultPrefix}${defaultHex}`, ""));
+        finalEmployeeId = `${defaultPrefix}${defaultHex}${(currentNum + 1).toString().padStart(3, "0")}`;
+      } else {
+        finalEmployeeId = `${defaultPrefix}${defaultHex}001`;
+      }
+    }
 
+    const hashedPassword = await bcrypt.hash(password, 12);
     const profileImage = req.file ? await uploadFile(req.file, "profiles") : null;
 
     const [user] = await db("users")
       .insert({
         name,
-        email: email.toLowerCase(),
+        email: email ? email.toLowerCase() : null,
         password: hashedPassword,
         role,
         employee_id: finalEmployeeId,
@@ -91,7 +115,7 @@ const createEmployee = async (req, res, next) => {
         gender: gender || null,
         marital_status: maritalStatus || null,
         designation: designation || null,
-        department: department || null,
+        department: branchDepartment || null,
         salary: salary ? parseFloat(salary) : null,
         profile_image: profileImage,
       })

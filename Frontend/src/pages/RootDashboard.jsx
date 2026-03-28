@@ -16,9 +16,24 @@ import LeaveCalendar from "../components/LeaveCalendar";
 import ActivityLog from "../components/ActivityLog";
 import CheckInOut from "../components/CheckInOut";
 import LoginLogs from "../components/LoginLogs";
+import PasswordResetManager from "../components/PasswordResetManager";
+import SessionManagement from "../components/SessionManagement";
+import { 
+  SkeletonDashboardHome, 
+  SkeletonEmployeesList, 
+  SkeletonLeavesList,
+  SkeletonLeaveCalendar,
+  SkeletonAttendance,
+  SkeletonProfileEdit,
+  SkeletonAddEmployee,
+  SkeletonHolidays,
+  SkeletonAnnouncementsList,
+  SkeletonChat,
+  SkeletonTable,
+  SkeletonList,
+} from "../components/skeletons";
 import axios from "axios";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const RootDashboard = () => {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -77,7 +92,33 @@ const RootDashboard = () => {
     fetchStats();
   }, []);
 
+  const getSkeletonForView = (view) => {
+    const skeletonMap = {
+      dashboard: <SkeletonDashboardHome />,
+      employeesList: <SkeletonEmployeesList />,
+      addEmployee: <SkeletonAddEmployee />,
+      editEmployee: <SkeletonAddEmployee />,
+      employeeDetails: <SkeletonProfileEdit />,
+      leaves: <SkeletonLeavesList />,
+      leaveCalendar: <SkeletonLeaveCalendar />,
+      attendance: <SkeletonAttendance />,
+      attendanceManage: <SkeletonAttendance />,
+      profileEdit: <SkeletonProfileEdit />,
+      holidays: <SkeletonHolidays />,
+      announcementsList: <SkeletonAnnouncementsList />,
+      addAnnouncement: <SkeletonProfileEdit />,
+      activityLogs: <SkeletonTable rows={8} cols={5} />,
+      loginLogs: <SkeletonTable rows={8} cols={4} />,
+      passwordReset: <SkeletonList items={5} />,
+      sessions: <SkeletonList items={5} />,
+      checkin: <SkeletonAttendance />,
+    };
+    return skeletonMap[view] || <SkeletonDashboardHome />;
+  };
+
   const renderContent = () => {
+    const skeleton = getSkeletonForView(currentView);
+
     switch (currentView) {
       case "profileEdit":
         return <ProfileEdit onDone={() => setCurrentView("dashboard")} />;
@@ -136,6 +177,10 @@ const RootDashboard = () => {
         return <AnnouncementsList />;
       case "loginLogs":
         return <LoginLogs />;
+      case "passwordReset":
+        return <PasswordResetManager />;
+      case "sessions":
+        return <SessionManagement />;
       default:
         return <DashboardHome stats={stats} loading={loadingStats} />;
     }
@@ -147,9 +192,9 @@ const RootDashboard = () => {
       setCurrentView={setCurrentView}
       chatOpen={chatOpen}
       setChatOpen={setChatOpen}
-      ChatComponent={<ChatWindow />}
+      ChatComponent={loadingStats ? <SkeletonChat /> : <ChatWindow />}
     >
-      {renderContent()}
+      {loadingStats ? getSkeletonForView(currentView) : renderContent()}
     </DashboardLayout>
   );
 };

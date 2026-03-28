@@ -3,8 +3,8 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
 import { Clock, CheckCircle, XCircle, AlertCircle, LogIn, LogOut } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { Skeleton, SkeletonTable } from "./Skeleton";
+import API_BASE from "../config/api.js";
 
 const EmployeeAttendanceView = () => {
   const { user } = useAuth();
@@ -92,9 +92,7 @@ const EmployeeAttendanceView = () => {
         <div className="text-center">
           <h2 className="text-xl font-semibold text-white">My Attendance</h2>
         </div>
-        <div className="h-48 flex items-center justify-center">
-          <p className="text-slate-400">Loading...</p>
-        </div>
+        <SkeletonTable rows={10} cols={6} />
       </div>
     );
   }

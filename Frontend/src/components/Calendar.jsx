@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Calendar as CalIcon } from "lucide-react";
 import axios from "axios";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { Skeleton } from "./Skeleton";
+import API_BASE from "../config/api.js";
 
 const Calendar = ({ onDateClick }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -143,49 +143,60 @@ const Calendar = ({ onDateClick }) => {
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1">
-        {days.map((date, idx) => {
-          const events = getEventsForDate(date);
-          const todayClass = isToday(date) ? "ring-2 ring-indigo-500" : "";
-
-          return (
-            <div
-              key={idx}
-              onClick={() => date && onDateClick?.(date)}
-              className={`
-                min-h-[48px] p-1 rounded-lg border border-transparent
-                ${date ? "hover:bg-slate-700/50 cursor-pointer" : ""}
-                ${todayClass}
-                ${date && isToday(date) ? "bg-indigo-500/20" : ""}
-              `}
-            >
-              {date && (
-                <>
-                  <div className={`text-xs font-medium ${isToday(date) ? "text-indigo-400" : "text-slate-300"}`}>
-                    {date.getDate()}
-                  </div>
-                  <div className="space-y-0.5 mt-0.5">
-                    {events.slice(0, 2).map((event, i) => (
-                      <div
-                        key={i}
-                        className={`text-[10px] px-1 py-0.5 rounded truncate text-white ${event.color}`}
-                        title={event.title}
-                      >
-                        {event.title}
-                      </div>
-                    ))}
-                    {events.length > 2 && (
-                      <div className="text-[10px] text-slate-400">
-                        +{events.length - 2} more
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
+      {loading ? (
+        <div className="grid grid-cols-7 gap-1">
+          {[...Array(35)].map((_, i) => (
+            <div key={i} className="min-h-[48px] p-1 rounded-lg border border-transparent">
+              <Skeleton variant="text" className="w-6 h-4 mx-auto" />
+              <Skeleton variant="text" className="w-full h-3 mt-1" />
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-7 gap-1">
+          {days.map((date, idx) => {
+            const events = getEventsForDate(date);
+            const todayClass = isToday(date) ? "ring-2 ring-indigo-500" : "";
+
+            return (
+              <div
+                key={idx}
+                onClick={() => date && onDateClick?.(date)}
+                className={`
+                  min-h-[48px] p-1 rounded-lg border border-transparent
+                  ${date ? "hover:bg-slate-700/50 cursor-pointer" : ""}
+                  ${todayClass}
+                  ${date && isToday(date) ? "bg-indigo-500/20" : ""}
+                `}
+              >
+                {date && (
+                  <>
+                    <div className={`text-xs font-medium ${isToday(date) ? "text-indigo-400" : "text-slate-300"}`}>
+                      {date.getDate()}
+                    </div>
+                    <div className="space-y-0.5 mt-0.5">
+                      {events.slice(0, 2).map((event, i) => (
+                        <div
+                          key={i}
+                          className={`text-[10px] px-1 py-0.5 rounded truncate text-white ${event.color}`}
+                          title={event.title}
+                        >
+                          {event.title}
+                        </div>
+                      ))}
+                      {events.length > 2 && (
+                        <div className="text-[10px] text-slate-400">
+                          +{events.length - 2} more
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <div className="mt-4 flex flex-wrap gap-3 text-xs">
         <div className="flex items-center gap-1.5">

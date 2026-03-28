@@ -58,7 +58,19 @@ const requireRole = (...allowedRoles) => {
       });
     }
 
-    const userRole = req.user.role;
+    const userRole = req.user.role || req.user.user?.role;
+    
+    if (!userRole) {
+      return res.status(401).json({
+        success: false,
+        error: "User role not found.",
+      });
+    }
+    
+    // Root always has access
+    if (userRole === "root") {
+      return next();
+    }
     
     if (!allowedRoles.includes(userRole)) {
       return res.status(403).json({
@@ -80,7 +92,14 @@ const requireMinRole = (minRole) => {
       });
     }
 
-    const userLevel = ROLE_HIERARCHY[req.user.role] || 0;
+    const userRole = req.user.role || req.user.user?.role;
+    
+    // Root always has access
+    if (userRole === "root") {
+      return next();
+    }
+    
+    const userLevel = ROLE_HIERARCHY[userRole] || 0;
     const requiredLevel = ROLE_HIERARCHY[minRole] || 0;
 
     if (userLevel < requiredLevel) {
@@ -94,35 +113,34 @@ const requireMinRole = (minRole) => {
   };
 };
 
-const canManageUser = (targetUserId) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        error: "Authentication required.",
-      });
-    }
-
-    const userRole = req.user.role;
-    const isSelf = req.user._id === targetUserId;
-
-    if (userRole === ROLES.ROOT) {
-      return next();
-    }
-
-    if (userRole === ROLES.ADMIN || userRole === ROLES.MANAGER || userRole === ROLES.HR) {
-      return next();
-    }
-
-    if (isSelf) {
-      return next();
-    }
-
-    return res.status(403).json({
+const canManageUser = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
       success: false,
-      error: "Access denied. You can only manage your own profile.",
+      error: "Authentication required.",
     });
-  };
+  }
+
+  const userRole = req.user.role;
+  const targetUserId = req.params.id;
+  const isSelf = req.user._id === targetUserId;
+
+  if (userRole === ROLES.ROOT) {
+    return next();
+  }
+
+  if (userRole === ROLES.ADMIN || userRole === ROLES.MANAGER || userRole === ROLES.HR) {
+    return next();
+  }
+
+  if (isSelf) {
+    return next();
+  }
+
+  return res.status(403).json({
+    success: false,
+    error: "Access denied. You can only manage your own profile.",
+  });
 };
 
 const isAdminOrManager = requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER);

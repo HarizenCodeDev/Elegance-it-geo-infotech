@@ -48,7 +48,7 @@ const getBalances = async (req, res, next) => {
       .where("year", year)
       .orderBy("leave_type");
 
-    if (balances.length === 0 && req.params.userId) {
+    if (balances.length === 0) {
       await initializeUserBalances(userId);
       return getBalances(req, res, next);
     }

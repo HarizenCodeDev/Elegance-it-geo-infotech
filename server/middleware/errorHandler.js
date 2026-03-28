@@ -40,6 +40,13 @@ export const errorHandler = (err, req, res, next) => {
     });
   }
 
+  if (err.name === "CastError" || err.message?.includes("ObjectId") || err.message?.includes("invalid input syntax")) {
+    return res.status(404).json({
+      success: false,
+      error: "Resource not found",
+    });
+  }
+
   if (err.name === "JsonWebTokenError") {
     return res.status(401).json({
       success: false,
@@ -54,6 +61,13 @@ export const errorHandler = (err, req, res, next) => {
     });
   }
 
+  if (err.type === "entity.parse.failed") {
+    return res.status(400).json({
+      success: false,
+      error: "Invalid JSON format",
+    });
+  }
+
   if (err.code === "23505") {
     return res.status(409).json({
       success: false,
@@ -65,6 +79,27 @@ export const errorHandler = (err, req, res, next) => {
     return res.status(400).json({
       success: false,
       error: "Invalid reference",
+    });
+  }
+
+  if (err.statusCode === 400 || err.status === 400) {
+    return res.status(400).json({
+      success: false,
+      error: err.message || "Bad request",
+    });
+  }
+
+  if (err.statusCode === 404 || err.status === 404) {
+    return res.status(404).json({
+      success: false,
+      error: err.message || "Resource not found",
+    });
+  }
+
+  if (err.name === "Error" && err.message?.includes("not found")) {
+    return res.status(404).json({
+      success: false,
+      error: err.message,
     });
   }
 

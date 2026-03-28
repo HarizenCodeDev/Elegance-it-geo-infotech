@@ -3,8 +3,7 @@ import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();

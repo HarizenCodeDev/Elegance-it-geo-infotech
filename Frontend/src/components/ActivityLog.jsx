@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Activity, Filter } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { Skeleton } from "./Skeleton";
+import API_BASE from "../config/api.js";
 
 const ActivityLog = () => {
   const [logs, setLogs] = useState([]);
@@ -108,9 +108,18 @@ const ActivityLog = () => {
       </div>
 
       {loading ? (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {[...Array(10)].map((_, i) => (
-            <div key={i} className="h-16 bg-slate-800/40 rounded-xl animate-pulse" />
+            <div key={i} className="flex items-center justify-between p-3 rounded-xl border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+              <div className="flex items-center gap-3">
+                <Skeleton variant="avatar" className="h-8 w-8 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton variant="text" className="w-48" />
+                  <Skeleton variant="text" className="w-32" />
+                </div>
+              </div>
+              <Skeleton variant="text" className="w-20" />
+            </div>
           ))}
         </div>
       ) : logs.length === 0 ? (

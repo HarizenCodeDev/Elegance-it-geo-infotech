@@ -6,7 +6,7 @@ import {
   updateLeaveStatus,
   deleteLeave,
 } from "../controller/leaveController.js";
-import { validate, sanitizeInput } from "../middleware/validator.js";
+import { validate, sanitizeInput, validateUUID } from "../middleware/validator.js";
 
 const router = express.Router();
 
@@ -26,10 +26,11 @@ router.post("/", sanitizeInput, validate(createLeaveSchema), createLeave);
 router.get("/", listLeaves);
 
 router.put("/:id/status", 
+  validateUUID("id"),
   requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER), 
   updateLeaveStatus
 );
 
-router.delete("/:id", deleteLeave);
+router.delete("/:id", validateUUID("id"), deleteLeave);
 
 export default router;

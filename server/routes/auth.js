@@ -15,6 +15,12 @@ import {
   exportEmployeesExcel,
   exportAttendanceExcel,
   exportLoginLogsExcel,
+  resetUserPassword,
+  getPasswordHistory,
+  getAllPasswordHistory,
+  getSessions,
+  terminateSession,
+  terminateAllSessions,
 } from "../controller/authController.js";
 import authMiddleware, { requireRole, ROLES } from "../middleware/auth.js";
 import { validate, sanitizeInput } from "../middleware/validator.js";
@@ -38,7 +44,7 @@ const upload = multer({
 const router = express.Router();
 
 const loginSchema = {
-  email: { required: true, type: "email" },
+  email: { required: true },
   password: { required: true },
 };
 
@@ -48,7 +54,7 @@ const changePasswordSchema = {
 };
 
 const forgotPasswordSchema = {
-  email: { required: true, type: "email" },
+  email: { required: true },
 };
 
 router.post("/login", sanitizeInput, validate(loginSchema), login);
@@ -95,6 +101,40 @@ router.get("/export/login-logs",
   authMiddleware,
   requireRole(ROLES.ROOT, ROLES.ADMIN), 
   exportLoginLogsExcel
+);
+
+router.post("/reset-user-password",
+  authMiddleware,
+  requireRole(ROLES.ROOT),
+  sanitizeInput,
+  resetUserPassword
+);
+
+router.get("/password-history",
+  authMiddleware,
+  requireRole(ROLES.ROOT),
+  getPasswordHistory
+);
+
+router.get("/all-password-history",
+  authMiddleware,
+  requireRole(ROLES.ROOT),
+  getAllPasswordHistory
+);
+
+router.get("/sessions",
+  authMiddleware,
+  getSessions
+);
+
+router.delete("/sessions/:sessionId",
+  authMiddleware,
+  terminateSession
+);
+
+router.delete("/sessions",
+  authMiddleware,
+  terminateAllSessions
 );
 
 export default router;

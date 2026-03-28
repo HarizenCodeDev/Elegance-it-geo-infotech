@@ -1,21 +1,75 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Shield, Lock, User, Loader2 } from "lucide-react";
 import logoSrc from "../assets/Logo/EG.png";
 import { useAuth } from "../context/authContext";
+import API_BASE from "../config/api.js";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 const VideoBackground = lazy(() => import("../components/VideoBackground"));
+
+const PasswordStrengthIndicator = ({ password }) => {
+  const getStrength = (pwd) => {
+    if (!pwd) return { score: 0, label: "", color: "" };
+    
+    let score = 0;
+    if (pwd.length >= 8) score++;
+    if (pwd.length >= 12) score++;
+    if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score++;
+    if (/\d/.test(pwd)) score++;
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) score++;
+    
+    if (score <= 1) return { score: 1, label: "Weak", color: "bg-rose-500" };
+    if (score <= 2) return { score: 2, label: "Fair", color: "bg-amber-500" };
+    if (score <= 3) return { score: 3, label: "Good", color: "bg-emerald-500" };
+    return { score: 4, label: "Strong", color: "bg-cyan-500" };
+  };
+
+  const strength = getStrength(password);
+
+  if (!password) return null;
+
+  return (
+    <div className="mt-2">
+      <div className="flex gap-1 mb-1">
+        {[1, 2, 3, 4].map((level) => (
+          <div
+            key={level}
+            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+              strength.score >= level ? strength.color : "bg-slate-700"
+            }`}
+          />
+        ))}
+      </div>
+      <p className={`text-xs ${strength.color.replace("bg-", "text-")}`}>
+        Password strength: {strength.label}
+      </p>
+    </div>
+  );
+};
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [lastLogin, setLastLogin] = useState(null);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setEmployeeId(savedEmail);
+      setRememberMe(true);
+    }
+    const lastLoginTime = localStorage.getItem("lastLogin");
+    if (lastLoginTime) {
+      setLastLogin(new Date(parseInt(lastLoginTime)).toLocaleString());
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,14 +78,32 @@ const Login = () => {
 
     try {
       const res = await axios.post(`${API_BASE}/api/auth/login`, {
-        email,
+        email: employeeId.trim(),
         password,
+        rememberMe,
       });
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("lastLogin", Date.now().toString());
+        
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", employeeId.trim());
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
+
         const userData = res.data.user;
         
+        if (res.data.mustChangePassword) {
+          navigate("/change-password", { state: { mustChange: true } });
+          return;
+        }
+        
+        if (res.data.passwordExpiring) {
+          localStorage.setItem("passwordExpiring", "true");
+        }
+
         if (!userData) {
           setError("Invalid response from server");
           setLoading(false);
@@ -49,7 +121,14 @@ const Login = () => {
         }
       }
     } catch (err) {
-      setError(err.response?.data?.error || "Login failed");
+      const errorMsg = err.response?.data?.error || "Login failed";
+      setError(errorMsg);
+      
+      if (err.response?.data?.lockedUntil) {
+        const lockedUntil = new Date(err.response.data.lockedUntil);
+        const minutes = Math.ceil((lockedUntil - Date.now()) / 60000);
+        setError(`Account locked. Try again in ${minutes} minutes.`);
+      }
     } finally {
       setLoading(false);
     }
@@ -61,8 +140,9 @@ const Login = () => {
         <VideoBackground />
       </Suspense>
       <div className="absolute inset-0 bg-black/30"></div>
+      
       <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <img
             src={logoSrc}
             alt="Elegance Logo"
@@ -70,37 +150,62 @@ const Login = () => {
             onError={(e) => { e.target.style.display = 'none'; }}
           />
           <h1 className="text-2xl font-bold text-white">Elegance IT & Geo Synergy</h1>
-          <p className="text-slate-400 mt-1">Welcome Back</p>
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <Shield size={16} className="text-cyan-400" />
+            <p className="text-slate-400 text-sm">Secure Admin Portal</p>
+          </div>
         </div>
 
         <div className="bg-black/10 backdrop-blur-xl rounded-3xl border border-2 border-black/90 p-8 shadow-2xl">
-          <h2 className="text-xl font-semibold text-white text-center mb-6">Sign In</h2>
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center p-2 rounded-lg bg-cyan-500/20 mb-3">
+              <Lock size={20} className="text-cyan-400" />
+            </div>
+            <h2 className="text-xl font-semibold text-white">Sign In</h2>
+            <p className="text-slate-400 text-xs mt-1">Enter your credentials to access</p>
+          </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-rose-500/20 border border-rose-500/50 text-rose-400 text-sm">
+            <div className="mb-4 p-3 rounded-lg bg-rose-500/20 border border-rose-500/50 text-rose-400 text-sm flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
               {error}
+            </div>
+          )}
+
+          {lastLogin && (
+            <div className="mb-4 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
+              <User size={14} />
+              Last login: {lastLogin}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="login-email" className="block text-sm font-medium text-slate-200 mb-2">Email</label>
-              <input
-                id="login-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 backdrop-blur-sm"
-                placeholder="you@example.com"
-                required
-              />
+              <label htmlFor="login-employee-id" className="block text-sm font-medium text-slate-200 mb-2">
+                Employee ID / Email
+              </label>
+              <div className="relative">
+                <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  id="login-employee-id"
+                  name="employeeId"
+                  type="text"
+                  autoComplete="username"
+                  value={employeeId}
+                  onChange={(e) => setEmployeeId(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 backdrop-blur-sm"
+                  placeholder="[EJXXXXXXXXXXXXX] or email@example.com"
+                  required
+                />
+              </div>
             </div>
 
             <div>
-              <label htmlFor="login-password" className="block text-sm font-medium text-slate-200 mb-2">Password</label>
+              <label htmlFor="login-password" className="block text-sm font-medium text-slate-200 mb-2">
+                Password
+              </label>
               <div className="relative">
+                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   id="login-password"
                   name="password"
@@ -108,7 +213,7 @@ const Login = () => {
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 pr-12 backdrop-blur-sm"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 backdrop-blur-sm"
                   placeholder="Enter your password"
                   required
                 />
@@ -120,27 +225,63 @@ const Login = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
+              <PasswordStrengthIndicator password={password} />
             </div>
 
             <div className="flex items-center justify-between text-sm">
-              <a href="/Forgot-Password" className="text-cyan-400 hover:text-cyan-300 transition">
-              Forgot Password?
-            </a>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-500 bg-slate-700 text-cyan-500 focus:ring-cyan-400"
+                />
+                <span className="text-slate-300">Remember me</span>
+              </label>
+              <a 
+                href="/Forgot-Password" 
+                className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1"
+              >
+                <Lock size={14} />
+                Forgot Password?
+              </a>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-lg font-semibold transition disabled:opacity-50 hover:shadow-lg hover:shadow-cyan-500/30"
+              className="w-full py-3 rounded-lg font-semibold transition disabled:opacity-50 hover:shadow-lg hover:shadow-cyan-500/30 flex items-center justify-center gap-2"
               style={{ 
                 background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
                 color: '#000000'
               }}
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  <Shield size={18} />
+                  Sign In
+                </>
+              )}
             </button>
           </form>
+
+          <div className="mt-6 pt-4 border-t border-slate-700/50">
+            <div className="flex items-center justify-center gap-4 text-xs text-slate-500">
+              <span>🔒 256-bit encryption</span>
+              <span>•</span>
+              <span>Secure connection</span>
+            </div>
+          </div>
         </div>
+
+        <p className="text-center text-slate-500 text-xs mt-4">
+          © {new Date().getFullYear()} Elegance IT & Geo Synergy. All rights reserved.
+        </p>
       </div>
     </div>
   );

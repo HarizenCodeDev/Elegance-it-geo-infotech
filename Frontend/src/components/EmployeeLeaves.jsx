@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { Skeleton, SkeletonTable } from "./Skeleton";
+import API_BASE from "../config/api.js";
 const statusOptions = ["All", "Pending", "Approved", "Rejected"];
 const leaveTypeOptions = [
-  { value: "Sick", label: "Sick" },
-  { value: "Casual", label: "Casual" },
+  { value: "Annual Leave", label: "Annual Leave" },
+  { value: "Sick Leave", label: "Sick Leave" },
+  { value: "Casual Leave", label: "Casual Leave" },
+  { value: "unpaid", label: "Unpaid Leave" },
 ];
 
 const EmployeeLeaves = () => {
@@ -184,7 +186,9 @@ const EmployeeLeaves = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">Loading...</td>
+                <td colSpan={5} className="px-4 py-8 text-center">
+                  <SkeletonTable rows={5} cols={5} />
+                </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>

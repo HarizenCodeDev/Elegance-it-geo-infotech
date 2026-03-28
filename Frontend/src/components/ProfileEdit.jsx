@@ -4,11 +4,10 @@ import axios from "axios";
 import { useAuth } from "../context/authContext";
 import { Eye, EyeOff } from "lucide-react";
 import { getImageUrl } from "../utils/excel";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const ProfileEdit = ({ onDone }) => {
-  const { user, updateAvatar } = useAuth();
+  const { user, updateAvatar, updateUser } = useAuth();
   const [form, setForm] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -19,6 +18,19 @@ const ProfileEdit = ({ onDone }) => {
     designation: user?.designation || "",
     newPassword: "",
   });
+
+  useEffect(() => {
+    setForm({
+      name: user?.name || "",
+      email: user?.email || "",
+      dob: user?.dob ? String(user.dob).slice(0, 10) : "",
+      gender: user?.gender || "",
+      maritalStatus: user?.maritalStatus || "",
+      department: user?.department || "",
+      designation: user?.designation || "",
+      newPassword: "",
+    });
+  }, [user]);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -69,6 +81,7 @@ const ProfileEdit = ({ onDone }) => {
       if (res.data.success) {
         setSuccess("Profile updated!");
         toast.success("Profile updated!");
+        updateUser(res.data.user);
         setTimeout(() => onDone?.(), 1500);
       }
     } catch (err) {

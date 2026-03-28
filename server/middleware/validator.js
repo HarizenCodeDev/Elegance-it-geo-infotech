@@ -1,5 +1,13 @@
 import validator from "validator";
 
+const MAX_STRING_LENGTH = 500;
+const MAX_TEXTAREA_LENGTH = 2000;
+const SUSPICIOUS_PATTERNS = [
+  /[\u0000-\u001F\u007F-\u009F]/,
+  /[\uFDD0-\uFDEF]/,
+  /[\uFFFE-\uFFFF]/,
+];
+
 export const validate = (schema) => {
   return (req, res, next) => {
     const errors = [];
@@ -42,6 +50,65 @@ export const validate = (schema) => {
       });
     }
 
+    next();
+  };
+};
+
+export const validateInputLength = (req, res, next) => {
+  const checkLength = (obj, path = "") => {
+    for (const [key, value] of Object.entries(obj)) {
+      const currentPath = path ? `${path}.${key}` : key;
+      
+      if (typeof value === "string") {
+        const maxLength = key === "description" || key === "reason" || key === "notes" 
+          ? MAX_TEXTAREA_LENGTH 
+          : MAX_STRING_LENGTH;
+        
+        if (value.length > maxLength) {
+          return `${currentPath} exceeds maximum length of ${maxLength} characters`;
+        }
+        
+        for (const pattern of SUSPICIOUS_PATTERNS) {
+          if (pattern.test(value)) {
+            return `Invalid characters in ${currentPath}`;
+          }
+        }
+      }
+      
+      if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        const error = checkLength(value, currentPath);
+        if (error) return error;
+      }
+    }
+    return null;
+  };
+
+  const error = checkLength(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      error,
+    });
+  }
+
+  next();
+};
+
+export const validateUUID = (paramName) => {
+  return (req, res, next) => {
+    const value = req.params[paramName];
+    
+    if (!value) return next();
+    
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    
+    if (!uuidRegex.test(value)) {
+      return res.status(404).json({
+        success: false,
+        error: "Resource not found",
+      });
+    }
+    
     next();
   };
 };

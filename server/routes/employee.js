@@ -16,13 +16,13 @@ import {
   updateAttendance,
   deleteEmployee,
 } from "../controller/employeeController.js";
-import { validate, sanitizeInput } from "../middleware/validator.js";
+import { validate, sanitizeInput, validateUUID } from "../middleware/validator.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 2 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowed = /jpeg|jpg|png|gif|webp/;
     const extname = allowed.test(path.extname(file.originalname).toLowerCase());
@@ -38,7 +38,7 @@ const router = express.Router();
 
 const createEmployeeSchema = {
   name: { required: true, minLength: 2 },
-  email: { required: true, type: "email" },
+  email: { type: "email" },
   password: { required: true, minLength: 6 },
   role: {
     required: true,
@@ -48,7 +48,7 @@ const createEmployeeSchema = {
 
 router.use(authMiddleware);
 
-router.get("/:id", getEmployee);
+router.get("/:id", validateUUID("id"), getEmployee);
 
 router.post("/", 
   requireRole(ROLES.ROOT, ROLES.ADMIN), 
@@ -63,6 +63,7 @@ router.get("/",
 );
 
 router.put("/:id", 
+  validateUUID("id"),
   canManageUser, 
   sanitizeInput, 
   upload.single("profileImage"), 
@@ -70,11 +71,13 @@ router.put("/:id",
 );
 
 router.put("/:id/attendance", 
+  validateUUID("id"),
   requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER), 
   updateAttendance
 );
 
 router.delete("/:id", 
+  validateUUID("id"),
   requireRole(ROLES.ROOT, ROLES.ADMIN), 
   deleteEmployee
 );

@@ -4,8 +4,7 @@ import axios from "axios";
 import { Download } from "lucide-react";
 import { exportToExcel } from "../utils/excel";
 import { Skeleton, SkeletonTable } from "./Skeleton";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const LoginLogs = () => {
   const [logs, setLogs] = useState([]);

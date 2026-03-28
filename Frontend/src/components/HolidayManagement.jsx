@@ -3,8 +3,8 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Trash2, Plus, Lock, Calendar, RefreshCw } from "lucide-react";
 import { useAuth } from "../context/authContext";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { Skeleton, SkeletonTable } from "./Skeleton";
+import API_BASE from "../config/api.js";
 
 const HolidayManagement = () => {
   const { user } = useAuth();
@@ -219,7 +219,7 @@ const HolidayManagement = () => {
       )}
 
       {loading ? (
-        <div className="text-center py-8 text-slate-400">Loading...</div>
+        <SkeletonTable rows={8} cols={5} />
       ) : holidays.length === 0 ? (
         <div className="text-center py-12 text-slate-400 bg-slate-800/60 rounded-xl border border-slate-700">
           <p>No holidays added yet</p>

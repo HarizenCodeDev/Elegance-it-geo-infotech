@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { SkeletonCard } from "./Skeleton";
+import API_BASE from "../config/api.js";
 
 const EmployeeAnnouncements = () => {
   const [rows, setRows] = useState([]);
@@ -36,7 +36,11 @@ const EmployeeAnnouncements = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-8 text-slate-400">Loading...</div>
+        <div className="space-y-4">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
       ) : error ? (
         <div className="text-center py-8 text-rose-400">{error}</div>
       ) : rows.length === 0 ? (

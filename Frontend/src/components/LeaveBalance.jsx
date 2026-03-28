@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Award, Calendar } from "lucide-react";
 import { Skeleton, SkeletonGrid } from "./Skeleton";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const LeaveBalance = ({ compact = false }) => {
   const [balances, setBalances] = useState([]);
@@ -29,21 +28,21 @@ const LeaveBalance = ({ compact = false }) => {
   };
 
   const getLeaveIcon = (type) => {
-    switch (type) {
-      case "annual": return "🏖️";
-      case "sick": return "🏥";
-      case "casual": return "🌴";
-      case "unpaid": return "📋";
+    switch (type?.toLowerCase()) {
+      case "annual": case "annual leave": return "🏖️";
+      case "sick": case "sick leave": return "🏥";
+      case "casual": case "casual leave": return "🌴";
+      case "unpaid": case "unpaid leave": return "📋";
       default: return "📅";
     }
   };
 
   const getLeaveColor = (type) => {
-    switch (type) {
-      case "annual": return "from-blue-500 to-indigo-600";
-      case "sick": return "from-rose-500 to-pink-600";
-      case "casual": return "from-cyan-500 to-teal-600";
-      case "unpaid": return "from-slate-500 to-gray-600";
+    switch (type?.toLowerCase()) {
+      case "annual": case "annual leave": return "from-blue-500 to-indigo-600";
+      case "sick": case "sick leave": return "from-rose-500 to-pink-600";
+      case "casual": case "casual leave": return "from-cyan-500 to-teal-600";
+      case "unpaid": case "unpaid leave": return "from-slate-500 to-gray-600";
       default: return "from-indigo-500 to-purple-600";
     }
   };
@@ -109,8 +108,12 @@ const LeaveBalance = ({ compact = false }) => {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">{getLeaveIcon(balance.leaveType)}</span>
-                  <span className="text-sm font-medium text-slate-300 capitalize">
-                    {balance.leaveType} Leave
+                  <span className="text-sm font-medium text-slate-300">
+                    {balance.leaveType === 'annual' ? 'Annual Leave' : 
+                     balance.leaveType === 'sick' ? 'Sick Leave' :
+                     balance.leaveType === 'casual' ? 'Casual Leave' :
+                     balance.leaveType === 'unpaid' ? 'Unpaid Leave' :
+                     balance.leaveType}
                   </span>
                 </div>
               </div>

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { useAuth } from "../context/authContext";
 import DashboardLayout from "../components/DashboardLayout";
+import ErrorBoundary from "../components/ErrorBoundary";
 import ChatWindow from "../components/ChatWindow";
 import EmployeeLeaves from "../components/EmployeeLeaves";
 import EmployeeAttendanceView from "../components/EmployeeAttendanceView";
@@ -10,9 +11,21 @@ import EmployeeHome from "../components/EmployeeHome";
 import CheckInOut from "../components/CheckInOut";
 import HolidayManagement from "../components/HolidayManagement";
 import LeaveCalendar from "../components/LeaveCalendar";
+import { 
+  SkeletonDashboardHome, 
+  SkeletonLeavesList,
+  SkeletonLeaveCalendar,
+  SkeletonAttendance,
+  SkeletonProfileEdit,
+  SkeletonHolidays,
+  SkeletonAnnouncementsList,
+  SkeletonChat,
+  SkeletonStatCard,
+  SkeletonList,
+  SkeletonTable,
+} from "../components/skeletons";
 import axios from "axios";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const EmployeeDashboard = () => {
   const { user } = useAuth();
@@ -151,26 +164,60 @@ const EmployeeDashboard = () => {
     }
   }, [user]);
 
+  const getSkeletonForView = (view) => {
+    const skeletonMap = {
+      dashboard: <SkeletonDashboardHome />,
+      leaves: <SkeletonLeavesList />,
+      leaveCalendar: <SkeletonLeaveCalendar />,
+      attendance: <SkeletonAttendance />,
+      profileEdit: <SkeletonProfileEdit />,
+      holidays: <SkeletonHolidays />,
+      announcementsList: <SkeletonAnnouncementsList />,
+      announcements: <SkeletonAnnouncementsList />,
+      checkin: <SkeletonStatCard />,
+    };
+    return skeletonMap[view] || <SkeletonDashboardHome />;
+  };
+
   const renderContent = () => {
+    let Component;
+    let skeleton = getSkeletonForView(currentView);
+
     switch (currentView) {
       case "profileEdit":
-        return <ProfileEdit onDone={() => setCurrentView("dashboard")} />;
+        Component = <ProfileEdit onDone={() => setCurrentView("dashboard")} />;
+        break;
       case "leaves":
-        return <EmployeeLeaves />;
+        Component = <EmployeeLeaves />;
+        break;
       case "attendance":
-        return <EmployeeAttendanceView />;
+        Component = <EmployeeAttendanceView />;
+        break;
       case "checkin":
-        return <CheckInOut />;
+        Component = <CheckInOut />;
+        break;
       case "announcementsList":
       case "announcements":
-        return <EmployeeAnnouncements />;
+        Component = <EmployeeAnnouncements />;
+        break;
       case "holidays":
-        return <HolidayManagement />;
+        Component = <HolidayManagement />;
+        break;
       case "leaveCalendar":
-        return <LeaveCalendar />;
+        Component = <LeaveCalendar />;
+        break;
       default:
-        return <EmployeeHome stats={stats} loading={loading} />;
+        Component = <EmployeeHome stats={stats} loading={loading} />;
+        skeleton = null;
     }
+
+    return (
+      <ErrorBoundary key={currentView}>
+        <div className="animate-fadeIn">
+          {loading && skeleton ? skeleton : Component}
+        </div>
+      </ErrorBoundary>
+    );
   };
 
   return (
@@ -179,7 +226,7 @@ const EmployeeDashboard = () => {
       setCurrentView={setCurrentView}
       chatOpen={chatOpen}
       setChatOpen={setChatOpen}
-      ChatComponent={<ChatWindow />}
+      ChatComponent={loading ? <SkeletonChat /> : <ChatWindow />}
     >
       {renderContent()}
     </DashboardLayout>

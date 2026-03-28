@@ -19,7 +19,6 @@ const createLeave = async (req, res, next) => {
       });
     }
 
-    // Validate leave type
     if (!VALID_LEAVE_TYPES.includes(type)) {
       return res.status(400).json({
         success: false,
@@ -27,14 +26,48 @@ const createLeave = async (req, res, next) => {
       });
     }
 
-    // Validate dates
     const fromDate = new Date(from);
     const toDate = new Date(to);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid date format",
+      });
+    }
+
+    if (fromDate < today) {
+      return res.status(400).json({
+        success: false,
+        error: "From date cannot be in the past",
+      });
+    }
 
     if (fromDate > toDate) {
       return res.status(400).json({
         success: false,
         error: "From date cannot be after to date",
+      });
+    }
+
+    const existingLeaves = await db("leaves")
+      .where("user_id", userId)
+      .whereIn("status", ["Pending", "Approved"])
+      .where((builder) => {
+        builder
+          .whereBetween("from_date", [fromDate, toDate])
+          .orWhereBetween("to_date", [fromDate, toDate])
+          .orWhere((b) => {
+            b.where("from_date", "<=", fromDate).where("to_date", ">=", toDate);
+          });
+      });
+
+    if (existingLeaves.length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: "You already have a leave application for these dates",
       });
     }
 

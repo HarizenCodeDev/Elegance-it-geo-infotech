@@ -3,8 +3,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Search, Plus, X, Send, MoreVertical, Phone, Video, CheckCheck, Image as ImageIcon, Smile, MessageCircle, Mic, Paperclip } from "lucide-react";
 import chatBgLogo from "../assets/Logo/EGlogo.png";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import API_BASE from "../config/api.js";
 
 const isGroupId = (id) => id && id.includes("-") && id.length === 36;
 

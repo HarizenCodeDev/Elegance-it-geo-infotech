@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Info } from "lucide-react";
+import API_BASE from "../config/api.js";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const BRANCHES = [
+  { value: "bengaluru", label: "Bengaluru", prefix: "EJB", hexCode: "68617269" },
+  { value: "krishnagiri", label: "Krishnagiri", prefix: "EJK", hexCode: "68617269" },
+];
+
+const ROLES = [
+  { value: "developer", label: "Developer" },
+  { value: "teamlead", label: "Team Lead" },
+  { value: "manager", label: "Manager" },
+  { value: "hr", label: "HR" },
+  { value: "admin", label: "Admin" },
+];
 
 const AddEmployeeForm = () => {
   const emptyForm = {
     name: "",
     email: "",
     password: "",
-    employeeId: "",
+    branch: "",
     dob: "",
     gender: "",
     maritalStatus: "",
@@ -26,8 +38,20 @@ const AddEmployeeForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [generatedEmployeeId, setGeneratedEmployeeId] = useState("");
 
   const update = (field, value) => setForm((f) => ({ ...f, [field]: value }));
+
+  useEffect(() => {
+    if (form.branch) {
+      const branchInfo = BRANCHES.find(b => b.value === form.branch);
+      if (branchInfo) {
+        setGeneratedEmployeeId(`${branchInfo.prefix}${branchInfo.hexCode}*** (auto-generated)`);
+      }
+    } else {
+      setGeneratedEmployeeId("");
+    }
+  }, [form.branch]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -51,10 +75,12 @@ const AddEmployeeForm = () => {
       });
 
       if (res.data.success) {
-        setSuccess("Employee added successfully!");
-        toast.success("Employee added!");
+        const employeeId = res.data.user?.employeeId || generatedEmployeeId;
+        setSuccess(`Employee added successfully! Login ID: ${employeeId}`);
+        toast.success(`Employee added!`);
         setForm(emptyForm);
         setFile(null);
+        setGeneratedEmployeeId("");
       }
     } catch (err) {
       const msg = err.response?.data?.error || "Failed to add employee";
@@ -82,10 +108,25 @@ const AddEmployeeForm = () => {
         </div>
       )}
 
+      <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+        <div className="flex items-start gap-3">
+          <Info size={20} className="text-cyan-400 mt-0.5 flex-shrink-0" />
+          <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="font-semibold text-white mb-1">Login Information:</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Employees will login using their <strong className="text-cyan-400">Employee ID</strong> (auto-generated based on branch)</li>
+              <li>Email is only used for sending notifications</li>
+              <li>Bengaluru branch: <strong className="text-cyan-400">EJB68617269***</strong></li>
+              <li>Krishnagiri branch: <strong className="text-cyan-400">EJK68617269***</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <label htmlFor="emp-name" className="text-sm text-slate-300">Name</label>
+            <label htmlFor="emp-name" className="text-sm text-slate-300">Name <span className="text-rose-400">*</span></label>
             <input
               id="emp-name"
               name="name"
@@ -99,7 +140,24 @@ const AddEmployeeForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="emp-email" className="text-sm text-slate-300">Email</label>
+            <label htmlFor="emp-branch" className="text-sm text-slate-300">Branch <span className="text-rose-400">*</span></label>
+            <select
+              id="emp-branch"
+              name="branch"
+              value={form.branch}
+              onChange={(e) => update("branch", e.target.value)}
+              required
+              className="w-full rounded-lg border border-slate-600 bg-slate-900/50 px-3 py-2 text-white"
+            >
+              <option value="">Select Branch</option>
+              {BRANCHES.map(b => (
+                <option key={b.value} value={b.value}>{b.label} ({b.prefix})</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="emp-email" className="text-sm text-slate-300">Email (for notifications)</label>
             <input
               id="emp-email"
               name="email"
@@ -107,13 +165,31 @@ const AddEmployeeForm = () => {
               autoComplete="email"
               value={form.email}
               onChange={(e) => update("email", e.target.value)}
-              required
               className="w-full rounded-lg border border-slate-600 bg-slate-900/50 px-3 py-2 text-white"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="emp-password" className="text-sm text-slate-300">Password</label>
+            <label htmlFor="emp-id" className="text-sm text-slate-300">Employee ID</label>
+            <div className="relative">
+              <input
+                id="emp-id"
+                name="employeeId"
+                type="text"
+                value={generatedEmployeeId}
+                disabled
+                className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2 text-cyan-400"
+              />
+              {form.branch && (
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-cyan-400">
+                  Auto
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="emp-password" className="text-sm text-slate-300">Password <span className="text-rose-400">*</span></label>
             <div className="relative">
               <input
                 id="emp-password"
@@ -133,18 +209,6 @@ const AddEmployeeForm = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="emp-id" className="text-sm text-slate-300">Employee ID</label>
-            <input
-              id="emp-id"
-              name="employeeId"
-              type="text"
-              value={form.employeeId}
-              onChange={(e) => update("employeeId", e.target.value)}
-              className="w-full rounded-lg border border-slate-600 bg-slate-900/50 px-3 py-2 text-white"
-            />
           </div>
 
           <div className="space-y-2">
@@ -227,7 +291,7 @@ const AddEmployeeForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="emp-role" className="text-sm text-slate-300">Role</label>
+            <label htmlFor="emp-role" className="text-sm text-slate-300">Role <span className="text-rose-400">*</span></label>
             <select
               id="emp-role"
               name="role"
@@ -236,11 +300,9 @@ const AddEmployeeForm = () => {
               className="w-full rounded-lg border border-slate-600 bg-slate-900/50 px-3 py-2 text-white"
               required
             >
-              <option value="developer">Developer</option>
-              <option value="teamlead">Team Lead</option>
-              <option value="manager">Manager</option>
-              <option value="hr">HR</option>
-              <option value="admin">Admin</option>
+              {ROLES.map(r => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
             </select>
           </div>
 
