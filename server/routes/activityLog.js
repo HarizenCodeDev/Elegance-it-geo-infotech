@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get("/", 
-  requireRole(ROLES.ROOT, ROLES.ADMIN), 
+  requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER, ROLES.HR), 
   getActivityLogs
 );
 

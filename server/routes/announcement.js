@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middleware/auth.js";
+import authMiddleware, { requireRole, ROLES } from "../middleware/auth.js";
 import {
   createAnnouncement,
   listAnnouncements,
@@ -16,7 +16,7 @@ const createAnnouncementSchema = {
 
 router.use(authMiddleware);
 
-router.post("/", sanitizeInput, validate(createAnnouncementSchema), createAnnouncement);
+router.post("/", requireRole(ROLES.ROOT, ROLES.ADMIN), sanitizeInput, validate(createAnnouncementSchema), createAnnouncement);
 
 router.get("/", listAnnouncements);
 

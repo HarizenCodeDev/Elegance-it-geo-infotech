@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middleware/auth.js";
+import authMiddleware, { requireRole, ROLES } from "../middleware/auth.js";
 import { getHolidays, createHoliday, deleteHoliday, getUpcomingHolidays, autoPopulateHolidays } from "../controller/holidayController.js";
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.get("/upcoming", authMiddleware, getUpcomingHolidays);
 
 router.post("/auto-populate", authMiddleware, autoPopulateHolidays);
 
-router.post("/", authMiddleware, createHoliday);
+router.post("/", authMiddleware, requireRole(ROLES.ROOT, ROLES.ADMIN), createHoliday);
 
 router.delete("/:id", authMiddleware, deleteHoliday);
 

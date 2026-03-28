@@ -51,7 +51,7 @@ router.use(authMiddleware);
 router.get("/:id", validateUUID("id"), getEmployee);
 
 router.post("/", 
-  requireRole(ROLES.ROOT, ROLES.ADMIN), 
+  requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER, ROLES.HR), 
   upload.single("profileImage"), 
   sanitizeInput, 
   validate(createEmployeeSchema), 
