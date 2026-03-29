@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import axios from "axios";
-import API_BASE from "../config/api.js";
+import api from "../config/axios.js";
 
 const AuthContext = createContext(null);
 
@@ -27,9 +26,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const res = await axios.get(`${API_BASE}/api/auth/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get(`/auth/profile`);
         setUser(res.data.user);
         localStorage.setItem("user", JSON.stringify(res.data.user));
       } catch {

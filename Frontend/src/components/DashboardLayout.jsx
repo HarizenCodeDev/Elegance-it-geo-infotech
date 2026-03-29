@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Edit2, Lock, LogOut, Menu, X, ChevronDown } from "lucide-react";
+import { Edit2, Lock, LogOut, Menu, X, ChevronDown, Sparkles, Brain, Search } from "lucide-react";
 import { useAuth } from "../context/authContext";
-import axios from "axios";
+import api from "../config/axios.js";
 import logoSrc from "../assets/Logo/EG.png";
 import NotificationBell from "./NotificationBell";
 import API_BASE from "../config/api.js";
@@ -25,6 +25,11 @@ const menuItems = [
   { title: "Announcements", key: "announcements", children: [
     { title: "Add New", key: "addAnnouncement", roles: ["root", "admin", "manager", "hr", "teamlead"] },
     { title: "View All", key: "announcementsList" },
+  ]},
+  { title: "AI Features", key: "ai", icon: "sparkles", roles: ["root", "admin", "manager", "hr"], children: [
+    { title: "Smart Search", key: "aiSearch", icon: "search", roles: ["root", "admin", "manager", "hr"] },
+    { title: "Attendance Insights", key: "aiAttendance", icon: "brain", roles: ["root", "admin", "manager", "hr"] },
+    { title: "Leave Prediction", key: "aiLeave", roles: ["root", "admin", "manager"] },
   ]},
   { title: "Security", key: "security", roles: ["root", "admin", "manager", "hr"], children: [
     { title: "Active Sessions", key: "sessions" },
@@ -94,11 +99,9 @@ const DashboardLayout = ({
     try {
       const fd = new FormData();
       fd.append("avatar", file);
-      const token = localStorage.getItem("token");
-      const res = await axios.post(`${API_BASE}/api/auth/avatar`, fd, {
+      const res = await api.post(`/auth/avatar`, fd, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
         },
       });
       const newAvatarUrl = res.data?.avatarUrl;
@@ -193,7 +196,12 @@ const DashboardLayout = ({
                       color: openMenus[item.key] ? 'var(--color-primary)' : 'var(--color-text-secondary)'
                     }}
                   >
-                    <span>{item.title}</span>
+                    <span className="flex items-center gap-2">
+                      {item.icon === 'sparkles' && <Sparkles size={16} />}
+                      {item.icon === 'brain' && <Brain size={16} />}
+                      {item.icon === 'search' && <Search size={16} />}
+                      {item.title}
+                    </span>
                     <ChevronDown size={16} className={`transition-transform ${openMenus[item.key] ? "rotate-180" : ""}`} />
                   </button>
                   {openMenus[item.key] && filteredChildren(item.children).length > 0 && (

@@ -20,7 +20,9 @@ const EmployeeDetails = ({ employee, onBack }) => {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
-    const date = new Date(dateStr);
+    // Convert date-only input to UTC date to prevent local timezone shift
+    const normalized = dateStr.includes('T') ? dateStr : `${dateStr}T00:00:00.000Z`;
+    const date = new Date(normalized);
     if (isNaN(date.getTime())) return "-";
     return date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
   };
@@ -59,6 +61,7 @@ const EmployeeDetails = ({ employee, onBack }) => {
         <DetailRow label="Department" value={employee.department} />
         <DetailRow label="Designation" value={employee.designation} />
         <DetailRow label="Marital Status" value={employee.maritalStatus} />
+        {employee.salary && <DetailRow label="Salary" value={`₹${employee.salary}`} />}
       </div>
 
       <div className="flex justify-end">

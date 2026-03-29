@@ -24,8 +24,8 @@ import {
   SkeletonList,
   SkeletonTable,
 } from "../components/skeletons";
-import axios from "axios";
-import API_BASE from "../config/api.js";
+import api from "../config/axios.js";
+
 
 const EmployeeDashboard = () => {
   const { user } = useAuth();
@@ -37,7 +37,6 @@ const EmployeeDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem("token");
         const today = new Date();
         const todayStr = today.toISOString().split("T")[0];
         const timestamp = Date.now();
@@ -52,23 +51,17 @@ const EmployeeDashboard = () => {
         const weekStartStr = startOfWeek.toISOString().split("T")[0];
 
         const [leaveRes, attRes, lastMonthAttRes, weekAttRes, threeMonthsAttRes] = await Promise.all([
-          axios.get(`${API_BASE}/api/leaves?userId=${user?._id}&_t=${timestamp}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${API_BASE}/api/attendance/my`, {
-            headers: { Authorization: `Bearer ${token}` },
+          api.get(`/leaves?userId=${user?._id}&_t=${timestamp}`),
+          api.get(`/attendance/my`, {
             params: { from: firstDayOfMonth, to: todayStr, _t: timestamp },
           }),
-          axios.get(`${API_BASE}/api/attendance/my`, {
-            headers: { Authorization: `Bearer ${token}` },
+          api.get(`/attendance/my`, {
             params: { from: lastMonthFirstDay, to: lastMonthLastDay, _t: timestamp },
           }),
-          axios.get(`${API_BASE}/api/attendance/my`, {
-            headers: { Authorization: `Bearer ${token}` },
+          api.get(`/attendance/my`, {
             params: { from: weekStartStr, to: todayStr, _t: timestamp },
           }),
-          axios.get(`${API_BASE}/api/attendance/my`, {
-            headers: { Authorization: `Bearer ${token}` },
+          api.get(`/attendance/my`, {
             params: { from: twoMonthsAgoFirstDay, to: todayStr, _t: timestamp },
           }),
         ]);

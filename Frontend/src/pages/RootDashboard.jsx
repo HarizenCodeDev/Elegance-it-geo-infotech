@@ -32,8 +32,8 @@ import {
   SkeletonTable,
   SkeletonList,
 } from "../components/skeletons";
-import axios from "axios";
-import API_BASE from "../config/api.js";
+import api from "../config/axios.js";
+
 
 const RootDashboard = () => {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -45,17 +45,12 @@ const RootDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem("token");
         const [empRes, leaveRes, attRes] = await Promise.all([
-          axios.get(`${API_BASE}/api/employees`, {
-            headers: { Authorization: `Bearer ${token}` },
+          api.get(`/employees`, {
             params: { limit: 100 },
           }),
-          axios.get(`${API_BASE}/api/leaves?status=Pending`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${API_BASE}/api/attendance`, {
-            headers: { Authorization: `Bearer ${token}` },
+          api.get(`/leaves?status=Pending`),
+          api.get(`/attendance`, {
             params: { date: new Date().toISOString().split("T")[0] },
           }),
         ]);

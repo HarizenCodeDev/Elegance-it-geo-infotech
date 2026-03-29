@@ -5,7 +5,7 @@ import axios from "axios";
 import API_BASE from "../config/api.js";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ const ForgotPassword = () => {
 
     try {
       const response = await axios.post(`${API_BASE}/api/auth/forgot-password`, {
-        email,
+        employee_id: employeeId,
       });
 
       if (response.data.success) {
@@ -41,7 +41,7 @@ const ForgotPassword = () => {
             Reset Password
           </h2>
           <p className="text-slate-400 text-center text-sm mb-6">
-            Enter your email and we'll send you a reset link
+            Enter your Employee ID and we'll send you a reset link
           </p>
 
           {message && (
@@ -58,18 +58,18 @@ const ForgotPassword = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="fp-email" className="block text-sm font-medium text-slate-300 mb-2">
-                Email
+              <label htmlFor="fp-employee-id" className="block text-sm font-medium text-slate-300 mb-2">
+                Employee ID
               </label>
               <input
-                id="fp-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="fp-employee-id"
+                name="employeeId"
+                type="text"
+                autoComplete="username"
+                value={employeeId}
+                onChange={(e) => setEmployeeId(e.target.value)}
                 className="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="you@example.com"
+                placeholder="EJB2026001"
                 required
               />
             </div>

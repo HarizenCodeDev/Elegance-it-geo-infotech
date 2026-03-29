@@ -44,7 +44,12 @@ const EditEmployeeForm = ({ employee, onDone }) => {
 
     try {
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => {
+
+      const normalizedDob = form.dob
+        ? new Date(`${form.dob}T00:00:00.000Z`).toISOString().split("T")[0]
+        : "";
+
+      Object.entries({ ...form, dob: normalizedDob }).forEach(([k, v]) => {
         if (v !== "") fd.append(k, v);
       });
       if (file) fd.append("profileImage", file);

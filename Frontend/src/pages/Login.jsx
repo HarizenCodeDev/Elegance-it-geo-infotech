@@ -1,10 +1,10 @@
 import { useState, lazy, Suspense, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../config/axios.js";
 import { Eye, EyeOff, Shield, Lock, User, Loader2 } from "lucide-react";
 import logoSrc from "../assets/Logo/EG.png";
 import { useAuth } from "../context/authContext";
-import API_BASE from "../config/api.js";
+
 
 const VideoBackground = lazy(() => import("../components/VideoBackground"));
 
@@ -60,9 +60,9 @@ const Login = () => {
   const [lastLogin, setLastLogin] = useState(null);
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem("rememberedEmail");
-    if (savedEmail) {
-      setEmployeeId(savedEmail);
+    const savedEmployeeId = localStorage.getItem("rememberedEmployeeId");
+    if (savedEmployeeId) {
+      setEmployeeId(savedEmployeeId);
       setRememberMe(true);
     }
     const lastLoginTime = localStorage.getItem("lastLogin");
@@ -77,8 +77,8 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_BASE}/api/auth/login`, {
-        email: employeeId.trim(),
+      const res = await api.post(`/auth/login`, {
+        employee_id: employeeId.trim(),
         password,
         rememberMe,
       });
@@ -88,9 +88,9 @@ const Login = () => {
         localStorage.setItem("lastLogin", Date.now().toString());
         
         if (rememberMe) {
-          localStorage.setItem("rememberedEmail", employeeId.trim());
+          localStorage.setItem("rememberedEmployeeId", employeeId.trim());
         } else {
-          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberedEmployeeId");
         }
 
         const userData = res.data.user;
@@ -152,7 +152,7 @@ const Login = () => {
           <h1 className="text-2xl font-bold text-white">Elegance IT & Geo Synergy</h1>
           <div className="flex items-center justify-center gap-2 mt-2">
             <Shield size={16} className="text-cyan-400" />
-            <p className="text-slate-400 text-sm">Secure Admin Portal</p>
+            <p className="text-slate-400 text-sm">Welcome Back</p>
           </div>
         </div>
 
@@ -182,7 +182,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="login-employee-id" className="block text-sm font-medium text-slate-200 mb-2">
-                Employee ID / Email
+                Employee ID
               </label>
               <div className="relative">
                 <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -194,7 +194,7 @@ const Login = () => {
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 backdrop-blur-sm"
-                  placeholder="[EJXXXXXXXXXXXXX] or email@example.com"
+                  placeholder="EJB2026001"
                   required
                 />
               </div>
@@ -272,9 +272,9 @@ const Login = () => {
 
           <div className="mt-6 pt-4 border-t border-slate-700/50">
             <div className="flex items-center justify-center gap-4 text-xs text-slate-500">
-              <span>🔒 256-bit encryption</span>
+              {/* <span>🔒 256-bit encryption</span>
               <span>•</span>
-              <span>Secure connection</span>
+              <span>Secure connection</span> */}
             </div>
           </div>
         </div>

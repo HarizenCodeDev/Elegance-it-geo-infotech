@@ -117,8 +117,11 @@ const CheckInOut = () => {
   };
 
   const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    if (!dateStr) return "-";
+    const normalized = dateStr.includes("T") ? dateStr : `${dateStr}T00:00:00.000Z`;
+    const date = new Date(normalized);
+    if (isNaN(date.getTime())) return "-";
+    return date.toLocaleDateString("en-GB", { weekday: "short", month: "short", day: "numeric" });
   };
 
   const getTimeDiff = (start, end) => {

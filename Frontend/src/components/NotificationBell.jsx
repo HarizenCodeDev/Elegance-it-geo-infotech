@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Bell, X, Check, CheckCheck } from "lucide-react";
-import axios from "axios";
+import api from "../config/axios.js";
 import toast from "react-hot-toast";
 import { Skeleton } from "./Skeleton";
-import API_BASE from "../config/api.js";
+
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
@@ -29,10 +29,7 @@ const NotificationBell = () => {
 
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_BASE}/api/notifications`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(`/notifications`);
       if (res.data.success) {
         setNotifications(res.data.notifications || []);
         setUnreadCount(res.data.unreadCount || 0);
@@ -42,10 +39,7 @@ const NotificationBell = () => {
 
   const markAsRead = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(`${API_BASE}/api/notifications/${id}/read`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.put(`/notifications/${id}/read`, {});
       fetchNotifications();
     } catch (error) {
       toast.error("Failed to mark as read");
@@ -54,10 +48,7 @@ const NotificationBell = () => {
 
   const markAllAsRead = async () => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(`${API_BASE}/api/notifications/read-all`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.put(`/notifications/read-all`, {});
       fetchNotifications();
       toast.success("All notifications marked as read");
     } catch (error) {
