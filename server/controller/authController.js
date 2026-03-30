@@ -260,7 +260,7 @@ const login = async (req, res, next) => {
     });
 
     await db("login_attempts").insert({
-      email: email,
+      email: user.email,
       ip_address: ip,
       user_agent: userAgent,
       success: true,

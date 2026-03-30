@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import crypto from "crypto";
 import { populateHolidaysForYear, autoPopulateUpcomingYears, getAllHolidaysForYear } from "../utils/holidayService.js";
 
 const getHolidays = async (req, res, next) => {
@@ -48,16 +49,19 @@ const createHoliday = async (req, res, next) => {
     }
 
     const year = new Date(date).getFullYear();
+    const holidayId = crypto.randomUUID();
 
-    const [holiday] = await db("holidays")
+    await db("holidays")
       .insert({
+        id: holidayId,
         name,
         date,
         type,
         description,
         year,
-      })
-      .returning("*");
+      });
+
+    const holiday = await db("holidays").where("id", holidayId).first();
 
     res.status(201).json({
       success: true,

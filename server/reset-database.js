@@ -63,6 +63,7 @@ async function resetDatabase() {
     for (const user of USERS) {
       try {
         await db('users').insert({
+          id: user.employee_id,
           name: user.name,
           email: user.email,
           password: BCRYPT_HASHES[user.role],
@@ -72,8 +73,6 @@ async function resetDatabase() {
           designation: user.designation,
           created_at: new Date(),
           updated_at: new Date(),
-          is_active: 1,
-          failed_attempts: 0,
         });
         console.log(`  ✅ Created ${user.role} user: ${user.email} (${user.employee_id})`);
       } catch (err) {

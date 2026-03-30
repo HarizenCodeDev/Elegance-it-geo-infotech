@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import crypto from "crypto";
 import { logActivity } from "./activityLogController.js";
 
 const canPublish = (role) =>
@@ -24,16 +25,19 @@ const createAnnouncement = async (req, res, next) => {
 
     const roles = audienceRoles?.length ? audienceRoles : ["all"];
     const depts = audienceDepartments?.length ? audienceDepartments : [];
+    const announcementId = crypto.randomUUID();
     
-    const [announcement] = await db("announcements")
+    await db("announcements")
       .insert({
+        id: announcementId,
         title: title.trim(),
         message: message.trim(),
         audience_roles: JSON.stringify(roles),
         audience_departments: JSON.stringify(depts),
         created_by: req.user._id,
-      })
-      .returning("*");
+      });
+
+    const announcement = await db("announcements").where("id", announcementId).first();
 
     // Get creator info
     const creator = await db("users")
@@ -49,7 +53,7 @@ const createAnnouncement = async (req, res, next) => {
         audienceRoles: announcement.audience_roles,
         audienceDepartments: announcement.audience_departments,
         createdBy: {
-          _id: creator.id,
+          _id: creator.employee_id,
           name: creator.name,
           role: creator.role,
         },

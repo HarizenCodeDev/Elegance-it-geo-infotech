@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import crypto from "crypto";
 
 const canViewAll = (role) => ["root", "admin", "manager"].includes(role);
 const canWrite = (role) => ["root", "admin", "manager"].includes(role);
@@ -25,16 +26,17 @@ const createOrUpdateAttendance = async (req, res, next) => {
   try {
     const { userId, date, status, action } = req.body;
 
-    if (!userId || !date) {
+    if (!date) {
       return res.status(400).json({ success: false, error: "Missing required fields" });
     }
 
-    const self = userId === req.user._id;
+    const targetUserId = userId || req.user._id;
+    const self = targetUserId === req.user._id;
     if (!self && !canWrite(req.user.role)) {
       return res.status(403).json({ success: false, error: "Not authorized" });
     }
 
-    const user = await db("users").where("employee_id", userId).first();
+    const user = await db("users").where("employee_id", targetUserId).first();
     if (!user) {
       return res.status(404).json({ success: false, error: "User not found" });
     }
@@ -43,84 +45,65 @@ const createOrUpdateAttendance = async (req, res, next) => {
     const now = new Date();
 
     let record;
+    let updated = false;
 
-    try {
-      if (action === "checkin") {
-        [record] = await db("attendance")
-          .where("user_id", userId)
-          .where("date", dateStr)
-          .update({ status: "Present", check_in_at: now, updated_at: now })
-          .returning("*");
-
-        if (!record) {
-          [record] = await db("attendance")
-            .insert({
-              user_id: userId,
-              date: dateStr,
-              status: "Present",
-              check_in_at: now,
-              created_at: now,
-              updated_at: now,
-            })
-            .returning("*");
-        }
-      } else if (action === "checkout") {
-        [record] = await db("attendance")
-          .where("user_id", userId)
-          .where("date", dateStr)
-          .update({ check_out_at: now, updated_at: now })
-          .returning("*");
-      } else if (status) {
-        [record] = await db("attendance")
-          .where("user_id", userId)
-          .where("date", dateStr)
-          .update({ status, updated_at: now })
-          .returning("*");
-
-        if (!record) {
-          [record] = await db("attendance")
-            .insert({
-              user_id: userId,
-              date: dateStr,
-              status,
-              created_at: now,
-              updated_at: now,
-            })
-            .returning("*");
-        }
-      }
-    } catch (insertError) {
-      if (insertError.code === "SQLITE_CONSTRAINT_UNIQUE") {
-        if (action === "checkin") {
-          [record] = await db("attendance")
-            .where("user_id", userId)
-            .where("date", dateStr)
-            .update({ status: "Present", check_in_at: now, updated_at: now })
-            .returning("*");
-        } else if (action === "checkout") {
-          [record] = await db("attendance")
-            .where("user_id", userId)
-            .where("date", dateStr)
-            .update({ check_out_at: now, updated_at: now })
-            .returning("*");
-        } else if (status) {
-          [record] = await db("attendance")
-            .where("user_id", userId)
-            .where("date", dateStr)
-            .update({ status, updated_at: now })
-            .returning("*");
-        }
-      } else {
-        throw insertError;
-      }
-    }
-
-    if (!record) {
-      record = await db("attendance")
-        .where("user_id", userId)
+    if (action === "checkin") {
+      const existing = await db("attendance")
+        .where("user_id", targetUserId)
         .where("date", dateStr)
         .first();
+      
+      if (existing) {
+        await db("attendance")
+          .where("id", existing.id)
+          .update({ status: "Present", check_in_at: now, updated_at: now });
+        updated = true;
+      }
+      
+      if (!updated) {
+        const newId = crypto.randomUUID();
+        await db("attendance").insert({
+          id: newId,
+          user_id: targetUserId,
+          date: dateStr,
+          status: "Present",
+          check_in_at: now,
+          created_at: now,
+          updated_at: now,
+        });
+      }
+    } else if (action === "checkout") {
+      await db("attendance")
+        .where("user_id", targetUserId)
+        .where("date", dateStr)
+        .update({ check_out_at: now, updated_at: now });
+    } else if (status) {
+      const existing = await db("attendance")
+        .where("user_id", targetUserId)
+        .where("date", dateStr)
+        .first();
+      
+      if (existing) {
+        await db("attendance")
+          .where("id", existing.id)
+          .update({ status, updated_at: now });
+      } else {
+        const newId = crypto.randomUUID();
+        await db("attendance").insert({
+          id: newId,
+          user_id: targetUserId,
+          date: dateStr,
+          status,
+          created_at: now,
+          updated_at: now,
+        });
+      }
     }
+
+    record = await db("attendance")
+      .where("user_id", targetUserId)
+      .where("date", dateStr)
+      .first();
 
     const isLate = isLateCheckIn(record.check_in_at);
     const attendanceStatus = record.status === "Present" ? (isLate ? "Late" : "On Time") : record.status;

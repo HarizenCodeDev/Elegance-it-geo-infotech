@@ -2,6 +2,7 @@ import db from "../config/database.js";
 import { createNotification } from "./notificationController.js";
 import { updateBalance, getOrCreateBalance } from "./leaveBalanceController.js";
 import { logActivity } from "./activityLogController.js";
+import crypto from "crypto";
 
 const canApprove = (role) => ["root", "admin", "manager"].includes(role);
 
@@ -71,19 +72,21 @@ const createLeave = async (req, res, next) => {
       });
     }
 
-    const [leave] = await db("leaves")
-      .insert({
-        user_id: userId,
-        type,
-        from_date: fromDate,
-        to_date: toDate,
-        description: description || null,
-        status: "Pending",
-      })
-      .returning("*");
+    const leaveId = crypto.randomUUID();
+    await db("leaves").insert({
+      id: leaveId,
+      user_id: userId,
+      type,
+      from_date: fromDate,
+      to_date: toDate,
+      description: description || null,
+      status: "Pending",
+    });
+
+    const leave = await db("leaves").where("id", leaveId).first();
 
     // Get user info
-    const user = await db("users").where("id", userId).first();
+    const user = await db("users").where("employee_id", userId).first();
 
     res.status(201).json({
       success: true,
@@ -195,13 +198,14 @@ const updateLeaveStatus = async (req, res, next) => {
       });
     }
 
-    const [leave] = await db("leaves")
+    const [updatedCount] = await db("leaves")
       .where("id", id)
       .update({
         status,
         updated_at: db.fn.now(),
-      })
-      .returning("*");
+      });
+
+    const leave = await db("leaves").where("id", id).first();
 
     const year = new Date(leave.from_date).getFullYear();
     const fromDate = new Date(leave.from_date);
@@ -228,7 +232,7 @@ const updateLeaveStatus = async (req, res, next) => {
     }
 
     // Send notification
-    const user = await db("users").where("id", leave.user_id).first();
+    const user = await db("users").where("employee_id", leave.user_id).first();
     if (user) {
       if (status === "Approved") {
         await createNotification(
