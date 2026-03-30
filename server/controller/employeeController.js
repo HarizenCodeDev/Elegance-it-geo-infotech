@@ -443,15 +443,18 @@ const deleteEmployee = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Prevent deleting self
-    if (id === req.user._id) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const queryField = uuidRegex.test(id) ? "id" : "employee_id";
+
+    // Prevent deleting self - check both UUID and employee_id
+    if (id === req.user._id || id === req.user.employee_id) {
       return res.status(400).json({
         success: false,
         error: "Cannot delete your own account",
       });
     }
 
-    const deleted = await db("users").where("employee_id", id).del();
+    const deleted = await db("users").where(queryField, id).del();
 
     if (!deleted) {
       return res.status(404).json({
