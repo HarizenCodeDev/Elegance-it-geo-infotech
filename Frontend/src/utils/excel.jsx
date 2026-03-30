@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import API_BASE from "../config/api.js";
 
 export const getImageUrl = (path) => {
