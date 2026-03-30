@@ -157,9 +157,14 @@ npm run dev
 
 After seeding:
 
-| Role | Email | Password |
-|------|-------|----------|
-| Root | mrnobody@elegance.com | mrnobody009 |
+| Role | Employee ID | Password |
+|------|-------------|----------|
+| Root | EJB2026001 | mrnobody009 |
+| Admin | EJB2026002 | admin123 |
+| Manager | EJB2026003 | manager123 |
+| HR | EJB2026004 | hr123456 |
+| Team Lead | EJB2026005 | teamlead123 |
+| Developer | EJB2026006 | dev123456 |
 
 ---
 
@@ -336,19 +341,41 @@ VITE_API_BASE_URL=https://api.your-domain.com
 
 ## 🧪 Testing
 
+### E2E Tests with Playwright
+
 ```bash
-# Run all tests
+# Run all E2E tests (127 tests)
 npm test
 
-# E2E tests with Playwright
-npx playwright test
+# Run with UI
+npx playwright test --ui
 
-# Backend unit tests
-cd server && npm test
+# Run specific test file
+npx playwright test tests/leaves.spec.js
 
-# Frontend component tests
-cd Frontend && npm run test
+# Run tests in headed mode
+npx playwright test --headed
+
+# Debug specific test
+npx playwright test tests/api/app.spec.js:174 --debug
 ```
+
+### Test Coverage
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Authentication | 15 | Login, logout, session management, rate limiting |
+| Employees | 12 | CRUD operations, search, validation |
+| Attendance | 8 | Check-in/out, manual entry, status tracking |
+| Leaves | 8 | Request, approval, overlap prevention |
+| RBAC | 45 | Role hierarchy, permissions matrix |
+| Security | 25 | XSS, SQL injection, rate limiting |
+| Performance | 8 | Response times, stress testing |
+| API Integration | 6 | End-to-end workflows |
+
+### Test Status
+
+All 127 E2E tests are currently passing (100% pass rate).
 
 ---
 

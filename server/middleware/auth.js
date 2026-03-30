@@ -23,7 +23,6 @@ const ROLE_HIERARCHY = {
 const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.header("Authorization");
-    console.log('[DEBUG auth] authHeader:', authHeader);
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
@@ -33,10 +32,8 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    console.log('[DEBUG auth] token:', token.substring(0, 50) + '...');
 
     const blacklisted = await isTokenBlacklisted(token);
-    console.log('[DEBUG auth] blacklisted:', blacklisted);
     if (blacklisted) {
       return res.status(401).json({
         success: false,
@@ -45,12 +42,10 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, config.JWT_SECRET);
-    console.log('[DEBUG auth] decoded:', decoded);
     req.user = decoded;
     req.user.role = decoded.role;
     next();
   } catch (error) {
-    console.log('[DEBUG auth] error:', error.message);
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,
@@ -74,7 +69,6 @@ const requireRole = (...allowedRoles) => {
     }
 
     const userRole = req.user.role || req.user.user?.role;
-    console.log('[DEBUG requireRole] userRole:', userRole, 'allowedRoles:', allowedRoles, 'req.user:', req.user);
     
     if (!userRole) {
       return res.status(401).json({
@@ -83,13 +77,11 @@ const requireRole = (...allowedRoles) => {
       });
     }
     
-    // Root always has access
     if (userRole === "root") {
       return next();
     }
     
     if (!allowedRoles.includes(userRole)) {
-      console.log('[DEBUG requireRole] Access denied for role:', userRole, 'allowed:', allowedRoles);
       return res.status(403).json({
         success: false,
         error: "Access denied. Insufficient permissions.",
