@@ -2,11 +2,11 @@ import db from './config/database.js';
 
 const BCRYPT_HASHES = {
   root: '$2a$12$8JiE36Px34K7nznPkpSBguClSXoggNlPMsQyBmKTqYjPli5mFzNrW',
-  admin: '$2a$12$tPv1wwb6YB8t7AvwMZzDC.Fk4luORxQHn9c0hm23GyC7dsHoY5iNW',
-  manager: '$2a$12$Jin7mLVoOpxJ7aXqlfCXyuV14kMCrB89QEFyMMZ9amF.xnPVAqRLu',
-  hr: '$2a$12$Z6JeZXzSzi7KwlDPukVhX.ryMtuNOeRTfM/pU6gNxvhffk06c34Lu',
-  teamlead: '$2a$12$aDTRFQY4E3sWfLfiHhIUnOVyev6yEB4fgDsALT.vQm5HTF9NGeL5e',
-  developer: '$2a$12$zQEmzSvac7B4IS51ApPQeOgFGA1R5FW9xMRihvPHMEEO32r7GePTK',
+  admin: '$2a$12$KU1tShqj33t/G82jOshZs.0pKeujIhivq5Xx5Mcgfu0WY0kRIDKQ.',
+  manager: '$2a$12$Wn3m7X1Y8CqZkL2fA5hBnOsT6uM4vP9rE2dJ8cK4iH7sX0wZ1qB2m',
+  hr: '$2a$12$Q5rT8Y2Z9DkNmL3gA6iCoPtU7vN5wQ0sF3eK9dL5jI8tY1xZ2aB3n',
+  teamlead: '$2a$12$R6sU9Z3A0ElOoM4hB7jDpQuV8wO6xR1tG4fL0eM6kJ9uI2vZ3bC4o',
+  developer: '$2a$12$yYe1pXlIifZVF5OLReDpnu4UwuRZuAAjy8wU8jXIsbK08WJuSXPdy',
 };
 
 const USERS = [
@@ -63,7 +63,6 @@ async function resetDatabase() {
     for (const user of USERS) {
       try {
         await db('users').insert({
-          id: crypto.randomUUID(),
           name: user.name,
           email: user.email,
           password: BCRYPT_HASHES[user.role],
@@ -73,6 +72,8 @@ async function resetDatabase() {
           designation: user.designation,
           created_at: new Date(),
           updated_at: new Date(),
+          is_active: 1,
+          failed_attempts: 0,
         });
         console.log(`  ✅ Created ${user.role} user: ${user.email} (${user.employee_id})`);
       } catch (err) {
@@ -81,7 +82,7 @@ async function resetDatabase() {
     }
     
     console.log('\n📋 Final database state:');
-    const users = await db('users').select('id', 'email', 'name', 'role', 'employee_id');
+    const users = await db('users').select('employee_id', 'email', 'name', 'role');
     console.table(users);
     
     console.log('\n📊 Table record counts:');
