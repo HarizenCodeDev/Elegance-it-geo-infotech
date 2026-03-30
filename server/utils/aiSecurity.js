@@ -279,28 +279,32 @@ export const securityMiddleware = async (req, res, next) => {
   const startTime = Date.now();
 
   res.on("finish", async () => {
-    const duration = Date.now() - startTime;
-    const riskScore = duration < 10 && req.method === "POST" ? 0 : aiSecurity.analyzeInput(req.body);
+    try {
+      const duration = Date.now() - startTime;
+      const riskScore = duration < 10 && req.method === "POST" ? 0 : aiSecurity.analyzeInput(req.body);
 
-    if (riskScore.isThreat) {
-      await aiSecurity.logSecurityEvent(
-        req.user?._id || "anonymous",
-        "THREAT_DETECTED",
-        "high",
-        {
+      if (riskScore.isThreat) {
+        await aiSecurity.logSecurityEvent(
+          req.user?._id || "anonymous",
+          "THREAT_DETECTED",
+          "high",
+          {
+            ip: req.ip,
+            userAgent: req.headers["user-agent"],
+            threats: riskScore.threats,
+            endpoint: req.originalUrl,
+          }
+        );
+
+        logger.warn("Threat detected", {
+          userId: req.user?._id,
           ip: req.ip,
-          userAgent: req.headers["user-agent"],
           threats: riskScore.threats,
           endpoint: req.originalUrl,
-        }
-      );
-
-      logger.warn("Threat detected", {
-        userId: req.user?._id,
-        ip: req.ip,
-        threats: riskScore.threats,
-        endpoint: req.originalUrl,
-      });
+        });
+      }
+    } catch (error) {
+      logger.error("Error in securityMiddleware finish handler", { error: error.message });
     }
   });
 
