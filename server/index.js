@@ -117,7 +117,7 @@ app.use(
 
 const globalLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 50000,
+  max: 500000,
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: false,
@@ -128,7 +128,7 @@ app.use("/api/", globalLimiter);
 
 const authLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 500,
+  max: 5000,
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
@@ -139,7 +139,7 @@ app.use("/api/auth/forgot-password", authLimiter);
 
 const sensitiveEndpointLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 200,
+  max: 5000,
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },

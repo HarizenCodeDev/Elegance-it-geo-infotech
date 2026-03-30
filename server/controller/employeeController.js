@@ -103,37 +103,27 @@ const createEmployee = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 12);
     const profileImage = req.file ? await uploadFile(req.file, "profiles") : null;
 
-    const [user] = await db("users")
-      .insert({
-        name,
-        email: email ? email.toLowerCase() : null,
-        password: hashedPassword,
-        role,
-        employee_id: finalEmployeeId,
-        dob: formattedDob,
-        gender: gender || null,
-        marital_status: maritalStatus || null,
-        designation: designation || null,
-        department: branchDepartment || null,
-        salary: salary ? parseFloat(salary) : null,
-        profile_image: profileImage,
-      })
-      .returning([
-        "id",
-        "name",
-        "email",
-        "role",
-        "employee_id",
-        "department",
-        "designation",
-        "profile_image",
-        "created_at",
-      ]);
+    await db("users").insert({
+      name,
+      email: email ? email.toLowerCase() : null,
+      password: hashedPassword,
+      role,
+      employee_id: finalEmployeeId,
+      dob: formattedDob,
+      gender: gender || null,
+      marital_status: maritalStatus || null,
+      designation: designation || null,
+      department: branchDepartment || null,
+      salary: salary ? parseFloat(salary) : null,
+      profile_image: profileImage,
+    });
+
+    const user = await db("users").where("employee_id", finalEmployeeId).first();
 
     res.status(201).json({
       success: true,
       user: {
-        _id: user.id,
+        _id: user.employee_id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -158,6 +148,13 @@ const listEmployees = async (req, res, next) => {
 
     const allowedRoles = ["root", "admin", "manager", "hr"];
     const canViewAll = allowedRoles.includes(req.user.role);
+
+    if (!canViewAll) {
+      return res.status(403).json({
+        success: false,
+        error: "Not authorized to view all employees",
+      });
+    }
     
     const whereConditions = [];
     
@@ -514,7 +511,7 @@ const getEmployee = async (req, res, next) => {
     res.json({
       success: true,
       user: {
-        _id: user.id,
+        _id: user.employee_id,
         name: user.name,
         email: user.email,
         role: user.role,

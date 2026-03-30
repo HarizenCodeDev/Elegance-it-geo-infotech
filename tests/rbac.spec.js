@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const API_BASE = 'http://192.168.29.205/api';
+const API_BASE = 'http://localhost:5001/api';
 
 const CREDENTIALS = {
   root: { employee_id: 'EJB2026001', password: 'mrnobody009' },
@@ -294,6 +294,34 @@ test.describe('RBAC - Cross-Role Access Matrix', () => {
     { method: 'GET', path: '/announcements', allowedRoles: ['root', 'admin', 'manager', 'hr', 'teamlead', 'developer'] },
   ];
 
+  const getPostData = (method, path) => {
+    if (path === '/employees') {
+      return {
+        name: 'Test Employee',
+        email: `test_${Date.now()}@example.com`,
+        password: 'password123',
+        role: 'developer',
+        designation: 'Developer',
+        department: 'Engineering'
+      };
+    }
+    if (path === '/holidays') {
+      return {
+        name: 'Test Holiday',
+        date: '2026-12-25',
+        type: 'public',
+        description: 'Test holiday description'
+      };
+    }
+    if (path === '/announcements') {
+      return {
+        title: 'Test Announcement',
+        message: 'This is a test announcement message for RBAC testing'
+      };
+    }
+    return { name: 'Test' };
+  };
+
   for (const endpoint of endpoints) {
     test(`${endpoint.method} ${endpoint.path}`, async ({ request }) => {
       for (const role of roles) {
@@ -312,7 +340,7 @@ test.describe('RBAC - Cross-Role Access Matrix', () => {
               ...options.headers,
               'Content-Type': 'application/json'
             },
-            data: { name: 'Test' }
+            data: getPostData(endpoint.method, endpoint.path)
           });
         }
         

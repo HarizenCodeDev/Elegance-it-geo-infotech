@@ -1,8 +1,22 @@
 import { test, expect } from '@playwright/test';
 
-const API_BASE = 'http://192.168.29.205/api';
+const API_BASE = 'http://localhost:5001/api';
 let adminToken = '';
 let devToken = '';
+
+async function clearUserLeaves(request, token) {
+  const listRes = await request.get(`${API_BASE}/leaves`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (listRes.ok()) {
+    const data = await listRes.json();
+    for (const leave of data.leaves || []) {
+      await request.delete(`${API_BASE}/leaves/${leave._id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    }
+  }
+}
 
 test.describe('Leaves API', () => {
   test.beforeAll(async ({ request }) => {
@@ -15,6 +29,8 @@ test.describe('Leaves API', () => {
       data: { employee_id: 'EJB2026006', password: 'dev123456' }
     });
     devToken = (await devLogin.json()).token;
+    
+    await clearUserLeaves(request, devToken);
   });
 
   test('GET /leaves - List All Leaves (Admin)', async ({ request }) => {
@@ -30,10 +46,11 @@ test.describe('Leaves API', () => {
   });
 
   test('POST /leaves - Apply Leave (Future Dates)', async ({ request }) => {
+    const timestamp = Date.now();
     const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + 30);
+    futureDate.setDate(futureDate.getDate() + 300 + (timestamp % 100));
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 32);
+    endDate.setDate(endDate.getDate() + 302 + (timestamp % 100));
     
     const res = await request.post(`${API_BASE}/leaves`, {
       headers: { 
@@ -44,7 +61,7 @@ test.describe('Leaves API', () => {
         type: 'Sick Leave',
         from: futureDate.toISOString().split('T')[0],
         to: endDate.toISOString().split('T')[0],
-        reason: 'Medical appointment'
+        reason: `Medical appointment ${timestamp}`
       }
     });
     expect([200, 201]).toContain(res.status());
@@ -76,10 +93,11 @@ test.describe('Leaves API', () => {
   });
 
   test('POST /leaves - Invalid Leave Type', async ({ request }) => {
+    const timestamp = Date.now();
     const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + 40);
+    futureDate.setDate(futureDate.getDate() + 340 + (timestamp % 20));
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 42);
+    endDate.setDate(endDate.getDate() + 342 + (timestamp % 20));
     
     const res = await request.post(`${API_BASE}/leaves`, {
       headers: { 
@@ -90,7 +108,7 @@ test.describe('Leaves API', () => {
         type: 'Invalid Leave Type',
         from: futureDate.toISOString().split('T')[0],
         to: endDate.toISOString().split('T')[0],
-        reason: 'Test'
+        reason: `Test ${timestamp}`
       }
     });
     expect(res.status()).toBe(400);
@@ -110,8 +128,9 @@ test.describe('Leaves API', () => {
   });
 
   test('POST /leaves - XSS in Reason', async ({ request }) => {
+    const timestamp = Date.now();
     const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + 50);
+    futureDate.setDate(futureDate.getDate() + 350 + (timestamp % 30));
     const endDate = new Date(futureDate);
     endDate.setDate(endDate.getDate() + 1);
     
@@ -124,7 +143,7 @@ test.describe('Leaves API', () => {
         type: 'Sick Leave',
         from: futureDate.toISOString().split('T')[0],
         to: endDate.toISOString().split('T')[0],
-        reason: '<script>alert("XSS")</script>'
+        reason: `<script>alert(\"XSS\")</script>${timestamp}`
       }
     });
     if (res.ok()) {
@@ -136,15 +155,16 @@ test.describe('Leaves API', () => {
   });
 
   test('POST /leaves - Valid Leave Types', async ({ request }) => {
+    const timestamp = Date.now();
     const leaveTypes = ['Annual Leave', 'Sick Leave', 'Casual Leave', 'unpaid'];
-    let dayOffset = 60;
+    let dayOffset = 700;
     
     for (const leaveType of leaveTypes) {
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + dayOffset);
       const endDate = new Date(futureDate);
-      endDate.setDate(endDate.getDate() + 5);
-      dayOffset += 10;
+      endDate.setDate(endDate.getDate() + 2);
+      dayOffset += 30;
       
       const res = await request.post(`${API_BASE}/leaves`, {
         headers: { 
@@ -155,7 +175,7 @@ test.describe('Leaves API', () => {
           type: leaveType,
           from: futureDate.toISOString().split('T')[0],
           to: endDate.toISOString().split('T')[0],
-          reason: `Test ${leaveType}`
+          reason: `Test ${leaveType} ${timestamp}`
         }
       });
       expect([200, 201]).toContain(res.status());

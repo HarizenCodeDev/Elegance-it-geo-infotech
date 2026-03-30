@@ -1,10 +1,24 @@
 import { test, expect } from '@playwright/test';
 
-const BASE_URL = 'http://192.168.29.205/api';
+const BASE_URL = 'http://localhost:5001/api';
 
 let rootToken = '';
 let adminToken = '';
 let devToken = '';
+
+async function clearUserLeaves(request, token) {
+  const listRes = await request.get(`${BASE_URL}/leaves`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (listRes.ok()) {
+    const data = await listRes.json();
+    for (const leave of data.leaves || []) {
+      await request.delete(`${BASE_URL}/leaves/${leave._id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    }
+  }
+}
 
 test.describe('🔐 API Authentication', () => {
   test('Login with employee ID returns token', async ({ request }) => {
@@ -162,6 +176,7 @@ test.describe('📋 Leave API', () => {
       data: { employee_id: 'EJB2026006', password: 'dev123456' }
     });
     devToken = (await res.json()).token;
+    await clearUserLeaves(request, devToken);
   });
 
   test('List leaves', async ({ request }) => {
@@ -173,7 +188,7 @@ test.describe('📋 Leave API', () => {
 
   test('Create leave application', async ({ request }) => {
     const future = new Date();
-    future.setDate(future.getDate() + 200 + Math.floor(Math.random() * 50));
+    future.setDate(future.getDate() + 800);
     const nextFuture = new Date(future);
     nextFuture.setDate(nextFuture.getDate() + 3);
     
@@ -249,7 +264,7 @@ test.describe('🎯 RBAC Tests', () => {
     const res = await request.get(`${BASE_URL}/employees`, {
       headers: { Authorization: `Bearer ${devToken}` }
     });
-    expect(res.ok()).toBeTruthy();
+    expect([401, 403]).toContain(res.status());
   });
 
   test('Admin can manage employees', async ({ request }) => {
