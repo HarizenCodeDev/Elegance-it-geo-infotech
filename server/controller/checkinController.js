@@ -1,4 +1,5 @@
 import db from "../config/database.js";
+import crypto from "crypto";
 import { logActivity } from "./activityLogController.js";
 
 const MAX_CHECKIN_PER_DAY = 3;
@@ -52,6 +53,7 @@ const updateAttendanceRecord = async (userId, checkInTime, checkOutTime) => {
   } else {
     const isLate = checkInTime ? isLateCheckIn(checkInTime) : false;
     await db("attendance").insert({
+      id: crypto.randomUUID(),
       user_id: userId,
       date: today,
       status: checkInTime ? (isLate ? "Late" : "On Time") : "Present",
@@ -80,18 +82,20 @@ const checkin = async (req, res, next) => {
       });
     }
 
-    const [record] = await db("checkin_checkout")
+    const recordId = crypto.randomUUID();
+    await db("checkin_checkout")
       .insert({
+        id: recordId,
         user_id: userId,
         type: "checkin",
         note: note || null,
         created_at: now,
-      })
-      .returning("*");
+      });
 
     await updateAttendanceRecord(userId, now, null);
 
     const allCheckins = await getTodayCheckins(userId);
+    const record = await db("checkin_checkout").where("id", recordId).first();
 
     res.status(201).json({
       success: true,
@@ -143,18 +147,20 @@ const checkout = async (req, res, next) => {
       });
     }
 
-    const [record] = await db("checkin_checkout")
+    const recordId = crypto.randomUUID();
+    await db("checkin_checkout")
       .insert({
+        id: recordId,
         user_id: userId,
         type: "checkout",
         parent_id: lastCheckin.id,
         note: note || null,
         created_at: now,
-      })
-      .returning("*");
+      });
 
     await updateAttendanceRecord(userId, null, now);
 
+    const record = await db("checkin_checkout").where("id", recordId).first();
     const checkinTime = new Date(lastCheckin.created_at);
     const checkoutTime = new Date(record.created_at);
     const duration = Math.round((checkoutTime - checkinTime) / 60000);

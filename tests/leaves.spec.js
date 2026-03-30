@@ -112,8 +112,8 @@ test.describe('Leaves API', () => {
   test('POST /leaves - XSS in Reason', async ({ request }) => {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 50);
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 51);
+    const endDate = new Date(futureDate);
+    endDate.setDate(endDate.getDate() + 1);
     
     const res = await request.post(`${API_BASE}/leaves`, {
       headers: { 
@@ -141,7 +141,7 @@ test.describe('Leaves API', () => {
     for (const leaveType of leaveTypes) {
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + Math.floor(Math.random() * 100) + 60);
-      const endDate = new Date();
+      const endDate = new Date(futureDate);
       endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 5) + 2);
       
       const res = await request.post(`${API_BASE}/leaves`, {
