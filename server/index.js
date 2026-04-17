@@ -244,6 +244,7 @@ app.use(errorHandler);
 
 const REDIRECT_PORT = process.env.REDIRECT_PORT || 80;
 
+console.log("All imports completed successfully");
 console.log("Starting server initialization...");
 
 const startServer = async () => {
@@ -274,7 +275,12 @@ const startServer = async () => {
       });
     }
   } catch (error) {
-    logger.error("Failed to start server with optional features", { error: error.message });
+    console.error("=== STARTUP ERROR ===");
+    console.error("Error:", error);
+    console.error("Error message:", error?.message);
+    console.error("Error stack:", error?.stack);
+    console.error("====================");
+    
     if (server) {
       server.listen(PORT, HOST, () => {
         console.log(`🚀 Server running on http://${HOST}:${PORT}`);
