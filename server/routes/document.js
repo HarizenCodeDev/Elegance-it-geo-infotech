@@ -27,7 +27,8 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-router.get("/:userId?", getDocuments);
+router.get("/", getDocuments);
+router.get("/:userId", getDocuments);
 
 router.post("/", upload.single("file"), uploadDocument);
 
