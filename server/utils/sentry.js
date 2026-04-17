@@ -6,6 +6,8 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
+let sentryInitialized = false;
+
 export const initSentry = (app) => {
   if (!process.env.SENTRY_DSN) {
     console.log("Sentry DSN not configured, error tracking disabled");
@@ -32,11 +34,18 @@ export const initSentry = (app) => {
 
   app.use(Sentry.Handlers.requestHandler());
   app.use(Sentry.Handlers.tracingHandler());
-
+  
+  sentryInitialized = true;
+  
   return Sentry;
 };
 
 export const sentryErrorHandler = (app) => {
+  if (!sentryInitialized || !process.env.SENTRY_DSN) {
+    console.log("Sentry not initialized, skipping error handler");
+    return;
+  }
+  
   app.use(Sentry.Handlers.errorHandler((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const errorId = err.sentry || Sentry.captureException(err);
@@ -61,21 +70,21 @@ export const sentryErrorHandler = (app) => {
 };
 
 export const captureError = (error, context = {}) => {
-  if (process.env.SENTRY_DSN) {
+  if (sentryInitialized && process.env.SENTRY_DSN) {
     Sentry.captureException(error, { extra: context });
   }
   console.error("Error:", error.message, context);
 };
 
 export const captureMessage = (message, level = "info") => {
-  if (process.env.SENTRY_DSN) {
+  if (sentryInitialized && process.env.SENTRY_DSN) {
     Sentry.captureMessage(message, level);
   }
   console.log(`[${level}] ${message}`);
 };
 
 export const setUserContext = (user) => {
-  if (process.env.SENTRY_DSN && user) {
+  if (sentryInitialized && process.env.SENTRY_DSN && user) {
     Sentry.setUser({
       id: user._id || user.id,
       email: user.email,
@@ -85,7 +94,7 @@ export const setUserContext = (user) => {
 };
 
 export const addBreadcrumb = (message, data = {}) => {
-  if (process.env.SENTRY_DSN) {
+  if (sentryInitialized && process.env.SENTRY_DSN) {
     Sentry.addBreadcrumb({
       message,
       data,
