@@ -214,6 +214,10 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 if (fs.existsSync(frontendDistPath)) {
   app.get("*", (req, res) => {
     res.sendFile(path.join(frontendDistPath, "index.html"));
