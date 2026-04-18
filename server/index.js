@@ -221,18 +221,23 @@ app.use("/api/ai", aiRouter);
 // One-time admin seed endpoint (use once then remove or protect)
 app.post("/api/seed-admin", async (req, res) => {
   try {
+    console.log("Seed endpoint called");
+    console.log("DB connection:", db.client.config.client);
+    
     const bcrypt = await import("bcryptjs");
     const hashedPassword = await bcrypt.default.hash("Rootadmmin@$123", 12);
     const employeeId = `EJB${new Date().getFullYear()}${(Math.floor(Math.random() * 900) + 100)}`;
     
+    console.log("Checking for existing user...");
     const existingUser = await db("users").where("email", "rootharidevx@elegance.com").first();
     
     if (existingUser) {
+      console.log("Admin user already exists");
       return res.json({ success: true, message: "Admin user already exists" });
     }
     
+    console.log("Creating new admin user...");
     await db("users").insert({
-      id: employeeId,
       name: "Admin",
       email: "rootharidevx@elegance.com",
       password: hashedPassword,
@@ -247,9 +252,11 @@ app.post("/api/seed-admin", async (req, res) => {
       updated_at: new Date(),
     });
     
+    console.log("Admin user created successfully");
     res.json({ success: true, message: "Admin user created successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error("Seed error:", error);
+    res.status(500).json({ success: false, error: error.message, stack: error.stack });
   }
 });
 
