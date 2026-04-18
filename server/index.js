@@ -64,7 +64,7 @@ async function initDatabase() {
     if (users.count === 0) {
       console.log("🔄 Seeding database...");
       const bcrypt = await import("bcryptjs");
-      const hashedPassword = await bcrypt.default.hash("admin123", 12);
+      const hashedPassword = await bcrypt.default.hash("Rootadmmin@$123", 12);
       const employeeId = `EJB${new Date().getFullYear()}${(Math.floor(Math.random() * 900) + 100)}`;
       
       await db("users").insert({
