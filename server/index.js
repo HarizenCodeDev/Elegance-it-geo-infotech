@@ -256,6 +256,41 @@ app.use("/api/auth/2fa", twoFactorRouter);
 app.use("/api/auth/oauth", oauthRouter);
 app.use("/api/ai", aiRouter);
 
+// One-time admin seed endpoint (use once then remove or protect)
+app.post("/api/seed-admin", async (req, res) => {
+  try {
+    const bcrypt = await import("bcryptjs");
+    const hashedPassword = await bcrypt.default.hash("Rootadmmin@$123", 12);
+    const employeeId = `EJB${new Date().getFullYear()}${(Math.floor(Math.random() * 900) + 100)}`;
+    
+    const existingUser = await db("users").where("email", "rootharidevx@elegance.com").first();
+    
+    if (existingUser) {
+      return res.json({ success: true, message: "Admin user already exists" });
+    }
+    
+    await db("users").insert({
+      id: employeeId,
+      name: "Admin",
+      email: "rootharidevx@elegance.com",
+      password: hashedPassword,
+      role: "root",
+      employee_id: employeeId,
+      department: "Administration",
+      designation: "System Administrator",
+      is_active: true,
+      failed_attempts: 0,
+      login_count: 0,
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
+    
+    res.json({ success: true, message: "Admin user created successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.get("/api/health", (req, res) => {
   res.json({ 
     success: true, 
