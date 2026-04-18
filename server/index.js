@@ -70,7 +70,7 @@ async function initDatabase() {
       await db("users").insert({
         id: employeeId,
         name: "Admin",
-        email: "admin@elegance.com",
+        email: "rootharidevx@elegance.com",
         password: hashedPassword,
         role: "root",
         employee_id: employeeId,
