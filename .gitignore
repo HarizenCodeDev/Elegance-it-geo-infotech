@@ -28,3 +28,4 @@ elegance.db
 # Test artifacts & reports
 reports/html/data/
 test-results/
+.vercel
