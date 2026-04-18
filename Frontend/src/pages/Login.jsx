@@ -167,7 +167,7 @@ const Login = () => {
           </div>
         </div>
 
-        <div className="bg-black/10 backdrop-blur-xl rounded-3xl border border-2 border-black/90 p-8 shadow-2xl">
+        <div className="bg-black/10 backdrop-blur-xl rounded-3xl border-2 border-black/90 p-8 shadow-2xl">
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center p-2 rounded-lg bg-cyan-500/20 mb-3">
               <Lock size={20} className="text-cyan-400" />
