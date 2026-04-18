@@ -222,7 +222,37 @@ app.use("/api/ai", aiRouter);
 app.post("/api/seed-admin", async (req, res) => {
   try {
     console.log("Seed endpoint called");
-    console.log("DB connection:", db.client.config.client);
+    console.log("DB client:", db.client.config.client);
+    console.log("DB connection:", db.client.config.connection);
+    
+    // Test database connection first
+    const testResult = await db.raw('SELECT NOW()');
+    console.log("DB connected:", !!testResult);
+    
+    // Check if users table exists
+    const hasUsers = await db.schema.hasTable('users');
+    console.log("Users table exists:", hasUsers);
+    
+    if (!hasUsers) {
+      // Create users table if it doesn't exist
+      console.log("Creating users table...");
+      await db.schema.createTable("users", (table) => {
+        table.uuid("id").primary().defaultTo(db.raw("gen_random_uuid()"));
+        table.string("name").notNullable();
+        table.string("email").unique().notNullable();
+        table.string("password").notNullable();
+        table.string("role").notNullable().defaultTo("developer");
+        table.string("employee_id").unique();
+        table.string("designation");
+        table.string("department");
+        table.boolean("is_active").defaultTo(true);
+        table.integer("failed_attempts").defaultTo(0);
+        table.integer("login_count").defaultTo(0);
+        table.timestamp("created_at").defaultTo(db.fn.now());
+        table.timestamp("updated_at").defaultTo(db.fn.now());
+      });
+      console.log("Users table created");
+    }
     
     const bcrypt = await import("bcryptjs");
     const hashedPassword = await bcrypt.default.hash("Rootadmmin@$123", 12);
@@ -256,7 +286,11 @@ app.post("/api/seed-admin", async (req, res) => {
     res.json({ success: true, message: "Admin user created successfully" });
   } catch (error) {
     console.error("Seed error:", error);
-    res.status(500).json({ success: false, error: error.message, stack: error.stack });
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      hint: "Check server logs for details"
+    });
   }
 });
 
