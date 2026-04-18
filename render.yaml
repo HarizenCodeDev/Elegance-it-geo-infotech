@@ -1,8 +1,4 @@
-# Render Blueprint Specification
-# This file allows one-click deployment to Render
-
 services:
-  # Backend API Service
   - type: web
     name: elegance-api
     env: node
@@ -15,7 +11,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 3000
+        value: "3000"
       - key: DATABASE_URL
         sync: false
       - key: JWT_SECRET
