@@ -1,9 +1,10 @@
 const API_BASE = (() => {
   const env = import.meta.env.VITE_API_BASE_URL;
   if (!env || env === "") {
-    return "/api"; // Default to /api for relative requests
+    return "/api";
   }
-  return env;
+  // If the env ends with /api, use it as is, otherwise append /api
+  return env.endsWith("/api") ? env : `${env}/api`;
 })();
 
 export default API_BASE;
