@@ -6,26 +6,14 @@ dotenv.config();
 
 const connectionString = process.env.DATABASE_URL || process.env.DB_URL;
 
-let finalConfig;
+// Use knexConfig for Supabase connection
 if (connectionString && connectionString.includes("supabase.co")) {
-  finalConfig = {
-    client: "pg",
-    connection: {
-      host: "db.lwiybyfwcaxuvkkulfvm.supabase.co",
-      port: 5432,
-      database: "postgres",
-      user: "postgres",
-      password: "Mrnobody@@7200",
-      ssl: { rejectUnauthorized: false }
-    },
-    useNullAsDefault: true,
-    pool: { min: 2, max: 10 }
-  };
+  const environment = process.env.NODE_ENV || "production";
+  const finalConfig = knexConfig[environment];
+  const db = knex(finalConfig);
+  export default db;
 } else {
   const environment = process.env.NODE_ENV || "development";
-  finalConfig = knexConfig[environment];
+  const db = knex(knexConfig[environment]);
+  export default db;
 }
-
-const db = knex(finalConfig);
-
-export default db;
