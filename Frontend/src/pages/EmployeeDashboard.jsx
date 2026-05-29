@@ -14,6 +14,7 @@ import LeaveCalendar from "../components/LeaveCalendar";
 import SalarySlips from "../components/SalarySlips";
 import ResignationWorkflow from "../components/ResignationWorkflow";
 import OnboardingSystem from "../components/OnboardingSystem";
+import FileExplorer from "../components/FileExplorer";
 import { 
   SkeletonDashboardHome, 
   SkeletonLeavesList,
@@ -174,6 +175,7 @@ const EmployeeDashboard = () => {
       announcementsList: <SkeletonAnnouncementsList />,
       announcements: <SkeletonAnnouncementsList />,
       checkin: <SkeletonStatCard />,
+      documents: <SkeletonTable rows={6} cols={4} />,
     };
     return skeletonMap[view] || <SkeletonDashboardHome />;
   };
@@ -213,6 +215,9 @@ const EmployeeDashboard = () => {
         break;
       case "leaveCalendar":
         Component = <LeaveCalendar />;
+        break;
+      case "documents":
+        Component = <FileExplorer />;
         break;
       default:
         Component = <EmployeeHome stats={stats} loading={loading} />;

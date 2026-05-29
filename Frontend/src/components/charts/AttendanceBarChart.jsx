@@ -24,8 +24,7 @@ const AttendanceBarChart = ({ data }) => {
   const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } = Charts;
 
   return (
-    <div style={{ width: "100%", height: 256, minHeight: 256 }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+    <ResponsiveContainer width="100%" height={256}>
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
         <XAxis dataKey="day" stroke="var(--color-text-muted)" />
@@ -40,7 +39,6 @@ const AttendanceBarChart = ({ data }) => {
         <Bar dataKey="present" fill="#06b6d4" radius={[8, 8, 0, 0]} name="Attendance" />
       </BarChart>
     </ResponsiveContainer>
-    </div>
   );
 };
 

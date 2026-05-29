@@ -35,7 +35,7 @@ const notifyRole = async (roles, title, message, type = "info") => {
 const getNotifications = async (req, res, next) => {
   try {
     const { unreadOnly, limit = 50 } = req.query;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     let query = db("notifications")
       .where("user_id", userId)
@@ -65,7 +65,7 @@ const getNotifications = async (req, res, next) => {
         link: n.link,
         createdAt: n.created_at,
       })),
-      unreadCount: unreadCount?.count || 0,
+      unreadCount: parseInt(unreadCount?.count) || 0,
     });
   } catch (error) {
     next(error);
@@ -75,7 +75,7 @@ const getNotifications = async (req, res, next) => {
 const markAsRead = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     await db("notifications")
       .where("id", id)
@@ -90,7 +90,7 @@ const markAsRead = async (req, res, next) => {
 
 const markAllAsRead = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     await db("notifications")
       .where("user_id", userId)
@@ -106,7 +106,7 @@ const markAllAsRead = async (req, res, next) => {
 const deleteNotification = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     await db("notifications")
       .where("id", id)

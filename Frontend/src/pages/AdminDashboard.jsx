@@ -21,6 +21,7 @@ import OnboardingSystem from "../components/OnboardingSystem";
 import CheckInOut from "../components/CheckInOut";
 import LoginLogs from "../components/LoginLogs";
 import SessionManagement from "../components/SessionManagement";
+import FileExplorer from "../components/FileExplorer";
 import { 
   SkeletonDashboardHome, 
   SkeletonEmployeesList, 
@@ -117,6 +118,7 @@ const AdminDashboard = () => {
       loginLogs: <SkeletonTable rows={8} cols={4} />,
       sessions: <SkeletonList items={5} />,
       checkin: <SkeletonStatCard />,
+      documents: <SkeletonTable rows={6} cols={4} />,
     };
 
     if (loading) {
@@ -190,6 +192,8 @@ const AdminDashboard = () => {
         return <LoginLogs />;
       case "sessions":
         return <SessionManagement />;
+      case "documents":
+        return <FileExplorer />;
       default:
         return <DashboardHome stats={stats} loading={loadingStats} />;
     }

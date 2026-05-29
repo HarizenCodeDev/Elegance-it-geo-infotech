@@ -31,51 +31,49 @@ const CheckInOutChart = ({ data }) => {
   }));
 
   return (
-    <div style={{ width: "100%", height: 256, minHeight: 256 }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-          <XAxis dataKey="day" stroke="var(--color-text-muted)" />
-          <YAxis 
-            stroke="var(--color-text-muted)"
-            domain={[6, 22]}
-            ticks={[6, 9, 12, 15, 18, 21]}
-            tickFormatter={(v) => `${v}:00`}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: 'var(--color-bg-primary)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '8px',
-            }}
-            formatter={(value, name) => {
-              const hours = Math.floor(value);
-              const mins = Math.round((value - hours) * 60);
-              return [`${hours}:${mins.toString().padStart(2, '0')}`, name === 'checkInHour' ? 'Check In' : 'Check Out'];
-            }}
-          />
-          <Legend />
-          <Line 
-            type="monotone" 
-            dataKey="checkInHour" 
-            stroke="#06b6d4" 
-            strokeWidth={2}
-            dot={{ fill: '#06b6d4', strokeWidth: 2 }}
-            name="Check In"
-            connectNulls
-          />
-          <Line 
-            type="monotone" 
-            dataKey="checkOutHour" 
-            stroke="#f59e0b" 
-            strokeWidth={2}
-            dot={{ fill: '#f59e0b', strokeWidth: 2 }}
-            name="Check Out"
-            connectNulls
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={256}>
+      <LineChart data={chartData}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+        <XAxis dataKey="day" stroke="var(--color-text-muted)" />
+        <YAxis 
+          stroke="var(--color-text-muted)"
+          domain={[6, 22]}
+          ticks={[6, 9, 12, 15, 18, 21]}
+          tickFormatter={(v) => `${v}:00`}
+        />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: 'var(--color-bg-primary)',
+            border: '1px solid var(--color-border)',
+            borderRadius: '8px',
+          }}
+          formatter={(value, name) => {
+            const hours = Math.floor(value);
+            const mins = Math.round((value - hours) * 60);
+            return [`${hours}:${mins.toString().padStart(2, '0')}`, name === 'checkInHour' ? 'Check In' : 'Check Out'];
+          }}
+        />
+        <Legend />
+        <Line 
+          type="monotone" 
+          dataKey="checkInHour" 
+          stroke="#06b6d4" 
+          strokeWidth={2}
+          dot={{ fill: '#06b6d4', strokeWidth: 2 }}
+          name="Check In"
+          connectNulls
+        />
+        <Line 
+          type="monotone" 
+          dataKey="checkOutHour" 
+          stroke="#f59e0b" 
+          strokeWidth={2}
+          dot={{ fill: '#f59e0b', strokeWidth: 2 }}
+          name="Check Out"
+          connectNulls
+        />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
 

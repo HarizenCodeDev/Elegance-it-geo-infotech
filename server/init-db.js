@@ -175,6 +175,18 @@ async function initDatabase() {
     });
     console.log('  ✅ Created notifications table');
 
+    // Folders table
+    console.log('📋 Creating folders table...');
+    await db.schema.createTable("folders", (table) => {
+      table.string("id", 36).primary();
+      table.string("name").notNullable();
+      table.string("parent_id");
+      table.string("user_id");
+      table.timestamp("created_at").defaultTo(db.fn.now());
+      table.timestamp("updated_at").defaultTo(db.fn.now());
+    });
+    console.log('  ✅ Created folders table');
+
     // Holidays table
     console.log('📋 Creating holidays table...');
     await db.schema.createTable("holidays", (table) => {
@@ -197,6 +209,7 @@ async function initDatabase() {
       table.string("type").notNullable();
       table.string("file_url").notNullable();
       table.text("description");
+      table.string("folder_id");
       table.timestamp("created_at").defaultTo(db.fn.now());
     });
     console.log('  ✅ Created documents table');

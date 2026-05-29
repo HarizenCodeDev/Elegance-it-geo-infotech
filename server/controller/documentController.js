@@ -5,15 +5,31 @@ const ALLOWED_TYPES = ["contract", "id_proof", "certificate", "other"];
 
 const getDocuments = async (req, res, next) => {
   try {
-    const userId = req.params.userId || req.user._id;
-    
-    if (req.params.userId && !["root", "admin", "manager"].includes(req.user.role)) {
-      return res.status(403).json({ success: false, error: "Not authorized" });
+    let userId = req.user.id;
+
+    if (req.params.userId) {
+      if (!["root", "admin", "manager"].includes(req.user.role)) {
+        return res.status(403).json({ success: false, error: "Not authorized" });
+      }
+      const user = await db("users").where("employee_id", req.params.userId).select("id").first();
+      if (!user) {
+        return res.status(404).json({ success: false, error: "User not found" });
+      }
+      userId = user.id;
     }
 
-    const documents = await db("documents")
+    const { folder_id } = req.query;
+    let query = db("documents")
       .where("user_id", userId)
       .orderBy("created_at", "desc");
+
+    if (folder_id === "null" || folder_id === "") {
+      query = query.whereNull("folder_id");
+    } else if (folder_id) {
+      query = query.where("folder_id", folder_id);
+    }
+
+    const documents = await query;
 
     res.json({
       success: true,
@@ -23,6 +39,7 @@ const getDocuments = async (req, res, next) => {
         type: d.type,
         fileUrl: d.file_url,
         description: d.description,
+        folder_id: d.folder_id,
         createdAt: d.created_at,
       })),
     });
@@ -37,8 +54,8 @@ const uploadDocument = async (req, res, next) => {
       return res.status(400).json({ success: false, error: "No file uploaded" });
     }
 
-    const userId = req.user._id;
-    const { name, type = "other", description } = req.body;
+    const userId = req.user.id;
+    const { name, type = "other", description, folder_id } = req.body;
 
     if (!ALLOWED_TYPES.includes(type)) {
       return res.status(400).json({ success: false, error: "Invalid document type" });
@@ -53,6 +70,7 @@ const uploadDocument = async (req, res, next) => {
         type,
         file_url: fileUrl,
         description,
+        folder_id: folder_id || null,
       })
       .returning("*");
 
@@ -64,6 +82,7 @@ const uploadDocument = async (req, res, next) => {
         type: document.type,
         fileUrl: document.file_url,
         description: document.description,
+        folder_id: document.folder_id,
         createdAt: document.created_at,
       },
     });
@@ -75,7 +94,7 @@ const uploadDocument = async (req, res, next) => {
 const deleteDocument = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     const doc = await db("documents").where("id", id).first();
 

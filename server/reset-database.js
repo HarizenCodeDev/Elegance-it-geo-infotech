@@ -36,6 +36,7 @@ async function resetDatabase() {
       'holidays',
       'announcements',
       'documents',
+      'folders',
       'login_logs',
       'login_attempts',
       'password_history',

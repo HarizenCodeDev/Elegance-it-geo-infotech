@@ -1,0 +1,273 @@
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T06:17:13.926Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T06:17:13.936Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T06:17:13.940Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:17:13.953Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T06:17:13.954Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:17:13.954Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T06:20:23.077Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T06:20:23.084Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T06:20:23.088Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:20:23.097Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T06:20:23.098Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:20:23.098Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T06:23:26.883Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T06:23:26.891Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T06:23:26.895Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:23:26.905Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T06:23:26.906Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:23:26.906Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T06:23:38.505Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T06:23:38.513Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T06:23:38.517Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:23:38.525Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T06:23:38.526Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:23:38.526Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T06:24:39.907Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T06:24:39.915Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T06:24:39.918Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:24:39.928Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T06:24:39.928Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:24:39.929Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T06:28:24.762Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T06:28:24.769Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T06:28:24.773Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:28:24.784Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T06:28:24.784Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T06:28:24.785Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T07:00:07.402Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T07:00:07.408Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T07:00:07.411Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T07:00:07.424Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T07:00:07.425Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T07:00:07.425Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:47:50.050Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:47:50.060Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:47:50.063Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:47:50.070Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:47:50.071Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:47:50.071Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:47:50.071Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:51:45.209Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:51:45.219Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:51:45.224Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:51:45.236Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:51:45.237Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:51:45.237Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:51:45.237Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:52:02.084Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:52:02.090Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:52:02.094Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:02.103Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:52:02.104Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:02.104Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:02.104Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:52:11.148Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:52:11.157Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:52:11.161Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:11.172Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:52:11.172Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:11.172Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:11.173Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:52:20.113Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:52:20.119Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:52:20.122Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:20.131Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:52:20.131Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:20.131Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:20.132Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:52:33.430Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:52:33.437Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:52:33.442Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:33.450Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:52:33.450Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:33.451Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:33.451Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:52:37.558Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:52:37.563Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:52:37.566Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:37.575Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:52:37.575Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:37.575Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:37.576Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:52:46.570Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:52:46.576Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:52:46.579Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:46.586Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:52:46.587Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:46.587Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:46.587Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:52:53.746Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:52:53.755Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:52:53.758Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:53.769Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:52:53.769Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:53.769Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:52:53.769Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:53:18.996Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:53:19.004Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:53:19.007Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:19.015Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:53:19.016Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:19.016Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:19.016Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:53:21.551Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:53:21.557Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:53:21.561Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:21.569Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:53:21.569Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:21.569Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:21.570Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:53:29.768Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:53:29.775Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:53:29.779Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:29.790Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:53:29.790Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:29.790Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:29.790Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:53:36.818Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:53:36.823Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:53:36.827Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:36.837Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:53:36.837Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:36.837Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:36.837Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:53:48.009Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:53:48.016Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:53:48.018Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:48.027Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:53:48.027Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:48.028Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:53:48.028Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:54:21.834Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:54:21.843Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:54:21.847Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:21.856Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:54:21.856Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:21.857Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:21.857Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:54:50.960Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:54:50.969Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:54:50.973Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:50.986Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:54:50.987Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:50.987Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:50.987Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T08:54:57.372Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T08:54:57.384Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T08:54:57.388Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:57.400Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T08:54:57.401Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:57.401Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T08:54:57.401Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:09:11.914Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:09:11.925Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:09:11.930Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:11.947Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:09:11.947Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:11.948Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:11.948Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:09:28.454Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:09:28.465Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:09:28.472Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:28.492Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:09:28.492Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:28.493Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:28.493Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:09:44.383Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:09:44.391Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:09:44.400Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:44.414Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:09:44.415Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:44.415Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:44.415Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:09:52.207Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:09:52.221Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:09:52.229Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:52.243Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:09:52.246Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:52.246Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:52.247Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:09:57.371Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:09:57.379Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:09:57.385Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:57.399Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:09:57.399Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:57.399Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:09:57.400Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:10:02.561Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:10:02.575Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:10:02.581Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:02.597Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:10:02.598Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:02.598Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:02.599Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:10:13.593Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:10:13.605Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:10:13.610Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:13.626Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:10:13.626Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:13.627Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:13.627Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:10:34.981Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:10:34.993Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:10:34.997Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:35.011Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:10:35.012Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:35.012Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:35.013Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:10:41.380Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:10:41.392Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:10:41.401Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:41.421Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:10:41.421Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:41.422Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:41.422Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:10:56.120Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:10:56.134Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:10:56.141Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:56.159Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:10:56.160Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:56.161Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:10:56.162Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:12:16.793Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:12:16.809Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:12:16.814Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:12:16.836Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:12:16.837Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:12:16.838Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:12:16.839Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:12:21.837Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:12:21.849Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:12:21.855Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:12:21.876Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:12:21.877Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:12:21.877Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:12:21.878Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:15:48.102Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:15:48.110Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:15:48.114Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:15:48.124Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:15:48.124Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:15:48.125Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:15:48.126Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:17:54.499Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:17:54.505Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:17:54.509Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:17:54.518Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:17:54.518Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:17:54.518Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:17:54.519Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:18:36.652Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:18:36.660Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:18:36.663Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:18:36.674Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:18:36.674Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:18:36.675Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:18:36.675Z"}
+{"level":"info","message":"ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy)","service":"elegance-ems","timestamp":"2026-05-29T09:29:10.846Z"}
+{"level":"info","message":"Redis not configured, continuing without Redis","service":"elegance-ems","timestamp":"2026-05-29T09:29:10.858Z"}
+{"level":"info","message":"Socket.io initialized","service":"elegance-ems","timestamp":"2026-05-29T09:29:10.867Z"}
+{"level":"info","message":"🚀 Server running on http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:29:10.882Z"}
+{"level":"info","message":"📚 API available at http://0.0.0.0:3000/api","service":"elegance-ems","timestamp":"2026-05-29T09:29:10.882Z"}
+{"level":"info","message":"🔌 WebSocket available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:29:10.883Z"}
+{"level":"info","message":"🌐 Frontend available at http://0.0.0.0:3000","service":"elegance-ems","timestamp":"2026-05-29T09:29:10.883Z"}

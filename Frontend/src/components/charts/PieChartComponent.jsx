@@ -22,8 +22,7 @@ const PieChartComponent = ({ data }) => {
   const { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } = Charts;
 
   return (
-    <div style={{ width: "100%", height: 256, minHeight: 256 }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+    <ResponsiveContainer width="100%" height={256}>
       <PieChart>
         <Pie
           data={data}
@@ -47,7 +46,6 @@ const PieChartComponent = ({ data }) => {
         />
       </PieChart>
     </ResponsiveContainer>
-    </div>
   );
 };
 

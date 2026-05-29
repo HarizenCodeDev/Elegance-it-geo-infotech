@@ -44,7 +44,7 @@ const generateSlip = async (req, res, next) => {
 
     const slip = await db("salary_slips").where("id", id).first();
 
-    await logActivity(req.user._id, "generate", "salary_slip", id, { userId: payroll.user_id, month, year }, req.ip);
+    await logActivity(req.user.id, "generate", "salary_slip", id, { userId: payroll.user_id, month, year }, req.ip);
 
     res.status(201).json({ success: true, slip });
   } catch (error) {

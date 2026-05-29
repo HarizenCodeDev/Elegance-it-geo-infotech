@@ -61,7 +61,7 @@ const processPayroll = async (req, res, next) => {
       payroll = await db("payroll").where("id", id).first();
     }
 
-    await logActivity(req.user._id, "process_payroll", "payroll", payroll.id, { userId, netPay, period: `${payPeriodStart} to ${payPeriodEnd}` }, req.ip);
+    await logActivity(req.user.id, "process_payroll", "payroll", payroll.id, { userId, netPay, period: `${payPeriodStart} to ${payPeriodEnd}` }, req.ip);
 
     res.json({ success: true, payroll });
   } catch (error) {
@@ -122,7 +122,7 @@ const deletePayroll = async (req, res, next) => {
     const deleted = await db("payroll").where("id", req.params.id).del();
     if (!deleted) return res.status(404).json({ success: false, error: "Payroll record not found" });
 
-    await logActivity(req.user._id, "delete", "payroll", req.params.id, {}, req.ip);
+    await logActivity(req.user.id, "delete", "payroll", req.params.id, {}, req.ip);
     res.json({ success: true, message: "Payroll record deleted" });
   } catch (error) {
     next(error);

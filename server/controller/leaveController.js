@@ -11,7 +11,7 @@ const VALID_LEAVE_TYPES = ["Annual Leave", "Sick Leave", "Casual Leave", "unpaid
 const createLeave = async (req, res, next) => {
   try {
     const { type, from, to, description } = req.body;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     if (!type || !from || !to) {
       return res.status(400).json({
@@ -75,7 +75,7 @@ const createLeave = async (req, res, next) => {
     const leaveId = crypto.randomUUID();
     await db("leaves").insert({
       id: leaveId,
-      user_id: userId,
+      user_id: req.user.id,
       type,
       from_date: fromDate,
       to_date: toDate,
@@ -86,7 +86,7 @@ const createLeave = async (req, res, next) => {
     const leave = await db("leaves").where("id", leaveId).first();
 
     // Get user info
-    const user = await db("users").where("employee_id", userId).first();
+    const user = await db("users").where("id", userId).first();
 
     res.status(201).json({
       success: true,
@@ -108,7 +108,7 @@ const createLeave = async (req, res, next) => {
       },
     });
     
-    await logActivity(userId, "create", "leave", leave.id, { type, from, to }, req.ip);
+    await logActivity(req.user.id, "create", "leave", leave.id, { type, from, to }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -147,7 +147,7 @@ const listLeaves = async (req, res, next) => {
       query = query.where("leaves.user_id", userId);
     }
 
-    const [{ count }] = await query.clone().clearSelect().count("* as count");
+    const [{ count }] = await query.clone().clearSelect().clearOrder().count("* as count");
     const leaves = await query.clone().limit(pageSize).offset(offset);
 
     res.json({
@@ -241,7 +241,7 @@ const updateLeaveStatus = async (req, res, next) => {
     }
 
     // Send notification
-    const user = await db("users").where("employee_id", leave.user_id).first();
+    const user = await db("users").where("id", leave.user_id).first();
     if (user) {
       if (status === "Approved") {
         await createNotification(
@@ -273,7 +273,7 @@ const updateLeaveStatus = async (req, res, next) => {
       },
     });
     
-    await logActivity(req.user._id, status.toLowerCase(), "leave", id, { type: leave.type, previousStatus: oldLeave.status }, req.ip);
+    await logActivity(req.user.id, status.toLowerCase(), "leave", id, { type: leave.type, previousStatus: oldLeave.status }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -294,7 +294,7 @@ const deleteLeave = async (req, res, next) => {
     }
 
     // Only allow deletion of own pending leaves
-    if (leave.user_id !== req.user._id) {
+    if (leave.user_id !== req.user.id) {
       return res.status(403).json({
         success: false,
         error: "Not authorized to delete this leave",

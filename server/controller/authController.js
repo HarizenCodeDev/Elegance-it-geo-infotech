@@ -185,13 +185,13 @@ const login = async (req, res, next) => {
 
     const tokenExpiry = rememberMe ? "30d" : config.JWT_EXPIRES_IN;
     const token = jwt.sign(
-      { _id: user.employee_id, role: user.role },
+      { _id: user.employee_id, id: user.id, role: user.role },
       config.JWT_SECRET,
       { expiresIn: tokenExpiry }
     );
 
     const refreshToken = jwt.sign(
-      { _id: user.employee_id, type: "refresh" },
+      { _id: user.employee_id, id: user.id, type: "refresh" },
       config.JWT_SECRET,
       { expiresIn: "30d" }
     );
@@ -272,9 +272,9 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    await createOrUpdateAttendanceOnLogin(req.user._id, "checkout");
-    await logActivity(req.user._id, "logout", "auth", req.user._id, {}, req.ip);
+    await createOrUpdateAttendanceOnLogin(req.user.id, "checkout");
 
+    await logActivity(req.user.id, "logout", "auth", req.user._id, {}, req.ip);
     res.json({
       success: true,
       message: "Logged out successfully",
@@ -314,13 +314,13 @@ const refreshAccessToken = async (req, res, next) => {
     }
 
     const newToken = jwt.sign(
-      { _id: user.employee_id, role: user.role },
+      { _id: user.employee_id, id: user.id, role: user.role },
       config.JWT_SECRET,
       { expiresIn: config.JWT_EXPIRES_IN }
     );
 
     const newRefreshToken = jwt.sign(
-      { _id: user.employee_id, type: "refresh" },
+      { _id: user.employee_id, id: user.id, type: "refresh" },
       config.JWT_SECRET,
       { expiresIn: "30d" }
     );
@@ -411,7 +411,7 @@ const validatePasswordComplexity = (password) => {
 const changePassword = async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    const userId = req.user._id;
+    const userId = req.user.id;
     const adminRoles = ["root", "admin", "manager", "hr"];
     const user = await db("users").where("id", userId).first();
 
@@ -505,7 +505,6 @@ const changePassword = async (req, res, next) => {
 const resetUserPassword = async (req, res, next) => {
   try {
     const { userId, newPassword } = req.body;
-    const requestingUserId = req.user._id;
     const requestingUserRole = req.user.role;
 
     // Only root can reset other users' passwords
@@ -530,9 +529,9 @@ const resetUserPassword = async (req, res, next) => {
       });
     }
 
-    const user = await db("users").where("employee_id", userId).first();
+    const targetUser = await db("users").where("employee_id", userId).first();
 
-    if (!user) {
+    if (!targetUser) {
       return res.status(404).json({
         success: false,
         error: "User not found",
@@ -541,9 +540,9 @@ const resetUserPassword = async (req, res, next) => {
 
     // Save old password to history
     await db("password_history").insert({
-      user_id: userId,
-      reset_by: requestingUserId,
-      password_hash: user.password,
+      user_id: targetUser.id,
+      reset_by: req.user.id,
+      password_hash: targetUser.password,
     });
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 12);
@@ -556,9 +555,9 @@ const resetUserPassword = async (req, res, next) => {
       });
 
     // Log the activity
-    await logActivity(requestingUserId, "reset_password", "auth", userId, { 
-      targetUser: user.name, 
-      targetEmail: user.email 
+    await logActivity(req.user.id, "reset_password", "auth", userId, { 
+      targetUser: targetUser.name, 
+      targetEmail: targetUser.email 
     }, req.ip);
 
     res.json({
@@ -572,9 +571,7 @@ const resetUserPassword = async (req, res, next) => {
 
 const getPasswordHistory = async (req, res, next) => {
   try {
-    const requestingUserId = req.user._id;
     const requestingUserRole = req.user.role;
-    const { userId } = req.query;
 
     // Only root can view password history
     if (requestingUserRole !== "root") {
@@ -584,6 +581,8 @@ const getPasswordHistory = async (req, res, next) => {
       });
     }
 
+    const { userId } = req.query;
+
     if (!userId) {
       return res.status(400).json({
         success: false,
@@ -591,21 +590,24 @@ const getPasswordHistory = async (req, res, next) => {
       });
     }
 
+    const targetUser = await db("users").where("employee_id", userId).first();
+    if (!targetUser) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
     const history = await db("password_history")
-      .where("user_id", userId)
+      .where("user_id", targetUser.id)
       .orderBy("created_at", "desc")
       .limit(10);
 
-    const user = await db("users").where("id", userId).first();
-
     res.json({
       success: true,
-      user: user ? {
-        _id: user.employee_id,
-        name: user.name,
-        email: user.email,
-        employeeId: user.employee_id,
-      } : null,
+      user: {
+        _id: targetUser.employee_id,
+        name: targetUser.name,
+        email: targetUser.email,
+        employeeId: targetUser.employee_id,
+      },
       history: history.map(h => ({
         _id: h.id,
         changedAt: h.created_at,
@@ -760,7 +762,7 @@ const uploadAvatar = async (req, res, next) => {
       });
     }
 
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     const oldUser = await db("users").where("id", userId).first();
     if (oldUser?.avatar) {
@@ -842,7 +844,7 @@ const getProfile = async (req, res, next) => {
 
 const getSessions = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const currentToken = req.headers.authorization?.replace("Bearer ", "");
     const currentTokenHash = currentToken ? crypto.createHash("sha256").update(currentToken).digest("hex") : null;
 
@@ -874,7 +876,7 @@ const getSessions = async (req, res, next) => {
 const terminateSession = async (req, res, next) => {
   try {
     const { sessionId } = req.params;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     const session = await db("login_sessions")
       .where("id", sessionId)
@@ -911,11 +913,9 @@ const terminateSession = async (req, res, next) => {
 
 const terminateAllSessions = async (req, res, next) => {
   try {
-    const userId = req.user._id;
-    const currentToken = req.headers.authorization?.replace("Bearer ", "");
-    const currentTokenHash = currentToken ? crypto.createHash("sha256").update(currentToken).digest("hex") : null;
+    const userId = req.user.id;
 
-    const sessionsToTerminate = await db("login_sessions")
+    await db("login_sessions")
       .where("user_id", userId)
       .where("is_active", true)
       .where("token_hash", "!=", currentTokenHash)

@@ -1,31 +1,6 @@
 {
-  "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "surge": "^0.27.3"
-  },
-  "name": "elegance1",
-  "version": "1.0.0",
-  "description": "<div align=\"center\">",
-  "main": "ecosystem.config.js",
-  "dependencies": {
-    "@opencode-ai/sdk": "^1.3.5",
-    "playwright": "^1.58.2",
-    "playwright-core": "^1.58.2"
-  },
-  "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:auth": "playwright test tests/auth.spec.js",
-    "test:employees": "playwright test tests/employees.spec.js",
-    "test:leaves": "playwright test tests/leaves.spec.js",
-    "test:attendance": "playwright test tests/attendance.spec.js",
-    "test:security": "playwright test tests/security.spec.js",
-    "test:rbac": "playwright test tests/rbac.spec.js",
-    "test:performance": "playwright test tests/performance.spec.js",
-    "test:debug": "playwright test --debug",
-    "test:report": "playwright show-report"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "private": true,
+  "name": "elegance-ems",
+  "version": "2.0.0",
+  "description": "Elegance Employee Management System"
 }

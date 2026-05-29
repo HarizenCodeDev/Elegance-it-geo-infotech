@@ -34,14 +34,14 @@ const createAnnouncement = async (req, res, next) => {
         message: message.trim(),
         audience_roles: JSON.stringify(roles),
         audience_departments: JSON.stringify(depts),
-        created_by: req.user._id,
+        created_by: req.user.id,
       });
 
     const announcement = await db("announcements").where("id", announcementId).first();
 
     // Get creator info
     const creator = await db("users")
-      .where("employee_id", req.user._id)
+      .where("id", req.user.id)
       .first();
 
     res.status(201).json({
@@ -61,7 +61,7 @@ const createAnnouncement = async (req, res, next) => {
       },
     });
     
-    await logActivity(req.user._id, "create", "announcement", announcement.id, { title }, req.ip);
+    await logActivity(req.user.id, "create", "announcement", announcement.id, { title }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -137,7 +137,7 @@ const deleteAnnouncement = async (req, res, next) => {
     }
 
     // Only creator or root can delete
-    if (announcement.created_by !== req.user._id && req.user.role !== "root") {
+    if (announcement.created_by !== req.user.id && req.user.role !== "root") {
       return res.status(403).json({
         success: false,
         error: "Not authorized to delete this announcement",

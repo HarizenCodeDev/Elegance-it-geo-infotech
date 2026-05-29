@@ -135,7 +135,7 @@ const createEmployee = async (req, res, next) => {
       },
     });
     
-    await logActivity(req.user._id, "create", "employee", user.id, { name: user.name, role: user.role }, req.ip);
+    await logActivity(req.user.id, "create", "employee", user.id, { name: user.name, role: user.role }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -168,7 +168,7 @@ const listEmployees = async (req, res, next) => {
       whereConditions.push({ type: "role", value: role });
     }
     if (!canViewAll) {
-      whereConditions.push({ type: "user_id", value: req.user._id });
+      whereConditions.push({ type: "user_id", value: req.user.id });
     }
 
     const buildQuery = (q) => {
@@ -381,7 +381,7 @@ const updateEmployee = async (req, res, next) => {
       },
     });
     
-    await logActivity(req.user._id, "update", "employee", id, { name: user.name }, req.ip);
+    await logActivity(req.user.id, "update", "employee", id, { name: user.name }, req.ip);
   } catch (error) {
     next(error);
   }
@@ -470,7 +470,7 @@ const deleteEmployee = async (req, res, next) => {
       });
     }
 
-    await logActivity(req.user._id, "delete", "employee", id, {}, req.ip);
+    await logActivity(req.user.id, "delete", "employee", id, {}, req.ip);
 
     res.json({
       success: true,

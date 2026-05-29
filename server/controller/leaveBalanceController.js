@@ -41,7 +41,13 @@ const initializeUserBalances = async (userId) => {
 const getBalances = async (req, res, next) => {
   try {
     const year = req.query.year || new Date().getFullYear();
-    const userId = req.params.userId || req.user._id;
+    const userId = req.params.userId
+      ? (await db("users").where("employee_id", req.params.userId).first())?.id
+      : req.user.id;
+
+    if (!userId) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
 
     const balances = await db("leave_balances")
       .where("user_id", userId)

@@ -67,7 +67,7 @@ const updateAttendanceRecord = async (userId, checkInTime, checkOutTime) => {
 
 const checkin = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const { note } = req.body;
     const now = new Date();
 
@@ -117,7 +117,7 @@ const checkin = async (req, res, next) => {
 
 const checkout = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const { note } = req.body;
     const now = new Date();
 
@@ -188,7 +188,7 @@ const checkout = async (req, res, next) => {
 
 const getMyRecords = async (req, res, next) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const { date, limit = 100 } = req.query;
 
     let query = db("checkin_checkout")

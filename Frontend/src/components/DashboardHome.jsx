@@ -88,9 +88,7 @@ const DashboardHome = ({ stats, loading }) => {
           style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
         >
           <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Employee Distribution</h3>
-          <div className="h-64">
-            <BarChartComponent data={roleData} />
-          </div>
+          <BarChartComponent data={roleData} />
         </div>
 
         <div 

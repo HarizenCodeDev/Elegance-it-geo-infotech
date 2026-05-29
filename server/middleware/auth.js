@@ -44,6 +44,15 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, config.JWT_SECRET);
     req.user = decoded;
     req.user.role = decoded.role;
+
+    if (!req.user.id) {
+      const db = (await import("../config/database.js")).default;
+      const user = await db("users").where("employee_id", req.user._id).select("id").first();
+      if (user) {
+        req.user.id = user.id;
+      }
+    }
+
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {

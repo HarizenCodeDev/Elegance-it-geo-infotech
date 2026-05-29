@@ -1,0 +1,273 @@
+2026-05-29 11:47:13 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 11:47:13 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 11:47:13 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 11:47:13 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:47:13 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 11:47:13 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:50:23 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 11:50:23 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 11:50:23 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 11:50:23 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:50:23 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 11:50:23 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:53:26 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 11:53:26 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 11:53:26 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 11:53:26 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:53:26 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 11:53:26 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:53:38 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 11:53:38 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 11:53:38 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 11:53:38 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:53:38 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 11:53:38 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:54:39 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 11:54:39 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 11:54:39 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 11:54:39 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:54:39 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 11:54:39 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:58:24 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 11:58:24 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 11:58:24 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 11:58:24 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 11:58:24 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 11:58:24 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 12:30:07 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 12:30:07 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 12:30:07 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 12:30:07 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 12:30:07 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 12:30:07 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:17:50 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:17:50 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:17:50 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:17:50 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:17:50 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:17:50 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:17:50 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:21:45 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:21:45 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:21:45 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:21:45 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:21:45 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:21:45 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:21:45 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:02 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:22:02 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:22:02 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:22:02 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:02 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:22:02 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:02 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:11 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:22:11 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:22:11 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:22:11 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:11 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:22:11 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:11 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:20 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:22:20 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:22:20 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:22:20 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:20 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:22:20 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:20 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:33 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:22:33 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:22:33 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:22:33 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:33 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:22:33 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:33 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:37 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:22:37 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:22:37 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:22:37 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:37 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:22:37 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:37 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:46 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:22:46 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:22:46 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:22:46 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:46 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:22:46 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:46 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:53 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:22:53 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:22:53 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:22:53 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:53 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:22:53 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:22:53 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:18 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:23:19 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:23:19 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:23:19 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:19 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:23:19 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:19 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:21 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:23:21 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:23:21 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:23:21 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:21 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:23:21 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:21 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:29 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:23:29 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:23:29 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:23:29 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:29 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:23:29 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:29 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:36 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:23:36 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:23:36 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:23:36 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:36 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:23:36 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:36 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:48 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:23:48 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:23:48 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:23:48 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:48 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:23:48 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:23:48 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:21 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:24:21 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:24:21 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:24:21 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:21 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:24:21 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:21 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:50 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:24:50 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:24:50 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:24:50 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:50 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:24:50 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:50 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:57 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:24:57 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:24:57 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:24:57 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:57 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:24:57 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:24:57 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:11 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:39:11 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:39:11 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:39:11 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:11 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:39:11 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:11 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:28 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:39:28 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:39:28 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:39:28 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:28 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:39:28 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:28 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:44 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:39:44 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:39:44 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:39:44 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:44 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:39:44 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:44 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:52 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:39:52 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:39:52 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:39:52 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:52 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:39:52 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:52 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:57 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:39:57 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:39:57 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:39:57 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:57 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:39:57 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:39:57 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:02 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:40:02 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:40:02 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:40:02 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:02 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:40:02 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:02 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:13 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:40:13 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:40:13 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:40:13 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:13 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:40:13 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:13 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:34 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:40:34 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:40:34 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:40:35 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:35 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:40:35 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:35 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:41 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:40:41 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:40:41 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:40:41 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:41 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:40:41 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:41 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:56 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:40:56 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:40:56 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:40:56 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:56 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:40:56 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:40:56 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:42:16 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:42:16 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:42:16 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:42:16 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:42:16 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:42:16 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:42:16 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:42:21 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:42:21 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:42:21 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:42:21 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:42:21 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:42:21 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:42:21 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:45:48 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:45:48 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:45:48 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:45:48 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:45:48 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:45:48 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:45:48 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:47:54 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:47:54 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:47:54 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:47:54 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:47:54 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:47:54 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:47:54 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:48:36 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:48:36 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:48:36 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:48:36 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:48:36 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:48:36 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:48:36 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:59:10 [INFO] ℹ️ USE_HTTPS not set; running over HTTP (expect TLS at proxy) {"service":"elegance-ems"}
+2026-05-29 14:59:10 [INFO] Redis not configured, continuing without Redis {"service":"elegance-ems"}
+2026-05-29 14:59:10 [INFO] Socket.io initialized {"service":"elegance-ems"}
+2026-05-29 14:59:10 [INFO] 🚀 Server running on http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:59:10 [INFO] 📚 API available at http://0.0.0.0:3000/api {"service":"elegance-ems"}
+2026-05-29 14:59:10 [INFO] 🔌 WebSocket available at http://0.0.0.0:3000 {"service":"elegance-ems"}
+2026-05-29 14:59:10 [INFO] 🌐 Frontend available at http://0.0.0.0:3000 {"service":"elegance-ems"}

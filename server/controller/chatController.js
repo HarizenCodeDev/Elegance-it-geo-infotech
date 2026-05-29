@@ -31,7 +31,7 @@ const createGroup = async (req, res, next) => {
         id: groupId,
         name: name.trim(),
         description: description?.trim() || null,
-        created_by: req.user._id,
+        created_by: req.user.id,
       })
       .returning("*");
 
@@ -41,7 +41,7 @@ const createGroup = async (req, res, next) => {
         id: group.id,
         name: group.name,
         description: group.description,
-        createdBy: req.user._id,
+        createdBy: req.user.id,
         createdAt: group.created_at,
       },
     });
@@ -92,7 +92,7 @@ const deleteGroup = async (req, res, next) => {
       });
     }
 
-    if (group.created_by !== req.user._id && req.user.role !== "root") {
+    if (group.created_by !== req.user.id && req.user.role !== "root") {
       return res.status(403).json({
         success: false,
         error: "Not authorized to delete this group",
@@ -137,6 +137,11 @@ const getMessages = async (req, res, next) => {
         .orderBy("chat_messages.ts", "asc")
         .limit(500);
     } else {
+      const contact = await db("users").where("employee_id", contactId).select("id").first();
+      if (!contact) {
+        return res.status(404).json({ success: false, error: "Contact not found" });
+      }
+
       messages = await db("chat_messages")
         .join("users", "chat_messages.from_user", "users.id")
         .select(
@@ -149,13 +154,13 @@ const getMessages = async (req, res, next) => {
         )
         .where((builder) => {
           builder
-            .where("chat_messages.from_user", req.user._id)
-            .where("chat_messages.to_user", contactId);
+            .where("chat_messages.from_user", req.user.id)
+            .where("chat_messages.to_user", contact.id);
         })
         .orWhere((builder) => {
           builder
-            .where("chat_messages.from_user", contactId)
-            .where("chat_messages.to_user", req.user._id);
+            .where("chat_messages.from_user", contact.id)
+            .where("chat_messages.to_user", req.user.id);
         })
         .orderBy("chat_messages.ts", "asc")
         .limit(500);
@@ -207,24 +212,29 @@ const sendMessage = async (req, res, next) => {
     if (type === "group") {
       [message] = await db("chat_messages")
         .insert({
-          from_user: req.user._id,
+          from_user: req.user.id,
           to_group: contactId,
           text: text.trim(),
           attachment: attachmentUrl,
         })
         .returning("*");
     } else {
+      const contact = await db("users").where("employee_id", contactId).select("id").first();
+      if (!contact) {
+        return res.status(404).json({ success: false, error: "Contact not found" });
+      }
+
       [message] = await db("chat_messages")
         .insert({
-          from_user: req.user._id,
-          to_user: contactId,
+          from_user: req.user.id,
+          to_user: contact.id,
           text: text.trim(),
           attachment: attachmentUrl,
         })
         .returning("*");
     }
 
-    const sender = await db("users").where("employee_id", req.user._id).first();
+    const sender = await db("users").where("id", req.user.id).first();
 
     res.status(201).json({
       success: true,

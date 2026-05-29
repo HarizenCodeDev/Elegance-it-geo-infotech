@@ -25,18 +25,18 @@ const getAttendanceStatus = (checkInTime) => {
 const createOrUpdateAttendance = async (req, res, next) => {
   try {
     const { userId, date, status, action } = req.body;
-    const targetUserId = userId || req.user._id;
+    const employeeId = userId || req.user._id;
 
-    if (!targetUserId || !date) {
+    if (!employeeId || !date) {
       return res.status(400).json({ success: false, error: "Missing required fields" });
     }
 
-    const self = targetUserId === req.user._id;
+    const self = employeeId === req.user._id;
     if (!self && !canWrite(req.user.role)) {
       return res.status(403).json({ success: false, error: "Not authorized" });
     }
 
-    const user = await db("users").where("employee_id", targetUserId).first();
+    const user = await db("users").where("employee_id", employeeId).first();
     if (!user) {
       return res.status(404).json({ success: false, error: "User not found" });
     }
@@ -49,7 +49,7 @@ const createOrUpdateAttendance = async (req, res, next) => {
 
     if (action === "checkin") {
       const existing = await db("attendance")
-        .where("user_id", targetUserId)
+        .where("user_id", user.id)
         .where("date", dateStr)
         .first();
       
@@ -64,7 +64,7 @@ const createOrUpdateAttendance = async (req, res, next) => {
         const newId = crypto.randomUUID();
         await db("attendance").insert({
           id: newId,
-          user_id: targetUserId,
+          user_id: user.id,
           date: dateStr,
           status: "Present",
           check_in_at: now,
@@ -74,14 +74,14 @@ const createOrUpdateAttendance = async (req, res, next) => {
       }
     } else if (action === "checkout") {
       await db("attendance")
-        .where("user_id", targetUserId)
+        .where("user_id", user.id)
         .where("date", dateStr)
         .update({ check_out_at: now, updated_at: now });
     } else if (!action && !status) {
       return res.status(400).json({ success: false, error: "Missing required fields" });
     } else if (status) {
       const existing = await db("attendance")
-        .where("user_id", targetUserId)
+        .where("user_id", user.id)
         .where("date", dateStr)
         .first();
       
@@ -93,7 +93,7 @@ const createOrUpdateAttendance = async (req, res, next) => {
         const newId = crypto.randomUUID();
         await db("attendance").insert({
           id: newId,
-          user_id: targetUserId,
+          user_id: user.id,
           date: dateStr,
           status,
           created_at: now,
@@ -103,7 +103,7 @@ const createOrUpdateAttendance = async (req, res, next) => {
     }
 
     record = await db("attendance")
-      .where("user_id", targetUserId)
+      .where("user_id", user.id)
       .where("date", dateStr)
       .first();
 
@@ -168,7 +168,7 @@ const listAttendance = async (req, res, next) => {
       attendanceQuery.where("attendance.user_id", userId);
     }
 
-    const [{ count }] = await attendanceQuery.clone().clearSelect().count("* as count");
+    const [{ count }] = await attendanceQuery.clone().clearSelect().clearOrder().count("* as count");
     const records = await attendanceQuery.clone().limit(pageSize).offset(offset);
 
     const result = records.map((r) => {
@@ -203,7 +203,7 @@ const listAttendance = async (req, res, next) => {
 const listMyAttendance = async (req, res, next) => {
   try {
     const { from, to } = req.query;
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     const checkinQuery = db("checkin_checkout")
       .where("user_id", userId)
@@ -315,11 +315,11 @@ const qrCheckin = async (req, res, next) => {
     if (!qrRecord) return res.status(400).json({ success: false, error: "Invalid QR token" });
     if (new Date(qrRecord.expires_at) < new Date()) return res.status(400).json({ success: false, error: "QR token expired" });
 
-    await db("qr_checkin_tokens").where("id", qrRecord.id).update({ used: true, used_by: req.user._id, used_at: db.fn.now() });
+    await db("qr_checkin_tokens").where("id", qrRecord.id).update({ used: true, used_by: req.user.id, used_at: db.fn.now() });
 
     const id = crypto.randomUUID();
     await db("checkin_checkout").insert({
-      id, user_id: req.user._id, type: "checkin", note: "QR check-in", ip_address: req.ip,
+      id, user_id: req.user.id, type: "checkin", note: "QR check-in", ip_address: req.ip,
     });
 
     res.json({ success: true, message: "QR check-in successful" });
@@ -349,7 +349,7 @@ const geoCheckin = async (req, res, next) => {
 
     const id = crypto.randomUUID();
     await db("checkin_checkout").insert({
-      id, user_id: req.user._id, type: "checkin",
+      id, user_id: req.user.id, type: "checkin",
       location: JSON.stringify({ latitude: parseFloat(latitude), longitude: parseFloat(longitude), distance: Math.round(distance) }),
       ip_address: req.ip, note: "Geo check-in",
     });

@@ -28,7 +28,7 @@ const createTask = async (req, res, next) => {
 
     const task = await db("onboarding_tasks").where("id", id).first();
 
-    await logActivity(req.user._id, "create", "onboarding", id, { userId, taskName }, req.ip);
+    await logActivity(req.user.id, "create", "onboarding", id, { userId, taskName }, req.ip);
 
     res.status(201).json({ success: true, task });
   } catch (error) {

@@ -24,23 +24,21 @@ const BarChartComponent = ({ data }) => {
   const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } = Charts;
 
   return (
-    <div style={{ width: "100%", height: 256, minHeight: 256 }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-          <XAxis dataKey="name" stroke="var(--color-text-muted)" />
-          <YAxis stroke="var(--color-text-muted)" />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: 'var(--color-bg-primary)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '8px',
-            }}
-          />
-          <Bar dataKey="value" fill="#06b6d4" radius={[8, 8, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={256}>
+      <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+        <XAxis dataKey="name" stroke="var(--color-text-muted)" />
+        <YAxis stroke="var(--color-text-muted)" />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: 'var(--color-bg-primary)',
+            border: '1px solid var(--color-border)',
+            borderRadius: '8px',
+          }}
+        />
+        <Bar dataKey="value" fill="#06b6d4" radius={[8, 8, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
   );
 };
 

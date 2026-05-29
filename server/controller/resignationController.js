@@ -14,7 +14,7 @@ const submitResignation = async (req, res, next) => {
     }
 
     const existing = await db("resignations")
-      .where("user_id", req.user._id)
+      .where("user_id", req.user.id)
       .whereIn("status", ["Pending", "Approved"])
       .first();
 
@@ -25,7 +25,7 @@ const submitResignation = async (req, res, next) => {
     const id = crypto.randomUUID();
     await db("resignations").insert({
       id,
-      user_id: req.user._id,
+      user_id: req.user.id,
       reason,
       last_working_day: lastWorkingDay,
       status: "Pending",
@@ -33,7 +33,7 @@ const submitResignation = async (req, res, next) => {
 
     const resignation = await db("resignations").where("id", id).first();
 
-    await logActivity(req.user._id, "submit", "resignation", id, { reason, lastWorkingDay }, req.ip);
+    await logActivity(req.user.id, "submit", "resignation", id, { reason, lastWorkingDay }, req.ip);
 
     res.status(201).json({ success: true, resignation });
   } catch (error) {
@@ -63,7 +63,7 @@ const listResignations = async (req, res, next) => {
     if (status) query.where("resignations.status", status);
 
     if (!canManageResignations(req.user.role)) {
-      query.where("resignations.user_id", req.user._id);
+      query.where("resignations.user_id", req.user.id);
     }
 
     const [{ count }] = await query.clone().clearSelect().count("* as count");
@@ -103,7 +103,7 @@ const updateResignationStatus = async (req, res, next) => {
 
     await db("resignations").where("id", id).update({
       status,
-      approved_by: req.user._id,
+      approved_by: req.user.id,
       approved_at: db.fn.now(),
       admin_notes: adminNotes || null,
       updated_at: db.fn.now(),
@@ -116,7 +116,7 @@ const updateResignationStatus = async (req, res, next) => {
       status === "Approved" ? "info" : "warning"
     );
 
-    await logActivity(req.user._id, status.toLowerCase(), "resignation", id, { previousStatus: resignation.status, adminNotes }, req.ip);
+    await logActivity(req.user.id, status.toLowerCase(), "resignation", id, { previousStatus: resignation.status, adminNotes }, req.ip);
 
     res.json({ success: true, message: `Resignation ${status.toLowerCase()}` });
   } catch (error) {

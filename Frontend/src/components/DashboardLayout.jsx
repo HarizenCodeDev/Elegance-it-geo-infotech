@@ -20,6 +20,7 @@ const menuItems = [
   { title: "Check In/Out", key: "checkin", roles: ["root", "admin", "manager"] },
   { title: "Chat", key: "chat" },
   { title: "Holidays", key: "holidays" },
+  { title: "Documents", key: "documents" },
   { title: "Payroll", key: "payroll", children: [
     { title: "Process Payroll", key: "payrollProcess", roles: ["root", "admin", "manager"] },
     { title: "Salary Slips", key: "salarySlips" },

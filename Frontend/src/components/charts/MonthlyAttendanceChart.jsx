@@ -31,8 +31,7 @@ const MonthlyAttendanceChart = ({ data }) => {
   }));
 
   return (
-    <div style={{ width: "100%", height: 256, minHeight: 256 }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+    <ResponsiveContainer width="100%" height={256}>
       <BarChart data={chartData} barCategoryGap="30%">
         <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
         <XAxis dataKey="month" stroke="var(--color-text-muted)" />
@@ -50,7 +49,6 @@ const MonthlyAttendanceChart = ({ data }) => {
         <Bar dataKey="Absent" fill="#ef4444" radius={[4, 4, 0, 0]} name="Absent" />
       </BarChart>
     </ResponsiveContainer>
-    </div>
   );
 };
 

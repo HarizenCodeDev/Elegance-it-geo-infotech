@@ -18,10 +18,14 @@ const NotificationBell = () => {
         setNotifications(res.data.notifications || []);
         setUnreadCount(res.data.unreadCount || 0);
       }
-    } catch { /* empty */ }
+    } catch {
+      if (import.meta.env.DEV) console.warn("Notification fetch failed");
+    }
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 30000);
     return () => clearInterval(interval);
