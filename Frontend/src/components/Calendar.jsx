@@ -10,10 +10,6 @@ const Calendar = ({ onDateClick }) => {
   const [holidays, setHolidays] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData, currentDate]);
-
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -40,6 +36,10 @@ const Calendar = ({ onDateClick }) => {
       setLoading(false);
     }
   }, [currentDate]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData, currentDate]);
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();

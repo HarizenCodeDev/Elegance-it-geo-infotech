@@ -122,34 +122,40 @@ const requireMinRole = (minRole) => {
   };
 };
 
-const canManageUser = (req, res, next) => {
+const canManageUser = async (req, res, next) => {
   if (!req.user) {
-    return res.status(401).json({
-      success: false,
-      error: "Authentication required.",
-    });
+    return res.status(401).json({ success: false, error: "Authentication required." });
   }
 
   const userRole = req.user.role;
   const targetUserId = req.params.id;
   const isSelf = req.user._id === targetUserId;
 
-  if (userRole === ROLES.ROOT) {
+  if (userRole === ROLES.ROOT || isSelf) {
     return next();
   }
 
-  if (userRole === ROLES.ADMIN || userRole === ROLES.MANAGER || userRole === ROLES.HR) {
-    return next();
+  const userLevel = ROLE_HIERARCHY[userRole] || 0;
+  const MIN_MANAGE_LEVEL = ROLE_HIERARCHY[ROLES.MANAGER];
+
+  if (userLevel < MIN_MANAGE_LEVEL) {
+    return res.status(403).json({ success: false, error: "Access denied. You can only manage your own profile." });
   }
 
-  if (isSelf) {
-    return next();
+  try {
+    const db = (await import("../config/database.js")).default;
+    const targetUser = await db("users").where("id", targetUserId).first();
+    if (!targetUser) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+    const targetLevel = ROLE_HIERARCHY[targetUser.role] || 0;
+    if (userLevel > targetLevel) {
+      return next();
+    }
+    return res.status(403).json({ success: false, error: "Access denied. You cannot manage users with equal or higher role." });
+  } catch {
+    return res.status(500).json({ success: false, error: "Error checking permissions" });
   }
-
-  return res.status(403).json({
-    success: false,
-    error: "Access denied. You can only manage your own profile.",
-  });
 };
 
 const isAdminOrManager = requireRole(ROLES.ROOT, ROLES.ADMIN, ROLES.MANAGER);

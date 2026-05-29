@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { memo, useEffect, useMemo, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
@@ -258,4 +258,4 @@ const LeavesList = () => {
   );
 };
 
-export default LeavesList;
+export default memo(LeavesList);

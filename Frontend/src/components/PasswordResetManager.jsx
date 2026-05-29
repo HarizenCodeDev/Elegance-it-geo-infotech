@@ -16,10 +16,6 @@ const PasswordResetManager = () => {
   const [history, setHistory] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -35,6 +31,10 @@ const PasswordResetManager = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const fetchHistory = async () => {
     try {

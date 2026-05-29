@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { SkeletonCard } from "./Skeleton";
@@ -73,4 +73,4 @@ const AnnouncementsList = ({ title = "Announcements" }) => {
   );
 };
 
-export default AnnouncementsList;
+export default memo(AnnouncementsList);

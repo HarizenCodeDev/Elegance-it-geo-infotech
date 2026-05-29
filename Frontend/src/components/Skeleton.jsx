@@ -90,10 +90,13 @@ export const SkeletonList = ({ items = 5, className = "" }) => (
   </div>
 );
 
+const GRID_COL_MAP = { 1: "lg:grid-cols-1", 2: "lg:grid-cols-2", 3: "lg:grid-cols-3", 4: "lg:grid-cols-4", 5: "lg:grid-cols-5", 6: "lg:grid-cols-6" };
+
 export const SkeletonGrid = ({ items = 6, count, cols = 3, className = "" }) => {
   const total = count ?? items;
+  const gridCols = GRID_COL_MAP[cols] || "lg:grid-cols-3";
   return (
-  <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${cols} gap-4 ${className}`}>
+  <div className={`grid grid-cols-1 sm:grid-cols-2 ${gridCols} gap-4 ${className}`}>
     {[...Array(total)].map((_, i) => (
       <SkeletonCard key={i} />
     ))}

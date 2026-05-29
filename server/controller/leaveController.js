@@ -116,10 +116,13 @@ const createLeave = async (req, res, next) => {
 
 const listLeaves = async (req, res, next) => {
   try {
-    const { status, userId } = req.query;
+    const { status, userId, page, limit } = req.query;
+    const currentPage = Math.max(1, parseInt(page) || 1);
+    const pageSize = Math.min(100, Math.max(1, parseInt(limit) || 50));
+    const offset = (currentPage - 1) * pageSize;
 
     let query = db("leaves")
-      .join("users", "leaves.user_id", "users.employee_id")
+      .join("users", "leaves.user_id", "users.id")
       .select(
         "leaves.id",
         "leaves.type",
@@ -134,8 +137,7 @@ const listLeaves = async (req, res, next) => {
         "users.department",
         "users.role"
       )
-      .orderBy("leaves.created_at", "desc")
-      .limit(500);
+      .orderBy("leaves.created_at", "desc");
 
     if (status && status !== "All") {
       query = query.where("leaves.status", status);
@@ -145,7 +147,8 @@ const listLeaves = async (req, res, next) => {
       query = query.where("leaves.user_id", userId);
     }
 
-    const leaves = await query;
+    const [{ count }] = await query.clone().clearSelect().count("* as count");
+    const leaves = await query.clone().limit(pageSize).offset(offset);
 
     res.json({
       success: true,
@@ -165,6 +168,12 @@ const listLeaves = async (req, res, next) => {
           role: l.role,
         },
       })),
+      pagination: {
+        page: currentPage,
+        limit: pageSize,
+        total: parseInt(count),
+        pages: Math.ceil(parseInt(count) / pageSize),
+      },
     });
   } catch (error) {
     next(error);
@@ -198,7 +207,7 @@ const updateLeaveStatus = async (req, res, next) => {
       });
     }
 
-    const [updatedCount] = await db("leaves")
+    const updatedCount = await db("leaves")
       .where("id", id)
       .update({
         status,

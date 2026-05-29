@@ -7,10 +7,6 @@ const Celebrations = () => {
   const [upcoming, setUpcoming] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchCelebrations();
-  }, []);
-
   const fetchCelebrations = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -81,6 +77,10 @@ const Celebrations = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCelebrations();
+  }, []);
 
   const getStatusBadge = (daysUntil) => {
     if (daysUntil === 0) return "bg-rose-500 text-white";

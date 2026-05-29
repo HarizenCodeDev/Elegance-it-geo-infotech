@@ -8,23 +8,7 @@ export async function up(knex) {
   `);
 
   await knex.schema.raw(`
-    CREATE INDEX IF NOT EXISTS idx_users_role ON users (role);
-  `);
-
-  await knex.schema.raw(`
-    CREATE INDEX IF NOT EXISTS idx_users_department ON users (department);
-  `);
-
-  await knex.schema.raw(`
-    CREATE INDEX IF NOT EXISTS idx_attendance_user_date ON attendance (user_id, date);
-  `);
-
-  await knex.schema.raw(`
-    CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance (date);
-  `);
-
-  await knex.schema.raw(`
-    CREATE INDEX IF NOT EXISTS idx_leaves_user_status ON leaves (user_id, status);
+    CREATE INDEX IF NOT EXISTS idx_users_email_lower ON users (LOWER(email));
   `);
 
   await knex.schema.raw(`
@@ -37,10 +21,6 @@ export async function up(knex) {
 
   await knex.schema.raw(`
     CREATE INDEX IF NOT EXISTS idx_activity_logs_user ON activity_logs (user_id, created_at);
-  `);
-
-  await knex.schema.raw(`
-    CREATE INDEX IF NOT EXISTS idx_checkin_checkout_user ON checkin_checkout (user_id, created_at);
   `);
 }
 

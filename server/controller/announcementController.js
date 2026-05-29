@@ -73,7 +73,7 @@ const listAnnouncements = async (req, res, next) => {
     const userDepartment = req.user.department;
 
     const announcements = await db("announcements")
-      .leftJoin("users", "announcements.created_by", "users.employee_id")
+      .leftJoin("users", "announcements.created_by", "users.id")
       .select(
         "announcements.id",
         "announcements.title",

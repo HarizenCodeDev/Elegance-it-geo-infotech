@@ -134,4 +134,4 @@ const DashboardHome = ({ stats, loading }) => {
   );
 };
 
-export default DashboardHome;
+export default memo(DashboardHome);

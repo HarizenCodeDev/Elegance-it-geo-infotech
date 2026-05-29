@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { memo, useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Download } from "lucide-react";
@@ -167,7 +167,7 @@ const EmployeesList = ({ onAddNew, onView, onEdit }) => {
                     <td className="px-4 py-3">
                       <div className="h-10 w-10 rounded-full bg-slate-700 overflow-hidden flex items-center justify-center">
                         {emp.profileImage || emp.avatar ? (
-                          <img src={getImageUrl(emp.profileImage || emp.avatar)} alt={emp.name} className="h-full w-full object-cover" />
+                          <img src={getImageUrl(emp.profileImage || emp.avatar)} alt={emp.name} className="h-full w-full object-cover" loading="lazy" />
                         ) : (
                           <div className="h-full w-full flex items-center justify-center text-xs text-white">
                             {(emp.name || "NA").slice(0, 2).toUpperCase()}
@@ -235,4 +235,4 @@ const EmployeesList = ({ onAddNew, onView, onEdit }) => {
   );
 };
 
-export default EmployeesList;
+export default memo(EmployeesList);

@@ -1,11 +1,12 @@
+import { memo } from "react";
 import { getImageUrl } from "../utils/excel";
 
-const DetailRow = ({ label, value }) => (
+const DetailRow = memo(({ label, value }) => (
   <div className="flex items-center gap-3 text-sm">
     <span className="font-semibold text-slate-400">{label}:</span>
     <span className="bg-slate-700 text-white px-2 py-1 rounded">{value || "-"}</span>
   </div>
-);
+));
 
 const EmployeeDetails = ({ employee, onBack }) => {
   if (!employee) {
@@ -39,7 +40,7 @@ const EmployeeDetails = ({ employee, onBack }) => {
             <img
               src={getImageUrl(avatarUrl)}
               alt={employee.name}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover" loading="lazy"
             />
           ) : (
             <div className="h-full w-full flex items-center justify-center text-2xl font-bold text-white bg-indigo-600">
@@ -76,4 +77,4 @@ const EmployeeDetails = ({ employee, onBack }) => {
   );
 };
 
-export default EmployeeDetails;
+export default memo(EmployeeDetails);

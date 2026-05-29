@@ -8,10 +8,6 @@ const AIAttendanceInsights = () => {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState("week");
 
-  useEffect(() => {
-    fetchInsights();
-  }, [fetchInsights, timeRange]);
-
   const fetchInsights = useCallback(async () => {
     setLoading(true);
     try {
@@ -29,6 +25,10 @@ const AIAttendanceInsights = () => {
       setLoading(false);
     }
   }, [timeRange]);
+
+  useEffect(() => {
+    fetchInsights();
+  }, [fetchInsights, timeRange]);
 
   const getTrendIcon = (trend) => {
     if (trend === "up") return <TrendingUp size={16} className="text-green-500" />;

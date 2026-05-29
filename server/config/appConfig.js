@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 export const config = {
-  JWT_SECRET: process.env.JWT_SECRET || "elegance_ems_super_secret_key_2024_production_minimum_32_chars",
+  JWT_SECRET: process.env.JWT_SECRET || (() => { throw new Error("JWT_SECRET environment variable is required"); })(),
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
   PORT: process.env.PORT || 443,
   HOST: process.env.HOST || "0.0.0.0",

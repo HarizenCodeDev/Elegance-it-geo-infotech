@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Download, LogIn, LogOut, Clock, CheckCircle, AlertCircle } from "lucide-react";
@@ -288,4 +288,4 @@ const CheckInOut = () => {
   );
 };
 
-export default CheckInOut;
+export default memo(CheckInOut);

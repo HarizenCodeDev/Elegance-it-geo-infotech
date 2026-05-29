@@ -20,19 +20,24 @@ import leaveRouter from "./routes/leave.js";
 import chatRouter from "./routes/chat.js";
 import announcementRouter from "./routes/announcement.js";
 import checkinRouter from "./routes/checkin.js";
-import leaveBalanceRouter from "./routes/leaveBalance.js";
+import leaveBalanceRouter from "./routes/leave-balance.js";
 import notificationRouter from "./routes/notification.js";
 import holidayRouter from "./routes/holiday.js";
 import documentRouter from "./routes/document.js";
-import activityLogRouter from "./routes/activityLog.js";
-import twoFactorRouter from "./routes/twoFactor.js";
+import activityLogRouter from "./routes/activity-logs.js";
+import twoFactorRouter from "./routes/two-factor.js";
 import oauthRouter from "./routes/oauth.js";
 import aiRouter from "./routes/ai.js";
+import payrollRouter from "./routes/payroll.js";
+import salarySlipRouter from "./routes/salary-slips.js";
+import resignationRouter from "./routes/resignation.js";
+import onboardingRouter from "./routes/onboarding.js";
 import { cacheMiddleware } from "./utils/responseCache.js";
+import { cacheMiddleware as redisCacheMiddleware } from "./utils/redis.js";
 import { errorHandler, requestLogger } from "./middleware/errorHandler.js";
 import { validateInputLength } from "./middleware/validator.js";
 import { initSentry, sentryErrorHandler } from "./utils/sentry.js";
-import { connectRedis } from "./utils/redis.js";
+import { connectRedis, isRedisConnected } from "./utils/redis.js";
 import { initSocketIO } from "./utils/socket.js";
 import logger from "./utils/logger.js";
 import { securityMiddleware, aiThreatDetection } from "./utils/aiSecurity.js";
@@ -135,7 +140,7 @@ app.use(
 
 const globalLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 500000,
+  max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: false,
@@ -145,8 +150,8 @@ const globalLimiter = rateLimit({
 app.use("/api/", globalLimiter);
 
 const authLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 5000,
+  windowMs: 15 * 60 * 1000,
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
@@ -157,7 +162,7 @@ app.use("/api/auth/forgot-password", authLimiter);
 
 const sensitiveEndpointLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 5000,
+  max: 200,
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
@@ -186,14 +191,17 @@ app.use((err, req, res, next) => {
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 app.use("/api/", validateInputLength);
-// Temporarily disable security middleware for debugging
-// app.use("/api/", securityMiddleware);
-
-app.use("/api/holidays", cacheMiddleware({ ttl: 60000, keyPrefix: "holidays" }));
-app.use("/api/announcements", cacheMiddleware({ ttl: 30000, keyPrefix: "announcements" }));
-app.use("/api/leave-balance", cacheMiddleware({ ttl: 60000, keyPrefix: "leave-balance" }));
 
 app.use(compression());
+
+const useRedis = () => isRedisConnected();
+
+app.use("/api/holidays", useRedis() ? redisCacheMiddleware({ ttl: 300, keyPrefix: "holidays" }) : cacheMiddleware({ ttl: 60000, keyPrefix: "holidays" }));
+app.use("/api/announcements", useRedis() ? redisCacheMiddleware({ ttl: 120, keyPrefix: "announcements" }) : cacheMiddleware({ ttl: 30000, keyPrefix: "announcements" }));
+app.use("/api/leave-balance", useRedis() ? redisCacheMiddleware({ ttl: 300, keyPrefix: "leave-balance" }) : cacheMiddleware({ ttl: 60000, keyPrefix: "leave-balance" }));
+app.use("/api/attendance", useRedis() ? redisCacheMiddleware({ ttl: 60, keyPrefix: "attendance" }) : cacheMiddleware({ ttl: 15000, keyPrefix: "attendance" }));
+app.use("/api/leaves", useRedis() ? redisCacheMiddleware({ ttl: 60, keyPrefix: "leaves" }) : cacheMiddleware({ ttl: 15000, keyPrefix: "leaves" }));
+app.use("/api/activity-logs", useRedis() ? redisCacheMiddleware({ ttl: 120, keyPrefix: "activity-logs" }) : cacheMiddleware({ ttl: 30000, keyPrefix: "activity-logs" }));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
   setHeaders: (res) => {
@@ -218,6 +226,10 @@ app.use("/api/activity-logs", activityLogRouter);
 app.use("/api/auth/2fa", twoFactorRouter);
 app.use("/api/auth/oauth", oauthRouter);
 app.use("/api/ai", aiRouter);
+app.use("/api/payroll", payrollRouter);
+app.use("/api/salary-slips", salarySlipRouter);
+app.use("/api/resignations", resignationRouter);
+app.use("/api/onboarding", onboardingRouter);
 
 // One-time admin seed endpoint (use once then remove or protect)
 app.post("/api/seed-admin", async (req, res) => {

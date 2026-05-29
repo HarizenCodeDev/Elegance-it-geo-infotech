@@ -83,6 +83,7 @@ export const validateInputLength = (req, res, next) => {
     return null;
   };
 
+  if (!req.body || typeof req.body !== 'object') return next();
   const error = checkLength(req.body);
   if (error) {
     return res.status(400).json({
@@ -113,10 +114,13 @@ export const validateUUID = (paramName) => {
   };
 };
 
+const PASSWORD_FIELDS = new Set(["password", "newPassword", "oldPassword", "confirmPassword"]);
+
 export const sanitizeInput = (req, res, next) => {
   const sanitize = (obj) => {
     for (const key in obj) {
       if (typeof obj[key] === "string") {
+        if (PASSWORD_FIELDS.has(key)) continue;
         obj[key] = validator.escape(validator.trim(obj[key]));
       }
     }

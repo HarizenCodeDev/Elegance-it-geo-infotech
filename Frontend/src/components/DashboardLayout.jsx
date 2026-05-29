@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { memo, useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Edit2, Lock, LogOut, Menu, X, ChevronDown, Sparkles, Brain, Search } from "lucide-react";
 import { useAuth } from "../context/authContext";
@@ -20,6 +20,14 @@ const menuItems = [
   { title: "Check In/Out", key: "checkin", roles: ["root", "admin", "manager"] },
   { title: "Chat", key: "chat" },
   { title: "Holidays", key: "holidays" },
+  { title: "Payroll", key: "payroll", children: [
+    { title: "Process Payroll", key: "payrollProcess", roles: ["root", "admin", "manager"] },
+    { title: "Salary Slips", key: "salarySlips" },
+  ]},
+  { title: "HR", key: "hr", roles: ["root", "admin", "manager", "hr"], children: [
+    { title: "Resignations", key: "resignations" },
+    { title: "Onboarding", key: "onboarding" },
+  ]},
   { title: "Login Logs", key: "loginLogs", roles: ["root", "admin", "manager"] },
   { title: "Activity Logs", key: "activityLogs", roles: ["root", "admin"] },
   { title: "Announcements", key: "announcements", children: [
@@ -87,13 +95,13 @@ const DashboardLayout = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
     logout();
     navigate("/login");
-  };
+  }, [logout, navigate]);
 
-  const handleAvatarUpload = async (file) => {
+  const handleAvatarUpload = useCallback(async (file) => {
     setUploadError("");
     setUploading(true);
     try {
@@ -114,9 +122,9 @@ const DashboardLayout = ({
     } finally {
       setUploading(false);
     }
-  };
+  }, [updateAvatar]);
 
-  const handleMenuClick = (key) => {
+  const handleMenuClick = useCallback((key) => {
     if (key === "chat") {
       setChatOpen(true);
     } else {
@@ -124,22 +132,22 @@ const DashboardLayout = ({
     }
     setCurrentView(key);
     setMobileMenuOpen(false);
-  };
+  }, [setCurrentView, setChatOpen]);
 
-  const toggleSubmenu = (key) => {
+  const toggleSubmenu = useCallback((key) => {
     setOpenMenus((prev) => {
       const isOpen = prev[key];
       return isOpen ? {} : { [key]: true };
     });
-  };
+  }, []);
 
-  const hasAccess = (roles) => {
+  const hasAccess = useCallback((roles) => {
     if (!roles) return true;
     return roles.includes(user?.role);
-  };
+  }, [user?.role]);
 
-  const filteredMenuItems = menuItems.filter((item) => hasAccess(item.roles));
-  const filteredChildren = (children) => children.filter((child) => hasAccess(child.roles));
+  const filteredMenuItems = useMemo(() => menuItems.filter((item) => hasAccess(item.roles)), [hasAccess]);
+  const filteredChildren = useCallback((children) => children.filter((child) => hasAccess(child.roles)), [hasAccess]);
 
   return (
     <div className="min-h-screen flex" style={{ backgroundColor: 'var(--color-bg-primary)', color: 'var(--color-text-primary)' }}>
@@ -157,7 +165,7 @@ const DashboardLayout = ({
         {/* Sidebar Header */}
         <div className="px-4 py-5 border-b" style={{ borderColor: 'var(--color-border)' }}>
           <div className="flex items-center gap-3">
-            <img src={logoSrc} alt="Elegance" className="h-10 w-10 object-contain" />
+            <img src={logoSrc} alt="Elegance" className="h-10 w-10 object-contain" loading="lazy" />
             <div className="hidden sm:block">
               <h2 className="text-lg font-bold">Elegance</h2>
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>EMS Dashboard</p>
@@ -170,7 +178,7 @@ const DashboardLayout = ({
           <div className="flex items-center gap-3">
             <div className="h-11 w-11 rounded-full flex items-center justify-center font-bold text-sm gradient-primary">
               {profileImage ? (
-                <img src={profileImage} alt="Profile" className="h-full w-full object-cover rounded-full" />
+                <img src={profileImage} alt="Profile" className="h-full w-full object-cover rounded-full" loading="lazy" />
               ) : (
                 <span>{(user?.name || "U").slice(0, 2).toUpperCase()}</span>
               )}
@@ -276,7 +284,7 @@ const DashboardLayout = ({
           </button>
 
           <div className="flex items-center gap-3 lg:hidden">
-            <img src={logoSrc} alt="Elegance" className="h-8 w-8 object-contain" />
+            <img src={logoSrc} alt="Elegance" className="h-8 w-8 object-contain" loading="lazy" />
           </div>
 
           <div className="ml-auto flex items-center gap-4">
@@ -290,7 +298,7 @@ const DashboardLayout = ({
               >
                 <div className="h-10 w-10 rounded-full flex items-center justify-center font-semibold overflow-hidden border-2 border-transparent hover:border-white transition gradient-primary">
                   {profileImage ? (
-                    <img src={profileImage} alt="Profile" className="h-full w-full object-cover" />
+                    <img src={profileImage} alt="Profile" className="h-full w-full object-cover" loading="lazy" />
                   ) : (
                     <span>{(user?.name || "U").slice(0, 2).toUpperCase()}</span>
                   )}
@@ -302,7 +310,7 @@ const DashboardLayout = ({
                   <div className="flex items-center gap-3">
                     <div className="relative h-14 w-14 rounded-full flex items-center justify-center font-bold gradient-primary">
                       {profileImage ? (
-                        <img src={profileImage} alt="Profile" className="h-full w-full object-cover rounded-full" />
+<img src={profileImage} alt="Profile" className="h-full w-full object-cover rounded-full" loading="lazy" />
                       ) : (
                         <span>{(user?.name || "U").slice(0, 2).toUpperCase()}</span>
                       )}
@@ -391,4 +399,4 @@ const DashboardLayout = ({
   );
 };
 
-export default DashboardLayout;
+export default memo(DashboardLayout);

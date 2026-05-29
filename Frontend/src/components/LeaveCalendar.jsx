@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight, Calendar as CalIcon } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -11,10 +11,6 @@ const LeaveCalendar = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData, currentDate]);
-
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -22,10 +18,10 @@ const LeaveCalendar = () => {
       const year = currentDate.getFullYear();
 
       const [leavesRes, holidaysRes] = await Promise.all([
-        axios.get(`${API_BASE}/api/leaves?status=Approved`, {
+        axios.get(`${API_BASE}/leaves?status=Approved`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get(`${API_BASE}/api/holidays?year=${year}`, {
+        axios.get(`${API_BASE}/holidays?year=${year}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -42,6 +38,10 @@ const LeaveCalendar = () => {
       setLoading(false);
     }
   }, [currentDate]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData, currentDate]);
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -268,4 +268,4 @@ const LeaveCalendar = () => {
   );
 };
 
-export default LeaveCalendar;
+export default memo(LeaveCalendar);

@@ -56,9 +56,9 @@ const createEmployee = async (req, res, next) => {
         });
       }
 
-    // Check if email exists
+    // Check if email exists (excluding soft-deleted)
     if (email) {
-      const existing = await db("users").where("email", email.toLowerCase()).first();
+      const existing = await db("users").where("email", email.toLowerCase()).where("is_deleted", false).first();
       if (existing) {
         return res.status(409).json({
           success: false,
@@ -86,13 +86,13 @@ const createEmployee = async (req, res, next) => {
     const randomNum = Math.floor(Math.random() * 900) + 100;
     finalEmployeeId = `${prefix}${year}${randomNum}`;
     
-    // Ensure uniqueness
-    let exists = await db("users").where("employee_id", finalEmployeeId).first();
+    // Ensure uniqueness (excluding soft-deleted)
+    let exists = await db("users").where("employee_id", finalEmployeeId).where("is_deleted", false).first();
     let attempts = 0;
     while (exists && attempts < 10) {
       const newRandom = Math.floor(Math.random() * 900) + 100;
       finalEmployeeId = `${prefix}${year}${newRandom}`;
-      exists = await db("users").where("employee_id", finalEmployeeId).first();
+      exists = await db("users").where("employee_id", finalEmployeeId).where("is_deleted", false).first();
       attempts++;
     }
     
@@ -172,6 +172,7 @@ const listEmployees = async (req, res, next) => {
     }
 
     const buildQuery = (q) => {
+      q = q.where("is_deleted", false);
       if (!canViewAll) {
         q = q.where("employee_id", req.user._id);
       }
@@ -334,6 +335,7 @@ const updateEmployee = async (req, res, next) => {
 
     const [user] = await db("users")
       .where(queryField, id)
+      .where("is_deleted", false)
       .update(updates)
       .returning([
         "id",
@@ -410,6 +412,7 @@ const updateAttendance = async (req, res, next) => {
 
     const [user] = await db("users")
       .where(queryField, id)
+      .where("is_deleted", false)
       .update({
         attendance_status: status,
         updated_at: db.fn.now(),
@@ -451,9 +454,16 @@ const deleteEmployee = async (req, res, next) => {
       });
     }
 
-    const deleted = await db("users").where(queryField, id).del();
+    const updated = await db("users")
+      .where(queryField, id)
+      .where("is_deleted", false)
+      .update({
+        is_deleted: true,
+        deleted_at: db.fn.now(),
+        updated_at: db.fn.now(),
+      });
 
-    if (!deleted) {
+    if (!updated) {
       return res.status(404).json({
         success: false,
         error: "User not found",
@@ -480,6 +490,7 @@ const getEmployee = async (req, res, next) => {
 
     const user = await db("users")
       .where(queryField, id)
+      .where("is_deleted", false)
       .select(
         "id",
         "name",

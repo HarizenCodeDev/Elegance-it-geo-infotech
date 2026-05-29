@@ -252,7 +252,7 @@ const exportCheckinExcel = async (req, res, next) => {
     const { from, to, userId } = req.query;
 
     let query = db("checkin_checkout")
-      .join("users", "checkin_checkout.user_id", "users.employee_id")
+      .join("users", "checkin_checkout.user_id", "users.id")
       .select(
         "users.employee_id",
         "users.name",

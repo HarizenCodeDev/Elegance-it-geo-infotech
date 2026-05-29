@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Trash2, Plus, Lock, Calendar, RefreshCw } from "lucide-react";
@@ -18,10 +18,6 @@ const HolidayManagement = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [autoPopulating, setAutoPopulating] = useState(false);
 
-  useEffect(() => {
-    fetchHolidays();
-  }, [fetchHolidays, selectedYear]);
-
   const fetchHolidays = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
@@ -37,6 +33,10 @@ const HolidayManagement = () => {
       setLoading(false);
     }
   }, [selectedYear]);
+
+  useEffect(() => {
+    fetchHolidays();
+  }, [fetchHolidays, selectedYear]);
 
   const handleAutoPopulate = async () => {
     setAutoPopulating(true);
@@ -269,4 +269,4 @@ const HolidayManagement = () => {
   );
 };
 
-export default HolidayManagement;
+export default memo(HolidayManagement);

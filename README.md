@@ -41,12 +41,14 @@
 ## ✨ Features
 
 ### 🔐 Authentication & Security
-- JWT-based authentication with refresh tokens
+- JWT-based authentication with refresh tokens (JWT_SECRET env var required)
 - Password complexity enforcement (8+ chars, uppercase, lowercase, numbers, special)
 - Password expiry after 90 days
 - Account lockout after 5 failed attempts (15-minute lockout)
 - Session management across devices
 - Remember Me with extended 30-day sessions
+- Role hierarchy enforcement — users cannot manage others with equal/higher role
+- Input sanitization skips password fields to preserve special characters
 
 ### 👥 Employee Management
 - Complete CRUD operations
@@ -65,6 +67,23 @@
 - Balance tracking by leave type
 - Overlap prevention
 - Leave predictions & forecasting
+
+### 💰 Payroll & Salary
+- Payroll processing with allowances & deductions
+- Net pay calculation
+- Monthly salary slip generation
+- Download tracking
+
+### 📋 HR Workflows
+- Resignation submission & approval workflow
+- Onboarding task management with progress tracking
+- Checklist system for new hires
+- Email notifications for status changes
+
+### 📍 Advanced Attendance
+- QR code-based check-in (time-limited tokens)
+- Geolocation-based check-in with office radius enforcement
+- Real-time attendance dashboard with late detection
 
 ### 💬 Internal Communication
 - Direct messaging
@@ -94,6 +113,8 @@
 | React Router 7 | Routing |
 | Recharts | Charts |
 | Axios | HTTP Client |
+| Framer Motion | Animations |
+| Vitest | Unit Testing |
 
 ### Backend
 | Technology | Purpose |
@@ -105,6 +126,7 @@
 | JWT | Authentication |
 | Bcryptjs | Password Hashing |
 | Socket.io | Real-time |
+| Vitest | Unit Testing |
 
 ### Deployment
 | Service | Purpose |
@@ -120,6 +142,7 @@
 ### Prerequisites
 - Node.js 18+
 - npm or yarn
+- **PostgreSQL** (local or Docker) — SQLite is not compatible (UUID schema)
 
 ### Local Development
 
@@ -128,23 +151,43 @@
 git clone https://github.com/HariDevex/Elegance-IT-Geo-Infotech.git
 cd Elegance-IT-Geo-Infotech
 
+# Start PostgreSQL via Docker (optional but recommended)
+docker run -d --name elegance-pg -e POSTGRES_USER=elegance \
+  -e POSTGRES_PASSWORD=elegance -e POSTGRES_DB=elegance_ems \
+  -p 5432:5432 postgres:16
+
 # Backend Setup
 cd server
 npm install
-cp .env.example .env  # Configure your settings
+cp .env.example .env  # Set DATABASE_URL=postgresql://elegance:elegance@localhost:5432/elegance_ems
 npm run db:migrate
-npm run db:seed
-npm run dev
+node seeds/seed.js     # Run seed directly (not via knex)
+npm run dev            # Uses node --watch, starts on :3000
 
 # Frontend Setup (new terminal)
 cd ../Frontend
 npm install
-npm run dev
+npm run dev            # Vite dev server on :8081, proxies /api to :3000
 ```
 
 ### Access Locally
-- **Frontend**: http://localhost:5173
+- **Frontend**: http://localhost:8081
 - **Backend API**: http://localhost:3000/api
+
+### Default Login (Local Seed)
+- **Employee ID**: `EJB2026266` (randomly generated, check seed output)
+- **Password**: `admin123`
+
+### Troubleshooting
+
+| Issue | Solution |
+|---|---|
+| `relation "users" does not exist` | Run `npm run db:migrate` before seeding |
+| `null value in column "id"` | Ensure PostgreSQL is used (not SQLite) |
+| Foreign key constraint errors | Ensure users are seeded before dependent tables |
+| Seed doesn't create user | Seed checks for existing root user; truncate `users` table to re-run |
+| Frontend can't reach API | Vite proxy forwards `/api` to `:3000`; ensure backend is running |
+| Port conflicts | Backend uses `:3000`, frontend uses `:8081` |
 
 ---
 
@@ -154,22 +197,27 @@ npm run dev
 Elegance-IT-Geo-Infotech/
 ├── server/                 # Express.js backend
 │   ├── config/            # Database configuration
-│   ├── controller/        # Business logic
+│   ├── controller/        # Business logic (incl. exportController)
 │   ├── middleware/        # Auth, validation, errors
 │   ├── migrations/        # Database schema
 │   ├── routes/           # API endpoints
 │   ├── seeds/            # Initial data
-│   ├── utils/            # Helpers
+│   ├── tests/            # Unit tests (60+ tests)
+│   ├── utils/            # Helpers (caching, logging)
 │   └── index.js          # Entry point
 │
 ├── Frontend/              # React frontend
 │   ├── src/
-│   │   ├── components/   # Reusable UI
+│   │   ├── components/   # Reusable UI (incl. PayrollManagement, SalarySlips, OnboardingSystem, ResignationWorkflow)
+│   │   ├── hooks/        # Custom React hooks
+│   │   ├── services/     # API service layer
 │   │   ├── pages/        # Route pages
-│   │   ├── context/      # React context
+│   │   ├── context/      # React context (auth)
 │   │   └── assets/       # Static assets
 │   └── index.html
 │
+├── types/                 # TypeScript type definitions (.d.ts)
+├── docs/                  # Architecture & API documentation
 ├── vercel.json           # Vercel config
 └── README.md
 ```
@@ -180,15 +228,27 @@ Elegance-IT-Geo-Infotech/
 
 | Module | Endpoint | Methods |
 |--------|----------|---------|
-| Auth | `/api/auth/*` | login, logout, profile, change-password |
+| Auth | `/api/auth/*` | login, logout, profile, change-password, sessions |
 | Employees | `/api/employees` | CRUD operations |
 | Attendance | `/api/attendance` | CRUD, check-in/out |
+| My Attendance | `/api/attendance/my` | GET (self-service) |
 | Leaves | `/api/leaves` | CRUD, approve/reject |
+| Leave Balance | `/api/leave-balance/*` | get/set balances, types |
 | Chat | `/api/chat` | messages, groups |
 | Notifications | `/api/notifications` | CRUD |
 | Holidays | `/api/holidays` | CRUD |
 | Activity Logs | `/api/activity-logs` | GET |
 | AI Features | `/api/ai/*` | insights, search, chat |
+| Payroll | `/api/payroll` | CRUD, process |
+| Salary Slips | `/api/salary-slips` | generate, list, download |
+| Resignations | `/api/resignations` | submit, list, approve/reject |
+| Onboarding | `/api/onboarding/*` | tasks, checklist |
+| Export Employees | `/api/auth/export/employees` | GET |
+| Export Attendance | `/api/auth/export/attendance` | GET |
+| Export Login Logs | `/api/auth/export/login-logs` | GET |
+| QR Check-in | `/api/attendance/generate-qr` | POST (generate QR token) |
+| QR Check-in | `/api/attendance/qr-checkin` | POST (scan & check in) |
+| Geo Check-in | `/api/attendance/geo-checkin` | POST (location-based) |
 
 ---
 

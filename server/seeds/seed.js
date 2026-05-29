@@ -1,4 +1,9 @@
 import bcrypt from "bcryptjs";
+import knex from "knex";
+import knexConfig from "../knexfile.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function seed(knex) {
   console.log("🌱 Starting database seed...");
@@ -37,6 +42,7 @@ export async function seed(knex) {
       .returning("*");
 
     console.log(`✅ Root user created:`);
+    console.log(`   Employee ID: ${rootUser.employee_id}`);
     console.log(`   Email: ${rootUser.email}`);
     console.log(`   Password: ${process.env.DEFAULT_PASSWORD || "admin123"}`);
     console.log("\n⚠️  Please change this password after first login!");
@@ -45,3 +51,16 @@ export async function seed(knex) {
     throw error;
   }
 }
+
+const env = process.env.NODE_ENV || "production";
+const db = knex(knexConfig[env]);
+
+seed(db)
+  .then(() => {
+    console.log("✅ Seed complete.");
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.error("❌ Seed failed:", err);
+    process.exit(1);
+  });

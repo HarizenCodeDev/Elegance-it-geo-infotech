@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
@@ -137,7 +137,7 @@ const ProfileEdit = ({ onDone }) => {
               <img
                 src={getImageUrl(user?.avatar || user?.profileImage)}
                 alt={form.name}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover" loading="lazy"
               />
             ) : (
               <div className="h-full w-full flex items-center justify-center text-3xl text-white font-bold">
@@ -282,4 +282,4 @@ const ProfileEdit = ({ onDone }) => {
   );
 };
 
-export default ProfileEdit;
+export default memo(ProfileEdit);

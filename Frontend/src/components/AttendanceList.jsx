@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Download } from "lucide-react";
@@ -23,10 +23,6 @@ const AttendanceList = () => {
   const { user } = useAuth();
   const canUpdate = ["admin", "manager", "root"].includes(user?.role);
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
-
   const fetchEmployees = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -36,6 +32,10 @@ const AttendanceList = () => {
       setEmployees(res.data.users || []);
     } catch { /* empty */ }
   };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
 
   const loadData = async (selectedDate) => {
     setLoading(true);
@@ -202,7 +202,7 @@ const AttendanceList = () => {
                   <td className="px-4 py-3">
                     <div className="h-10 w-10 rounded-full bg-slate-700 overflow-hidden">
                         {emp.profileImage ? (
-                          <img src={getImageUrl(emp.profileImage)} alt={emp.name} className="h-full w-full object-cover" />
+                          <img src={getImageUrl(emp.profileImage)} alt={emp.name} className="h-full w-full object-cover" loading="lazy" />
                         ) : (
                         <div className="h-full w-full flex items-center justify-center text-xs text-white">
                           {(emp.name || "NA").slice(0, 2).toUpperCase()}
@@ -256,4 +256,4 @@ const AttendanceList = () => {
   );
 };
 
-export default AttendanceList;
+export default memo(AttendanceList);

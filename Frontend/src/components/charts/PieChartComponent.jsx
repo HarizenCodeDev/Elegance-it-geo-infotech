@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { memo, useState, useEffect } from "react";
 
 const PieChartComponent = ({ data }) => {
   const [Charts, setCharts] = useState(null);
@@ -22,7 +22,8 @@ const PieChartComponent = ({ data }) => {
   const { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } = Charts;
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <div style={{ width: "100%", height: 256, minHeight: 256 }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
       <PieChart>
         <Pie
           data={data}
@@ -46,7 +47,8 @@ const PieChartComponent = ({ data }) => {
         />
       </PieChart>
     </ResponsiveContainer>
+    </div>
   );
 };
 
-export default PieChartComponent;
+export default memo(PieChartComponent);

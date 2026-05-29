@@ -53,7 +53,7 @@ const createGroup = async (req, res, next) => {
 const listGroups = async (req, res, next) => {
   try {
     const groups = await db("chat_groups")
-      .leftJoin("users", "chat_groups.created_by", "users.employee_id")
+      .leftJoin("users", "chat_groups.created_by", "users.id")
       .select(
         "chat_groups.id",
         "chat_groups.name",
@@ -125,7 +125,7 @@ const getMessages = async (req, res, next) => {
 
     if (type === "group") {
       messages = await db("chat_messages")
-        .join("users", "chat_messages.from_user", "users.employee_id")
+        .join("users", "chat_messages.from_user", "users.id")
         .select(
           "chat_messages.id",
           "chat_messages.text",
@@ -138,7 +138,7 @@ const getMessages = async (req, res, next) => {
         .limit(500);
     } else {
       messages = await db("chat_messages")
-        .join("users", "chat_messages.from_user", "users.employee_id")
+        .join("users", "chat_messages.from_user", "users.id")
         .select(
           "chat_messages.id",
           "chat_messages.text",

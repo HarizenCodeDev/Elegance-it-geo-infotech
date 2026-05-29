@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import API_BASE from "../config/api.js";
@@ -259,4 +259,4 @@ const EditEmployeeForm = ({ employee, onDone }) => {
   );
 };
 
-export default EditEmployeeForm;
+export default memo(EditEmployeeForm);

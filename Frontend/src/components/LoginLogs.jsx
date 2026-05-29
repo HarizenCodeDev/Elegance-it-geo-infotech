@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Download } from "lucide-react";
@@ -139,4 +139,4 @@ const LoginLogs = () => {
   );
 };
 
-export default LoginLogs;
+export default memo(LoginLogs);

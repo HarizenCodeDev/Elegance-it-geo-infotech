@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
@@ -168,4 +168,4 @@ const AddAnnouncementForm = ({ onCreated }) => {
   );
 };
 
-export default AddAnnouncementForm;
+export default memo(AddAnnouncementForm);

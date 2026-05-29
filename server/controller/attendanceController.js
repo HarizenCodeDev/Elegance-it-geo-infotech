@@ -129,14 +129,18 @@ const createOrUpdateAttendance = async (req, res, next) => {
 
 const listAttendance = async (req, res, next) => {
   try {
-    const { date, from, to, userId } = req.query;
+    const { date, from, to, userId, page, limit } = req.query;
     
     if (!canViewAll(req.user.role)) {
       return res.status(403).json({ success: false, error: "Not authorized to view all attendance" });
     }
     
+    const currentPage = Math.max(1, parseInt(page) || 1);
+    const pageSize = Math.min(100, Math.max(1, parseInt(limit) || 50));
+    const offset = (currentPage - 1) * pageSize;
+    
     const attendanceQuery = db("attendance")
-      .join("users", "attendance.user_id", "users.employee_id")
+      .join("users", "attendance.user_id", "users.id")
       .select(
         "attendance.id",
         "attendance.user_id",
@@ -149,8 +153,7 @@ const listAttendance = async (req, res, next) => {
         "users.department",
         "users.role"
       )
-      .orderBy("attendance.date", "desc")
-      .limit(500);
+      .orderBy("attendance.date", "desc");
 
     if (date) {
       const dateStr = date.split("T")[0];
@@ -165,7 +168,8 @@ const listAttendance = async (req, res, next) => {
       attendanceQuery.where("attendance.user_id", userId);
     }
 
-    const records = await attendanceQuery;
+    const [{ count }] = await attendanceQuery.clone().clearSelect().count("* as count");
+    const records = await attendanceQuery.clone().limit(pageSize).offset(offset);
 
     const result = records.map((r) => {
       const isLate = isLateCheckIn(r.check_in_at);
@@ -181,7 +185,16 @@ const listAttendance = async (req, res, next) => {
       };
     });
 
-    res.json({ success: true, records: result });
+    res.json({
+      success: true,
+      records: result,
+      pagination: {
+        page: currentPage,
+        limit: pageSize,
+        total: parseInt(count),
+        pages: Math.ceil(parseInt(count) / pageSize),
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -264,4 +277,87 @@ const listMyAttendance = async (req, res, next) => {
   }
 };
 
-export { createOrUpdateAttendance, listAttendance, listMyAttendance };
+const haversineDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371000;
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+};
+
+const generateQrToken = async (req, res, next) => {
+  try {
+    if (!["root", "admin", "manager"].includes(req.user.role)) {
+      return res.status(403).json({ success: false, error: "Not authorized" });
+    }
+
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ success: false, error: "userId is required" });
+
+    const token = crypto.randomUUID();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+    await db("qr_checkin_tokens").insert({ token, user_id: userId, expires_at: expiresAt });
+
+    res.json({ success: true, token, expires_at: expiresAt.toISOString() });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const qrCheckin = async (req, res, next) => {
+  try {
+    const { qrToken } = req.body;
+    if (!qrToken) return res.status(400).json({ success: false, error: "qrToken is required" });
+
+    const qrRecord = await db("qr_checkin_tokens").where({ token: qrToken, used: false }).first();
+    if (!qrRecord) return res.status(400).json({ success: false, error: "Invalid QR token" });
+    if (new Date(qrRecord.expires_at) < new Date()) return res.status(400).json({ success: false, error: "QR token expired" });
+
+    await db("qr_checkin_tokens").where("id", qrRecord.id).update({ used: true, used_by: req.user._id, used_at: db.fn.now() });
+
+    const id = crypto.randomUUID();
+    await db("checkin_checkout").insert({
+      id, user_id: req.user._id, type: "checkin", note: "QR check-in", ip_address: req.ip,
+    });
+
+    res.json({ success: true, message: "QR check-in successful" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const geoCheckin = async (req, res, next) => {
+  try {
+    const { latitude, longitude } = req.body;
+    if (latitude == null || longitude == null) {
+      return res.status(400).json({ success: false, error: "latitude and longitude are required" });
+    }
+
+    const OFFICE_LAT = parseFloat(process.env.OFFICE_LAT) || 28.6139;
+    const OFFICE_LNG = parseFloat(process.env.OFFICE_LNG) || 77.209;
+    const MAX_RADIUS = parseFloat(process.env.GEO_MAX_RADIUS) || 100;
+
+    const distance = haversineDistance(parseFloat(latitude), parseFloat(longitude), OFFICE_LAT, OFFICE_LNG);
+    if (distance > MAX_RADIUS) {
+      return res.status(400).json({
+        success: false, error: `You are ${Math.round(distance)}m away from office. Must be within ${MAX_RADIUS}m.`,
+        distance: Math.round(distance),
+      });
+    }
+
+    const id = crypto.randomUUID();
+    await db("checkin_checkout").insert({
+      id, user_id: req.user._id, type: "checkin",
+      location: JSON.stringify({ latitude: parseFloat(latitude), longitude: parseFloat(longitude), distance: Math.round(distance) }),
+      ip_address: req.ip, note: "Geo check-in",
+    });
+
+    res.json({ success: true, message: "Geo check-in successful", distance: Math.round(distance) });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createOrUpdateAttendance, listAttendance, listMyAttendance, generateQrToken, qrCheckin, geoCheckin };

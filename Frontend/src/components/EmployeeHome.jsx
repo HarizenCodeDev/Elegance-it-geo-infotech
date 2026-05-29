@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Calendar as CalIcon, Clock, CheckCircle, XCircle, TrendingUp } from "lucide-react";
 import MonthlyAttendanceChart from "./charts/MonthlyAttendanceChart";
 import AttendanceBarChart from "./charts/AttendanceBarChart";
@@ -146,4 +147,4 @@ const EmployeeHome = ({ stats, loading }) => {
   );
 };
 
-export default EmployeeHome;
+export default memo(EmployeeHome);

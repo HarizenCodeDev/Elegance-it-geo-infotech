@@ -1,23 +1,15 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Award, Calendar } from "lucide-react";
 import { Skeleton, SkeletonGrid } from "./Skeleton";
-import API_BASE from "../config/api.js";
+import api from "../config/axios.js";
 
 const LeaveBalance = ({ compact = false }) => {
   const [balances, setBalances] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchBalances();
-  }, []);
-
   const fetchBalances = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_BASE}/api/leave-balance/balance`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/leave-balance/balance");
       if (res.data.success) {
         setBalances(res.data.balances || []);
       }
@@ -26,6 +18,10 @@ const LeaveBalance = ({ compact = false }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchBalances();
+  }, []);
 
   const getLeaveIcon = (type) => {
     switch (type?.toLowerCase()) {

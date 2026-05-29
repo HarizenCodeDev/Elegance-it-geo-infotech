@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Eye, EyeOff, Info, UserPlus, Copy, CheckCircle } from "lucide-react";
@@ -429,4 +429,4 @@ const AddEmployeeForm = ({ onEmployeeAdded }) => {
   );
 };
 
-export default AddEmployeeForm;
+export default memo(AddEmployeeForm);

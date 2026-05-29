@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Monitor, Smartphone, Globe, Clock, Trash2, LogOut, Shield, AlertCircle } from "lucide-react";
@@ -9,10 +9,6 @@ const SessionManagement = () => {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [terminating, setTerminating] = useState(null);
-
-  useEffect(() => {
-    fetchSessions();
-  }, []);
 
   const fetchSessions = async () => {
     setLoading(true);
@@ -28,6 +24,10 @@ const SessionManagement = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchSessions();
+  }, []);
 
   const terminateSession = async (sessionId) => {
     setTerminating(sessionId);
@@ -218,4 +218,4 @@ const SessionManagement = () => {
   );
 };
 
-export default SessionManagement;
+export default memo(SessionManagement);

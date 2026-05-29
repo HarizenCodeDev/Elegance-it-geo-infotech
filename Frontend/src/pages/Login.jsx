@@ -157,7 +157,7 @@ const Login = () => {
           <img
             src={logoSrc}
             alt="Elegance Logo"
-            className="h-20 w-20 mx-auto mb-4 object-contain"
+            className="h-20 w-20 mx-auto mb-4 object-contain" loading="lazy"
             onError={(e) => { e.target.style.display = 'none'; }}
           />
           <h1 className="text-2xl font-bold text-white">Elegance IT & Geo Synergy</h1>

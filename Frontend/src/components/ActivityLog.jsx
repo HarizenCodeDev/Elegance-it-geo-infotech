@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Activity, Filter } from "lucide-react";
@@ -10,10 +10,6 @@ const ActivityLog = () => {
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 1 });
   const [filters, setFilters] = useState({ module: "", action: "" });
-
-  useEffect(() => {
-    fetchLogs();
-  }, [fetchLogs, pagination.page, filters]);
 
   const fetchLogs = useCallback(async () => {
     setLoading(true);
@@ -42,6 +38,10 @@ const ActivityLog = () => {
       setLoading(false);
     }
   }, [pagination.page, filters]);
+
+  useEffect(() => {
+    fetchLogs();
+  }, [fetchLogs, pagination.page, filters]);
 
   const getActionColor = (action) => {
     switch (action) {
@@ -188,4 +188,4 @@ const ActivityLog = () => {
   );
 };
 
-export default ActivityLog;
+export default memo(ActivityLog);

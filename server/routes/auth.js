@@ -12,9 +12,6 @@ import {
   uploadAvatar,
   getProfile,
   getLoginLogs,
-  exportEmployeesExcel,
-  exportAttendanceExcel,
-  exportLoginLogsExcel,
   resetUserPassword,
   getPasswordHistory,
   getAllPasswordHistory,
@@ -22,6 +19,11 @@ import {
   terminateSession,
   terminateAllSessions,
 } from "../controller/authController.js";
+import {
+  exportEmployeesExcel,
+  exportAttendanceExcel,
+  exportLoginLogsExcel,
+} from "../controller/exportController.js";
 import authMiddleware, { requireRole, ROLES } from "../middleware/auth.js";
 import { validate, sanitizeInput } from "../middleware/validator.js";
 
