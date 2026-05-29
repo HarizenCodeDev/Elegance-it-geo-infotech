@@ -25,18 +25,21 @@ const getAttendanceStatus = (checkInTime) => {
 const createOrUpdateAttendance = async (req, res, next) => {
   try {
     const { userId, date, status, action } = req.body;
-    const employeeId = userId || req.user._id;
+    const input = userId || req.user._id;
 
-    if (!employeeId || !date) {
+    if (!input || !date) {
       return res.status(400).json({ success: false, error: "Missing required fields" });
     }
 
-    const self = employeeId === req.user._id;
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(input);
+    const self = isUuid ? input === req.user.id : input === req.user._id;
     if (!self && !canWrite(req.user.role)) {
       return res.status(403).json({ success: false, error: "Not authorized" });
     }
 
-    const user = await db("users").where("employee_id", employeeId).first();
+    const user = isUuid
+      ? await db("users").where("id", input).first()
+      : await db("users").where("employee_id", input).first();
     if (!user) {
       return res.status(404).json({ success: false, error: "User not found" });
     }
